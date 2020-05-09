@@ -1,0 +1,32 @@
+{
+    "name": "sammyjo20/lasso",
+    "description": "Lasso 1.0",
+    "type": "library",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Sam Carré",
+            "email": "sam.carre2000@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">7.3",
+        "illuminate/support": "^7.0",
+        "illuminate/contracts": "^7.0",
+        "symfony/process": "^5.0",
+        "illuminate/filesystem": "^7.",
+        "symfony/finder": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sammyjo20\\Lasso\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sammyjo20\\Lasso\\LassoServiceProvider"
+            ]
+        }
+    }
+}
