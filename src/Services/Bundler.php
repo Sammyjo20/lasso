@@ -5,6 +5,8 @@ namespace Sammyjo20\Lasso\Services;
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
+use Sammyjo20\Lasso\Factories\BundleFactory;
+use Sammyjo20\Lasso\Factories\ZipFactory;
 use Symfony\Component\Finder\Finder;
 
 class Bundler
@@ -12,17 +14,22 @@ class Bundler
     /**
      * @var Compiler
      */
-    public $compiler;
+    protected $compiler;
 
     /**
      * @var Filesystem
      */
-    public $filesystem;
+    protected $filesystem;
 
     /**
      * @var string
      */
-    public $bundle_id;
+    protected $bundle_id;
+
+    /**
+     * @var string
+     */
+    protected $environment;
 
     /**
      * Bundler constructor.
@@ -30,101 +37,100 @@ class Bundler
     public function __construct()
     {
         $this->compiler = new Compiler();
-
         $this->filesystem = new Filesystem();
-
         $this->bundle_id = Str::random(20);
+        $this->environment = app()->environment();
+
+        $this->deleteLassoDirectory();
     }
 
-    public function execute()
+    /**
+     * @return void
+     */
+    private function deleteLassoDirectory(): void
     {
-        $public_path = config('lasso.upload.public_path');
-
-        // $this->compiler->buildAssets();
-
-        // Command completed,
-
-        $asset_url = config('app.asset_url', null);
-
-        // Now let's move all the files (except excluded to a new folder)
-        $this->filesystem->copyDirectory($public_path, '.lasso/bundle');
-
-        // Clean any excluded files/directories
-        (new BundleCleaner())->execute();
-
-        // Now make a custom mix-manifest file but replace the location to be the CDN url.
-        $manifest = array_map(function ($value) use ($asset_url) {
-            return $asset_url . '/' . $this->bundle_id . $value;
-        }, get_object_vars($manifest));
-
-        // Replace the old manifest with the new
-        $this->filesystem->put('.lasso/bundle/mix-manifest.json', json_encode($manifest));
-
-        // Copy files to filesystem. (use Symfony's Finder to help)
-        $finder = new Finder();
-        $items = $finder
-            ->in(base_path('.lasso/bundle'))
-            ->files();
-
-        // Make a new directory
-        $disk = config('lasso.filesystem.disk');
-        $directory = config('lasso.filesystem.directory');
-
-        Storage::disk($disk)
-            ->makeDirectory($directory . '/' . $this->bundle_id . '/');
-
-        foreach ($items as $item) {
-            $this->uploadFile($item);
-        }
-
-        // Now create a "bundle-info.json" file that we can use to grab the files from.
-        // Todo: Will have the ability to roll back to previous assets if something bad happens.
-
-        $this->createBundleInfo();
-
-        // Delete the .lasso folder
         $this->filesystem->deleteDirectory('.lasso');
     }
 
     /**
-     * @param $file
+     * @param string $bundle_directory
+     * @return string
      */
-    public function uploadFile($file)
+    private function createZipArchiveFromBundle(string $bundle_directory): string
     {
-        $disk = config('lasso.filesystem.disk');
-        $directory = config('lasso.filesystem.directory');
+        $files = (new Finder())
+            ->in(base_path('.lasso/bundle'))
+            ->files();
 
-        $path = $directory . '/' . $this->bundle_id . '/' . $file->getRelativePathName();
+        $relative_path = '.lasso/dist/' . $this->bundle_id . '.zip';
 
-        Storage::disk($disk)
-            ->put($path, $file->getContents(), 'public');
+        $zip_path = base_path($relative_path);
+
+        $zip = new ZipFactory($zip_path);
+
+        foreach ($files as $file) {
+            $zip->add($file->getPathname(), $file->getRelativePathname());
+        }
+
+        $zip->closeZip();
+
+        return $zip_path;
+    }
+
+    public function execute()
+    {
+        $mode = config('lasso.mode');
+        $public_path = config('lasso.upload.public_path');
+
+        $this->compiler->buildAssets();
+
+        // Command completed,
+        $asset_url = config('app.asset_url', null);
+
+        // Now let's move all the files into a temporary location.
+        $this->filesystem->copyDirectory($public_path, '.lasso/bundle');
+
+        $this->filesystem->ensureDirectoryExists('.lasso/dist');
+
+        // Clean any excluded files/directories from the bundle
+        (new BundleCleaner())->execute();
+
+        // Todo: If the mode === CDN, we need to process the mix-manifest too.
+
+        //        $manifest = array_map(function ($value) use ($asset_url) {
+//            return $asset_url . '/' . $this->bundle_id . $value;
+//        }, get_object_vars($manifest));
+//
+//        $this->filesystem->put('.lasso/bundle/mix-manifest.json', json_encode($manifest));
+
+        $zip = $this->createZipArchiveFromBundle('.lasso/bundle');
+
+        // Once the Zip is done, we can create the bundle-info file.
+        $bundle_info = BundleFactory::create($this->bundle_id);
+
+        // Create the bundle info as a file.
+        $this->filesystem->put(base_path('.lasso/dist/bundle-info.json'), $bundle_info);
+
+        $this->uploadFile($zip, $this->bundle_id . '.zip');
+        $this->uploadFile(base_path('.lasso/dist/bundle-info.json'), 'bundle-info.json');
+
+        // Delete the .lasso folder
+        $this->deleteLassoDirectory();
     }
 
     /**
-     *
+     * @param string $path
+     * @param string $name
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function createBundleInfo()
+    public function uploadFile(string $path, string $name)
     {
-        $env = app()->environment();
-        $disk = config('lasso.filesystem.disk');
-        $directory = config('lasso.filesystem.directory');
+        $disk = config('lasso.upload.disk');
+        $directory = config('lasso.upload.upload_assets_to');
 
-        $mode = config('lasso.compiler.mode');
-        $non_cdn_items = config('lasso.compiler.non_cdn_items', []);
-
-        // Todo: Perhaps for non-cdn folders we should zip them up? That would definitely make it
-        // easer to download on the the servers?
-
-        $info = [
-            'current' => [
-                'id' => $this->bundle_id,
-                'mode' => $mode,
-                'pull' => $non_cdn_items,
-            ],
-            'previous' => null,
-        ];
+        $upload_path = $directory . '/' . $this->environment . '/' . $name;
 
         Storage::disk($disk)
-            ->put($directory . '/bundle-info-' . $env . '.json', json_encode($info), 'private');
+            ->put($upload_path, $this->filesystem->get($path));
     }
 }

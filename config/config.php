@@ -20,7 +20,7 @@ return [
         'disk' => 'cdn',
 
         // Which directory on the disk should we put files?
-        'upload_assets_to' => 'public',
+        'upload_assets_to' => 'lasso',
 
         // Which path to look at
         'public_path' => public_path(),

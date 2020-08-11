@@ -16,7 +16,9 @@
         "symfony/process": "^5.0",
         "illuminate/filesystem": "^7.",
         "symfony/finder": "^5.0",
-        "illuminate/console": "^7.25"
+        "illuminate/console": "^7.25",
+        "ext-json": "*",
+        "ext-zip": "*"
     },
     "autoload": {
         "psr-4": {

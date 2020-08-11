@@ -13,7 +13,7 @@ class CreateBundle extends Command
      *
      * @var string
      */
-    protected $signature = 'lasso:publish';
+    protected $signature = 'lasso:publish {-f?}';
 
     /**
      * The console command description.
@@ -40,6 +40,11 @@ class CreateBundle extends Command
     public function handle(Console $console)
     {
         $console->setCommand($this);
+
+        // $force = $this->option('f');
+
+        // Check to see if the current environment is supported
+        // Also check to see if the git commit contains "no-lasso"
 
         return (new Bundler())->execute();
     }
