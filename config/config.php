@@ -27,11 +27,11 @@ return [
 
     'filesystem' => [
 
-        'directory' => 'public',
+        'disk' => 'cdn',
 
         'driver' => 's3',
 
-        'disk' => 'cdn',
+        'directory' => 'public',
 
     ],
 
