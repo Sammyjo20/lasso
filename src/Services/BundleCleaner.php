@@ -27,12 +27,12 @@ class BundleCleaner
     {
         $this->forbidden_files = array_merge(
             $this->forbidden_files,
-            config('lasso.compiler.excluded_files')
+            config('lasso.upload.excluded_files')
         );
 
         $this->forbidden_directories = array_merge(
             $this->forbidden_directories,
-            config('lasso.compiler.excluded_directories')
+            config('lasso.upload.excluded_directories')
         );
     }
 

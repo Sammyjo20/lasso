@@ -27,7 +27,13 @@ class Compiler
             'Compiling assets (%s) ⏳', config('lasso.compiler.command')
         ));
 
-        CommandHelper::run(config('lasso.compiler.command'), function ($process) {
+        $command = sprintf(
+            '%s run %s',
+            config('lasso.compiler.package_manager'),
+            config('lasso.compiler.script')
+        );
+
+        CommandHelper::run($command, function ($process) {
             // Something very bad has happened.
         });
     }

@@ -2,13 +2,28 @@
 
 return [
 
+    'mode' => 'local', // Local or CDN? CDN, will replace every item in the mix-manifest.json with the cdn-ified directory.
+
+    'cdn_url' => null,
+
     'compiler' => [
 
-        // Options: Hybrid - Images and other assets aren't served by the CDN, Full - Everything in CDN.
-        'mode' => 'hybrid',
+        'package_manager' => 'npm', // Supports npm, yarn.
 
-        // What to run, this could be anything, yarn run dev, yarn run production, npm run compile.
-        'command' => 'npm run dev',
+        'script' => 'dev', // *package_manager* run *script*
+
+    ],
+
+    'upload' => [
+
+        // Which disk shall we use?
+        'disk' => 'cdn',
+
+        // Which directory on the disk should we put files?
+        'upload_assets_to' => 'public',
+
+        // Which path to look at
+        'public_path' => public_path(),
 
         // Files that shouldn't be included in the bundle
         'excluded_files' => [],
@@ -16,29 +31,11 @@ return [
         // Directories that shouldn't be included in the bundle
         'excluded_directories' => [],
 
-        // IF mode is hybrid, download these folders to the local server.
-        'non_cdn_items' => [
-            'images'
-        ],
-
-    ],
-
-    // What filesystem to use to upload to.
-
-    'filesystem' => [
-
-        'disk' => 'cdn',
-
-        'driver' => 's3',
-
-        'directory' => 'public',
-
     ],
 
     'hooks' => [
-
         // Have events that happen throughout the process.
-
+        // Not sure what this would be, but I will leave this here.
     ],
 
 ];

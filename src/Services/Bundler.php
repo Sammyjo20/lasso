@@ -38,23 +38,19 @@ class Bundler
 
     public function execute()
     {
-         $this->compiler->buildAssets();
+        $public_path = config('lasso.upload.public_path');
+
+        // $this->compiler->buildAssets();
 
         // Command completed,
-
-        $manifest = json_decode(
-            file_get_contents(public_path('mix-manifest.json'))
-        );
 
         $asset_url = config('app.asset_url', null);
 
         // Now let's move all the files (except excluded to a new folder)
-        $this->filesystem->ensureDirectoryExists('public');
-        $this->filesystem->copyDirectory(public_path(), '.lasso/bundle');
+        $this->filesystem->copyDirectory($public_path, '.lasso/bundle');
 
         // Clean any excluded files/directories
-        $cleaner = new BundleCleaner();
-        $cleaner->execute();
+        (new BundleCleaner())->execute();
 
         // Now make a custom mix-manifest file but replace the location to be the CDN url.
         $manifest = array_map(function ($value) use ($asset_url) {
@@ -129,6 +125,6 @@ class Bundler
         ];
 
         Storage::disk($disk)
-            ->put($directory . '/bundle-info-' . $env .'.json', json_encode($info), 'private');
+            ->put($directory . '/bundle-info-' . $env . '.json', json_encode($info), 'private');
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Sammyjo20\Lasso\Commands\CreateBundle;
 use Sammyjo20\Lasso\Commands\FetchBundle;
 use Sammyjo20\Lasso\Container\Console;
+use Sammyjo20\Lasso\Helpers\ConfigValidator;
 
 class LassoServiceProvider extends BaseServiceProvider
 {
@@ -17,6 +18,8 @@ class LassoServiceProvider extends BaseServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->app->instance(Console::class, new Console());
+
+            (new ConfigValidator())->validate();
 
             $this->commands([
                 CreateBundle::class,
