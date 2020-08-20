@@ -190,8 +190,6 @@ class Fetcher
                 }
 
                 // Done!
-
-                $this->deleteLassoDirectory();
             }
         } catch (\Exception $ex) {
             // If anything goes wrong inside this try block,
@@ -200,5 +198,10 @@ class Fetcher
 
             $this->rollBack($ex);
         }
+
+        // If it's all successful, it's time to clean everything up.
+        $this->deleteLassoDirectory();
+
+        // Now we should go and delete the old bundles. We will do that tomorrow.
     }
 }
