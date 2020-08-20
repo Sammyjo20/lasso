@@ -5,7 +5,7 @@ namespace Sammyjo20\Lasso\Services;
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
-use Sammyjo20\Lasso\Factories\BundleFactory;
+use Sammyjo20\Lasso\Factories\BundleMetaFactory;
 use Sammyjo20\Lasso\Factories\ZipFactory;
 use Symfony\Component\Finder\Finder;
 
@@ -106,16 +106,18 @@ class Bundler
         $zip = $this->createZipArchiveFromBundle('.lasso/bundle');
 
         // Once the Zip is done, we can create the bundle-info file.
-        $bundle_info = BundleFactory::create($this->bundle_id);
+        $bundle_info = BundleMetaFactory::create($this->bundle_id, $zip);
 
         // Create the bundle info as a file.
-        $this->filesystem->put(base_path('.lasso/dist/bundle-info.json'), $bundle_info);
+        $this->filesystem->put(base_path('.lasso/dist/bundle-meta.next.json'), $bundle_info);
 
         $this->uploadFile($zip, $this->bundle_id . '.zip');
-        $this->uploadFile(base_path('.lasso/dist/bundle-info.json'), 'bundle-info.json');
+        $this->uploadFile(base_path('.lasso/dist/bundle-meta.next.json'), 'bundle-meta.next.json');
 
         // Delete the .lasso folder
         $this->deleteLassoDirectory();
+
+        // Done.
     }
 
     /**

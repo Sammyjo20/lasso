@@ -30,9 +30,7 @@ class Compiler
             config('lasso.compiler.script')
         );
 
-        $this->console->info(sprintf(
-            'Compiling assets (%s) ⏳', $command
-        ));
+        $this->console->info('🔥 Compiling assets...');
 
         CommandHelper::run($command, function ($process) {
 //            throw new CompilerFailedException('Something really bad happened.');

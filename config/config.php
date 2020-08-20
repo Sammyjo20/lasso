@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Str;
+
 return [
 
     'mode' => 'local', // Local or CDN? CDN, will replace every item in the mix-manifest.json with the cdn-ified directory.
@@ -20,12 +22,12 @@ return [
         'disk' => 'cdn',
 
         // Which directory on the disk should we put files?
-        'upload_assets_to' => 'lasso',
+        'upload_assets_to' => Str::slug('lasso-' . env('APP_NAME','laravel')),
 
         // Which path to look at
         'public_path' => public_path(),
 
-        // Files that shouldn't be included in the bundle
+        // Files that shouldn't be included in the bundle.
         'excluded_files' => [],
 
         // Directories that shouldn't be included in the bundle

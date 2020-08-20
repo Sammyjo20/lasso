@@ -42,7 +42,7 @@ class ZipExtractor
      */
     private function openZip(): void
     {
-        $this->zip_file->open($this->zip_path, ZipArchive::RDONLY);
+        $this->zip_file->open($this->zip_path, ZipArchive::CREATE);
     }
 
     /**

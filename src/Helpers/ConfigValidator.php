@@ -63,7 +63,7 @@ class ConfigValidator
      */
     private function checkIfPublicPathExists($value): bool
     {
-        return $this->filesystem->exists($value);
+        return $this->filesystem->exists($value) && $this->filesystem->isReadable($value) && $this->filesystem->isWritable($value);
     }
 
     /**
