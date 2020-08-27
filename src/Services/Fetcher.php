@@ -42,7 +42,7 @@ class Fetcher
         $this->lasso_path = sprintf(
             '%s/%s',
             rtrim(config('lasso.upload.upload_assets_to'), '/'),
-            app()->environment()
+            config('lasso.storage.environment')
         );
 
         $this->backup_service = new Backup($this->local_filesystem, base_path('.lasso/backup'));
@@ -95,7 +95,15 @@ class Fetcher
         $filesystem = Storage::disk($this->lasso_disk);
         $base_path = $this->lasso_path;
 
-        // Firstly, let's check if the filesystem has a "bundle-meta.next.json"
+        // Firstly, let's check if the local filesystem has a "lasso-bundle.json"
+        // file in it's root directory.
+
+        if ($this->local_filesystem->exists(base_path('lasso-bundle.json'))) {
+            $file = $this->local_filesystem->get(base_path('lasso-bundle.json'));
+            return (array)json_decode($file, true);
+        }
+
+        // Secondly, let's check if the filesystem has a "bundle-meta.next.json"
         // file in it's directory. If we have this, we will want to prefer this,
         // as Lasso has created this for our next deployment.
 

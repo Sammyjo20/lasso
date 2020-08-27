@@ -33,11 +33,28 @@ return [
         // Directories that shouldn't be included in the bundle
         'excluded_directories' => [],
 
+        'push_to_git' => true, // git add "lasso" && git commit -m"Lasso Assets 🐎" --author="Lasso" && git push
+
     ],
 
-    'hooks' => [
-        // Have events that happen throughout the process.
-        // Not sure what this would be, but I will leave this here.
+    'storage' => [
+
+        'environment' => env('APP_ENV', 'production'),
+
+        'bundles_to_keep' => 5,
+
+    ],
+
+    'webhooks' => [
+        // Trigger webhooks for events that happen inside of Lasso
+
+        'publish' => [
+            //
+        ],
+
+        'retrieve' => [
+            //
+        ],
     ],
 
 ];

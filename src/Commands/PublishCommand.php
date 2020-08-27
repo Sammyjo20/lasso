@@ -4,6 +4,7 @@ namespace Sammyjo20\Lasso\Commands;
 
 use Illuminate\Console\Command;
 use Sammyjo20\Lasso\Container\Console;
+use Sammyjo20\Lasso\Helpers\ConfigValidator;
 use Sammyjo20\Lasso\Services\Bundler;
 
 class PublishCommand extends Command
@@ -13,7 +14,7 @@ class PublishCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'lasso:publish {-f?}';
+    protected $signature = 'lasso:publish {--no-git}';
 
     /**
      * The console command description.
@@ -39,16 +40,17 @@ class PublishCommand extends Command
      */
     public function handle(Console $console)
     {
-        $console->setCommand($this);
+        (new ConfigValidator())->validate();
 
-        // $force = $this->option('f');
+        $console->setCommand($this);
 
         // Check to see if the current environment is supported
         // Also check to see if the git commit contains "no-lasso"
+        $use_git = !$this->option('no-git');
 
         $this->info('🏁 Starting to publish assets');
 
-        (new Bundler())->execute();
+        (new Bundler())->execute($use_git);
 
         $this->info('🐎 Successfully published assets to Filesystem! Yee-haw!');
     }

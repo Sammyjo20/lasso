@@ -5,6 +5,7 @@ namespace Sammyjo20\Lasso\Commands;
 
 use Illuminate\Console\Command;
 use Sammyjo20\Lasso\Container\Console;
+use Sammyjo20\Lasso\Helpers\ConfigValidator;
 use Sammyjo20\Lasso\Services\Fetcher;
 
 class FetchCommand extends Command
@@ -40,6 +41,8 @@ class FetchCommand extends Command
      */
     public function handle(Console $console)
     {
+        (new ConfigValidator())->validate();
+
         $console->setCommand($this);
 
         // 1. Pull down the zip and unzip the bundle

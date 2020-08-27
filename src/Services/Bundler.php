@@ -39,7 +39,7 @@ class Bundler
         $this->compiler = new Compiler();
         $this->filesystem = new Filesystem();
         $this->bundle_id = Str::random(20);
-        $this->environment = app()->environment();
+        $this->environment = config('lasso.storage.environment');
 
         $this->deleteLassoDirectory();
     }
@@ -77,7 +77,19 @@ class Bundler
         return $zip_path;
     }
 
-    public function execute()
+    /**
+     * @param array $data
+     */
+    private function sendWebhooks(array $data)
+    {
+        $webhooks = config('lasso.webhooks.publish', []);
+
+        foreach($webhooks as $webhook) {
+            Webhook::send($webhook, Webhook::PUBLISH, $data);
+        }
+    }
+
+    public function execute(bool $use_git = true)
     {
         $mode = config('lasso.mode');
         $public_path = config('lasso.upload.public_path');
@@ -108,16 +120,35 @@ class Bundler
         // Once the Zip is done, we can create the bundle-info file.
         $bundle_info = BundleMetaFactory::create($this->bundle_id, $zip);
 
-        // Create the bundle info as a file.
-        $this->filesystem->put(base_path('.lasso/dist/bundle-meta.next.json'), $bundle_info);
 
+        // If we are using Git, we will create a lasso-bundle.json file
+        // locally inside the git repository, which will then be committed.
+
+        if ($use_git === true) {
+            $this->filesystem->replace(base_path('lasso-bundle.json'), $bundle_info);
+        } else {
+            $this->filesystem->put(base_path('.lasso/dist/bundle-meta.next.json'), $bundle_info);
+            $this->uploadFile(base_path('.lasso/dist/bundle-meta.next.json'), 'bundle-meta.next.json');
+        }
+
+        // Create the bundle info as a file.
         $this->uploadFile($zip, $this->bundle_id . '.zip');
-        $this->uploadFile(base_path('.lasso/dist/bundle-meta.next.json'), 'bundle-meta.next.json');
 
         // Delete the .lasso folder
         $this->deleteLassoDirectory();
 
-        // Done.
+        $push_to_git = config('lasso.upload.push_to_git', false);
+
+        // If we're using git, commit the lasso-bundle file.
+        if ($use_git === true && $push_to_git === true) {
+            (new Committer())->commitAndPushBundle();
+        }
+
+        // Done. Send webhooks
+
+        $this->sendWebhooks(
+            (array)json_decode($bundle_info)
+        );
     }
 
     /**
