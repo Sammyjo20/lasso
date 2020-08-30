@@ -143,6 +143,11 @@ class Bundler
             (new Committer())->commitAndPushBundle();
         }
 
+        // Now let's try to push this onto our history file.
+        if ($use_git === true) {
+            (new BundleHistory())->appendToHistory($this->bundle_id);
+        }
+
         // Done. Send webhooks
 
         $this->sendWebhooks(

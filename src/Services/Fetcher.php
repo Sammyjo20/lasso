@@ -32,6 +32,11 @@ class Fetcher
     protected $backup_service;
 
     /**
+     * @var
+     */
+    protected $use_git;
+
+    /**
      * Fetcher constructor.
      */
     public function __construct()
@@ -46,6 +51,7 @@ class Fetcher
         );
 
         $this->backup_service = new Backup($this->local_filesystem, base_path('.lasso/backup'));
+        $this->use_git = false;
     }
 
     /**
@@ -99,6 +105,7 @@ class Fetcher
         // file in it's root directory.
 
         if ($this->local_filesystem->exists(base_path('lasso-bundle.json'))) {
+            $this->use_git = true;
             $file = $this->local_filesystem->get(base_path('lasso-bundle.json'));
             return (array)json_decode($file, true);
         }
@@ -219,5 +226,8 @@ class Fetcher
         $this->deleteLassoDirectory();
 
         // Now we should go and delete the old bundles. We will do that tomorrow.
+        if ($this->use_git === true) {
+            (new BundleHistory())->cleanFromHistory();
+        }
     }
 }

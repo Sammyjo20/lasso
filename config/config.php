@@ -46,11 +46,11 @@ return [
 
         /*
          * After running "php artisan lasso:push", by default Lasso will
-         * create a "lasso-bundle.json" file and automatically commit it to
-         * Git. To disable this functionality, change the setting below or
-         * use "php artisan lasso:push --no-git".
+         * create a "lasso-bundle.json" file. If you would like Lasso to
+         * automatically commit and push the file to Git after running the
+         * command, enable this.
          */
-        'push_to_git' => true,
+        'push_to_git' => false,
 
         /*
          * When using Lasso with Git, you will be able to roll-back your
