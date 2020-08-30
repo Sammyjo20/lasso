@@ -66,7 +66,7 @@ class Fetcher
 
     /**
      * @param \Exception $exception
-     * @throws \Sammyjo20\Lasso\Exceptions\RestoreFailed
+     * @throws \Exception
      */
     private function rollBack(\Exception $exception)
     {
@@ -78,7 +78,7 @@ class Fetcher
 
         $this->deleteLassoDirectory();
 
-        throw new $exception;
+        throw $exception;
     }
 
     /**
