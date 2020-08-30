@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Sammyjo20\Lasso\Exceptions\FetchCommandFailed;
 use Sammyjo20\Lasso\Factories\ZipExtractor;
 use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
+use Sammyjo20\Lasso\Helpers\FileLister;
 
 class Fetcher
 {
@@ -184,19 +185,27 @@ class Fetcher
 
                 // Now it's time to unzip!
                 (new ZipExtractor($bundle))
-                    ->extractTo(base_path('.lasso/unpackaged'));
+                    ->extractTo(base_path('.lasso/bundle'));
 
-                // Now replace those assets, baby!
-                $files = $this->local_filesystem->allFiles(base_path('.lasso/unpackaged'));
+                $files = (new FileLister(base_path('.lasso/bundle')))
+                    ->getFinder();
 
                 foreach($files as $file) {
-                    $from = $public_path . '/' . $file->getRelativePathname();
-                    $to = $file->getContents();
+                    $relative_path = $file->getRelativePathName();
+                    $path = $public_path . '/' . $relative_path;
 
-                    $this->local_filesystem->replace($from, $to);
+                    if ($this->local_filesystem->exists($path)) {
+                        $this->local_filesystem->delete($path);
+                    }
+
+                    $this->local_filesystem->ensureDirectoryExists(
+                        $public_path . '/' . $file->getRelativePath()
+                    );
+
+                    $this->local_filesystem->put(
+                        $path, $file->getContents()
+                    );
                 }
-
-                // Done!
             }
         } catch (\Exception $ex) {
             // If anything goes wrong inside this try block,
