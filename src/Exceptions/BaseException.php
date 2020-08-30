@@ -2,8 +2,13 @@
 
 namespace Sammyjo20\Lasso\Exceptions;
 
-class CommitFailedException extends \Exception
+class BaseException extends \Exception
 {
+    /**
+     * @var string
+     */
+    public static $event = 'An exception was thrown.';
+
     /**
      * @param string $reason
      * @return static
@@ -11,7 +16,7 @@ class CommitFailedException extends \Exception
     public static function because(string $reason)
     {
         return new static(sprintf(
-            'Failed to push to git remote. Reason: %s', $reason
+            '%s Reason: %s', static::$event, $reason
         ));
     }
 }

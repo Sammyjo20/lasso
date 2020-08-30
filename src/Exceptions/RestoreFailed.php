@@ -2,7 +2,7 @@
 
 namespace Sammyjo20\Lasso\Exceptions;
 
-class BackupRestoreException extends \Exception
+class RestoreFailed extends BaseException
 {
-
+    //
 }

@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Http;
 
 class Webhook
 {
-    public const PUBLISH = 'publish';
+    public const PUSH_EVENT = 'push';
 
-    public const RETRIEVE = 'retrieve';
+    public const PULL_EVENT = 'pull';
 
     /**
      * @param string $url

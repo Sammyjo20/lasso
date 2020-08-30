@@ -3,7 +3,7 @@
 namespace Sammyjo20\Lasso\Services;
 
 use Illuminate\Filesystem\Filesystem;
-use Sammyjo20\Lasso\Exceptions\CommitFailedException;
+use Sammyjo20\Lasso\Exceptions\CommittingFailed;
 use Sammyjo20\Lasso\Helpers\CommandHelper;
 
 class Committer
@@ -22,14 +22,14 @@ class Committer
     }
 
     /**
-     * @throws CommitFailedException
+     * @throws CommittingFailed
      */
     public function commitAndPushBundle()
     {
         $path = base_path('lasso-bundle.json');
 
         if (!$this->filesystem->exists($path)) {
-            throw new CommitFailedException('The "lasso-bundle.json" could not be found.');
+            throw new CommittingFailed('The "lasso-bundle.json" could not be found.');
         }
 
         $command = "git add 'lasso-bundle.json' && git commit -m'Lasso Assets 🐎' --author='Lasso <>' && git push";

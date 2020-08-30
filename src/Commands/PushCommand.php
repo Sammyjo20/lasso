@@ -1,28 +1,27 @@
 <?php
 
-
 namespace Sammyjo20\Lasso\Commands;
 
 use Illuminate\Console\Command;
 use Sammyjo20\Lasso\Container\Console;
 use Sammyjo20\Lasso\Helpers\ConfigValidator;
-use Sammyjo20\Lasso\Services\Fetcher;
+use Sammyjo20\Lasso\Services\Bundler;
 
-class FetchCommand extends Command
+class PushCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'lasso:fetch';
+    protected $signature = 'lasso:push {--no-git}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Grab the latest Lasso bundle from the filesystem, and pull down the files.';
+    protected $description = 'Run the asset compiler and upload the assets to the disk.';
 
     /**
      * Create a new command instance.
@@ -45,12 +44,14 @@ class FetchCommand extends Command
 
         $console->setCommand($this);
 
-        // 1. Pull down the zip and unzip the bundle
-        // 2. Check the integrity of the ZIP
-        // 3. Take a Backup of the public_path, before tampering with it.
-        // 4. If something goes wrong, we just roll back to the backup, but after that throw an exception.
-        // 5. If something doesn't go wrong, whoop.
+        // Check to see if the current environment is supported
+        // Also check to see if the git commit contains "no-lasso"
+        $use_git = !$this->option('no-git');
 
-        return (new Fetcher())->execute();
+        $this->info('🏁 Starting to publish assets');
+
+        (new Bundler())->execute($use_git);
+
+        $this->info('🐎 Successfully published assets to Filesystem! Yee-haw!');
     }
 }

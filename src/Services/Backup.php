@@ -3,7 +3,7 @@
 namespace Sammyjo20\Lasso\Services;
 
 use Illuminate\Filesystem\Filesystem;
-use Sammyjo20\Lasso\Exceptions\BackupRestoreException;
+use Sammyjo20\Lasso\Exceptions\RestoreFailed;
 
 class Backup
 {
@@ -36,15 +36,15 @@ class Backup
 
     /**
      * @return bool
-     * @throws BackupRestoreException
+     * @throws RestoreFailed
      */
     public function restoreBackup(): bool
     {
         if (!$this->filesystem->exists($this->destination)) {
-            throw new BackupRestoreException('Couldn\'t find backup file.');
+            throw RestoreFailed::because('Couldn\'t find backup file.');
         }
 
-        $public_path = config('lasso.upload.public_path');
+        $public_path = config('lasso.public_path');
 
         $this->filesystem->cleanDirectory($public_path);
         $this->filesystem->move($this->destination, $public_path);
@@ -59,7 +59,7 @@ class Backup
      */
     public function startBackup(): bool
     {
-        $public_path = config('lasso.upload.public_path');
+        $public_path = config('lasso.public_path');
         $backup_destination = $this->destination;
 
         $success = $this->filesystem->copyDirectory(

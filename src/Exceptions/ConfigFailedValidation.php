@@ -2,16 +2,10 @@
 
 namespace Sammyjo20\Lasso\Exceptions;
 
-class ConfigFailedValidation extends \Exception
+class ConfigFailedValidation extends BaseException
 {
     /**
-     * @param string $reason
-     * @return static
+     * @var string
      */
-    public static function because(string $reason)
-    {
-        return new static(sprintf(
-            'Failed to process configuration. Reason: %s', $reason
-        ));
-    }
+    public static $event = 'Failed to parse configuration.';
 }

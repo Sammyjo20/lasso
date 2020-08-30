@@ -4,8 +4,7 @@ namespace Sammyjo20\Lasso\Services;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
-use Sammyjo20\Lasso\Exceptions\BackupRestoreException;
-use Sammyjo20\Lasso\Exceptions\FetchCommandException;
+use Sammyjo20\Lasso\Exceptions\FetchCommandFailed;
 use Sammyjo20\Lasso\Factories\ZipExtractor;
 use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
 
@@ -37,11 +36,11 @@ class Fetcher
     public function __construct()
     {
         $this->local_filesystem = new Filesystem();
-        $this->lasso_disk = config('lasso.upload.disk');
+        $this->lasso_disk = config('lasso.storage.disk');
 
         $this->lasso_path = sprintf(
             '%s/%s',
-            rtrim(config('lasso.upload.upload_assets_to'), '/'),
+            rtrim(config('lasso.storage.upload_to'), '/'),
             config('lasso.storage.environment')
         );
 
@@ -67,7 +66,7 @@ class Fetcher
 
     /**
      * @param \Exception $exception
-     * @throws BackupRestoreException
+     * @throws \Sammyjo20\Lasso\Exceptions\RestoreFailed
      */
     private function rollBack(\Exception $exception)
     {
@@ -79,7 +78,7 @@ class Fetcher
 
         $this->deleteLassoDirectory();
 
-        throw new BackupRestoreException($exception);
+        throw new $exception;
     }
 
     /**
@@ -87,7 +86,7 @@ class Fetcher
      * decode the data and give it to us as an array.
      *
      * @return array
-     * @throws FetchCommandException
+     * @throws FetchCommandFailed
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function retrieveLatestBundleMeta(): array
@@ -117,7 +116,7 @@ class Fetcher
         // If we don't however. We need to throw an exception.
 
         if (!$filesystem->has($base_path . '/bundle-meta.json')) {
-            throw FetchCommandException::because('A valid "bundle-meta.json" file could not be found for the current environment.');
+            throw FetchCommandFailed::because('A valid "bundle-meta.json" file could not be found for the current environment.');
         }
 
         $file = $filesystem->get($base_path . '/bundle-meta.json');
@@ -128,7 +127,7 @@ class Fetcher
      * @param string $id
      * @param string $checksum
      * @return string
-     * @throws FetchCommandException
+     * @throws FetchCommandFailed
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function retrieveBundle(string $id, string $checksum): string
@@ -140,13 +139,13 @@ class Fetcher
             ->get($filesystem_path);
 
         if (!$zip) {
-            throw FetchCommandException::because('The bundle Zip could not be found or was inaccessible.');
+            throw FetchCommandFailed::because('The bundle Zip could not be found or was inaccessible.');
         }
 
         try {
             $this->local_filesystem->put($local_path, $zip);
         } catch (\Exception $ex) {
-            throw FetchCommandException::because('An error occurred while writing to the local path.');
+            throw FetchCommandFailed::because('An error occurred while writing to the local path.');
         }
 
         // Now we want to check if the integrity of the bundle is okay.
@@ -154,7 +153,7 @@ class Fetcher
         // incorrectly or tampered with!
 
         if (!BundleIntegrityHelper::verifyChecksum($local_path, $checksum)) {
-            throw FetchCommandException::because('The bundle Zip\'s checksum is incorrect.');
+            throw FetchCommandFailed::because('The bundle Zip\'s checksum is incorrect.');
         }
 
         return $local_path;
@@ -170,7 +169,7 @@ class Fetcher
         $bundle_info = $this->retrieveLatestBundleMeta();
 
         if (!isset($bundle_info['id']) || !isset($bundle_info['checksum'])) {
-            throw FetchCommandException::because('The bundle info was missing the required data.');
+            throw FetchCommandFailed::because('The bundle info was missing the required data.');
         }
 
         // Grab the Zip.
@@ -181,7 +180,7 @@ class Fetcher
 
         try {
             if ($this->backup_service->startBackup()) {
-                $public_path = rtrim(config('lasso.upload.public_path'), '/');
+                $public_path = rtrim(config('lasso.public_path'), '/');
 
                 // Now it's time to unzip!
                 (new ZipExtractor($bundle))

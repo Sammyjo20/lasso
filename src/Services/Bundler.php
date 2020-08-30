@@ -82,17 +82,16 @@ class Bundler
      */
     private function sendWebhooks(array $data)
     {
-        $webhooks = config('lasso.webhooks.publish', []);
+        $webhooks = config('lasso.webhooks.push', []);
 
         foreach($webhooks as $webhook) {
-            Webhook::send($webhook, Webhook::PUBLISH, $data);
+            Webhook::send($webhook, Webhook::PUSH_EVENT, $data);
         }
     }
 
     public function execute(bool $use_git = true)
     {
-        $mode = config('lasso.mode');
-        $public_path = config('lasso.upload.public_path');
+        $public_path = config('lasso.public_path');
 
         $this->compiler->buildAssets();
 
@@ -137,7 +136,7 @@ class Bundler
         // Delete the .lasso folder
         $this->deleteLassoDirectory();
 
-        $push_to_git = config('lasso.upload.push_to_git', false);
+        $push_to_git = config('lasso.storage.push_to_git', false);
 
         // If we're using git, commit the lasso-bundle file.
         if ($use_git === true && $push_to_git === true) {
@@ -158,8 +157,8 @@ class Bundler
      */
     public function uploadFile(string $path, string $name)
     {
-        $disk = config('lasso.upload.disk');
-        $directory = config('lasso.upload.upload_assets_to');
+        $disk = config('lasso.storage.disk');
+        $directory = config('lasso.storage.upload_to');
 
         $upload_path = $directory . '/' . $this->environment . '/' . $name;
 

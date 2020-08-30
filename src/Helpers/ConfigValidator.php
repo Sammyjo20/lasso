@@ -3,7 +3,6 @@
 namespace Sammyjo20\Lasso\Helpers;
 
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 use Sammyjo20\Lasso\Exceptions\ConfigFailedValidation;
 
 class ConfigValidator
@@ -34,27 +33,9 @@ class ConfigValidator
      * @param $value
      * @return bool
      */
-    private function checkMode($value): bool
+    private function checkCompilerScript($value): bool
     {
-        return Str::contains($value, ['local', 'cdn']);
-    }
-
-    /**
-     * @param $value
-     * @return bool
-     */
-    private function checkCdnUrl($value): bool
-    {
-        return !is_null($value) && filter_var($value, FILTER_SANITIZE_URL);
-    }
-
-    /**
-     * @param $value
-     * @return bool
-     */
-    private function checkPackageManager($value): bool
-    {
-        return Str::contains($value, ['npm', 'yarn']);
+        return !is_null($value);
     }
 
     /**
@@ -99,23 +80,11 @@ class ConfigValidator
      */
     public function validate(): void
     {
-        if (!$this->checkMode($this->get('mode'))) {
-            throw ConfigFailedValidation::because('The specified mode must be either "local" or "cdn".');
+        if (!$this->checkCompilerScript($this->get('compiler.script'))) {
+            throw ConfigFailedValidation::because('You must specify a script to run the compiler. (E.g: npm run production)');
         }
 
-        if ($this->get('mode') === 'cdn' && !$this->checkCdnUrl($this->get('cdn_url'))) {
-            throw ConfigFailedValidation::because('The specified CDN url is invalid.');
-        }
-
-        if (!$this->checkPackageManager($this->get('compiler.package_manager'))) {
-            throw ConfigFailedValidation::because('The specified package manager must be either "npm" or "yarn".');
-        }
-
-        if (!$this->checkIfPublicPathExists($this->get('upload.public_path'))) {
-            throw ConfigFailedValidation::because('The specified public directory is not a valid or accessible directory.');
-        }
-
-        if (!$this->checkDiskExists($this->get('upload.disk'))) {
+        if (!$this->checkDiskExists($this->get('storage.disk'))) {
             throw ConfigFailedValidation::because('The specified upload disk is not a valid disk.');
         }
 
@@ -125,6 +94,10 @@ class ConfigValidator
 
         if (!$this->checkBundleToKeepCount($this->get('storage.bundles_to_keep'))) {
             throw ConfigFailedValidation::because('You must specify how many bundles should be kept. (Min: 1)');
+        }
+
+        if (!$this->checkIfPublicPathExists($this->get('public_path'))) {
+            throw ConfigFailedValidation::because('The specified public directory is not a valid or accessible directory.');
         }
     }
 }
