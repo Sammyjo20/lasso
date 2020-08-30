@@ -57,19 +57,23 @@ class BundleHistory
     }
 
     /**
-     * @param string $bundle
+     * @param string $bundle_id
      * @return bool
      * @throws BundleHistoryException
      */
-    public function appendToHistory(string $bundle): bool
+    public function appendToHistory(string $bundle_id): bool
     {
         $disk = $this->cloud_disk;
         $path = $this->history_path;
 
         $history = $this->getHistory();
 
+        // Todo: Refactor this by retrieving the full path from an argument.
+        $base_directory = rtrim(config('lasso.storage.upload_to'), '/');
+        $bundle_path = $base_directory . '/' . config('lasso.storage.environment') . '/' . $bundle_id . '.zip';
+
         try {
-            $history[] = $bundle;
+            $history[] = $bundle_path;
             return Storage::disk($disk)->put($path, json_encode($history));
         } catch (\Exception $ex) {
             throw new BundleHistoryException('Failed to update the history.json file!');
@@ -88,16 +92,23 @@ class BundleHistory
         $history = $this->getHistory();
         $bundles_to_keep = config('lasso.storage.bundles_to_keep');
 
-        if (count($history) < $bundles_to_keep) {
-            return false;
+        if (count($history) > $bundles_to_keep) {
+            $delete = array_slice($history, 0, $bundles_to_keep);
+
+            foreach ($delete as $bundle) {
+                // Attempt to delete the bundle.
+                Storage::disk($disk)->delete($bundle);
+            }
+
+            $keep = array_slice($history, $bundles_to_keep);
+
+            try {
+                return Storage::disk($disk)->put($path, json_encode($keep));
+            } catch (\Exception $ex) {
+                throw new BundleHistoryException('Failed to update the history.json file!');
+            }
         }
 
-        $history = array_splice($history, -$bundles_to_keep);
-
-        try {
-            return Storage::disk($disk)->put($path, json_encode($history));
-        } catch (\Exception $ex) {
-            throw new BundleHistoryException('Failed to update the history.json file!');
-        }
+        return false;
     }
 }
