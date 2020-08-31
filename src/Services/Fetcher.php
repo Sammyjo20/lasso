@@ -37,17 +37,23 @@ class Fetcher
     protected $use_git;
 
     /**
+     * @var string
+     */
+    protected $environment;
+
+    /**
      * Fetcher constructor.
      */
     public function __construct()
     {
         $this->local_filesystem = new Filesystem();
         $this->lasso_disk = config('lasso.storage.disk');
+        $this->environment = config('lasso.storage.environment') ?? 'global';
 
         $this->lasso_path = sprintf(
             '%s/%s',
             rtrim(config('lasso.storage.upload_to'), '/'),
-            config('lasso.storage.environment')
+            $this->environment
         );
 
         $this->backup_service = new Backup($this->local_filesystem, base_path('.lasso/backup'));
@@ -224,10 +230,5 @@ class Fetcher
 
         // If it's all successful, it's time to clean everything up.
         $this->deleteLassoDirectory();
-
-        // Now we should go and delete the old bundles. We will do that tomorrow.
-        if ($this->use_git === true) {
-            (new BundleHistory())->cleanFromHistory();
-        }
     }
 }

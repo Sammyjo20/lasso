@@ -60,15 +60,6 @@ class ConfigValidator
      * @param $value
      * @return bool
      */
-    private function checkEnvironmentSpecified($value): bool
-    {
-        return !is_null($value);
-    }
-
-    /**
-     * @param $value
-     * @return bool
-     */
     private function checkBundleToKeepCount($value): bool
     {
         return is_int($value) && $value > 0;
@@ -88,11 +79,7 @@ class ConfigValidator
             throw ConfigFailedValidation::because('The specified upload disk is not a valid disk.');
         }
 
-        if (!$this->checkEnvironmentSpecified($this->get('storage.environment'))) {
-            throw ConfigFailedValidation::because('There was no environment specified.');
-        }
-
-        if (!$this->checkBundleToKeepCount($this->get('storage.bundles_to_keep'))) {
+        if (!$this->checkBundleToKeepCount($this->get('storage.max_bundles'))) {
             throw ConfigFailedValidation::because('You must specify how many bundles should be kept. (Min: 1)');
         }
 

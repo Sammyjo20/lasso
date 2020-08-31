@@ -38,11 +38,11 @@ return [
         'upload_to' => sprintf('lasso-%s', Str::slug(env('APP_NAME','laravel'))),
 
         /*
-         * Lasso will also create a separate directory containing
+         * Lasso can also create a separate directory containing
          * the environment the files will be stored in. Specify this
          * here.
          */
-        'environment' => env('APP_ENV', 'production'),
+        'environment' => env('LASSO_ENV', null),
 
         /*
          * After running "php artisan lasso:push", by default Lasso will
@@ -53,11 +53,11 @@ return [
         'push_to_git' => false,
 
         /*
-         * When using Lasso with Git, you will be able to roll-back your
-         * commits, and Lasso will pull down an old bundle of assets. Choose
-         * how many you would like to keep.
+         * Lasso will automatically version the assets. This is useful if you
+         * suddenly need to roll-back a deployment and use an older version
+         * of built files. You can set the maximum amount of files stored here.
          */
-        'bundles_to_keep' => 5,
+        'max_bundles' => 5,
 
     ],
 

@@ -7,6 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use Sammyjo20\Lasso\Factories\BundleMetaFactory;
 use Sammyjo20\Lasso\Factories\ZipFactory;
+use Sammyjo20\Lasso\Helpers\DirectoryHelper;
 use Symfony\Component\Finder\Finder;
 
 class Bundler
@@ -39,7 +40,7 @@ class Bundler
         $this->compiler = new Compiler();
         $this->filesystem = new Filesystem();
         $this->bundle_id = Str::random(20);
-        $this->environment = config('lasso.storage.environment');
+        $this->environment = config('lasso.storage.environment') ?? 'global';
 
         $this->deleteLassoDirectory();
     }
@@ -95,9 +96,6 @@ class Bundler
 
         $this->compiler->buildAssets();
 
-        // Command completed,
-        $asset_url = config('app.asset_url', null);
-
         // Now let's move all the files into a temporary location.
         $this->filesystem->copyDirectory($public_path, '.lasso/bundle');
 
@@ -106,19 +104,10 @@ class Bundler
         // Clean any excluded files/directories from the bundle
         (new BundleCleaner())->execute();
 
-        // Todo: If the mode === CDN, we need to process the mix-manifest too.
-
-        //        $manifest = array_map(function ($value) use ($asset_url) {
-//            return $asset_url . '/' . $this->bundle_id . $value;
-//        }, get_object_vars($manifest));
-//
-//        $this->filesystem->put('.lasso/bundle/mix-manifest.json', json_encode($manifest));
-
         $zip = $this->createZipArchiveFromBundle('.lasso/bundle');
 
         // Once the Zip is done, we can create the bundle-info file.
         $bundle_info = BundleMetaFactory::create($this->bundle_id, $zip);
-
 
         // If we are using Git, we will create a lasso-bundle.json file
         // locally inside the git repository, which will then be committed.
@@ -140,13 +129,11 @@ class Bundler
 
         // If we're using git, commit the lasso-bundle file.
         if ($use_git === true && $push_to_git === true) {
-            (new Committer())->commitAndPushBundle();
+            (new Committer())->commitAndPushBundle(); // Could be static
         }
 
-        // Now let's try to push this onto our history file.
-        if ($use_git === true) {
-            (new BundleHistory())->appendToHistory($this->bundle_id);
-        }
+        $bundle_path = DirectoryHelper::getFileDirectory($this->bundle_id . '.zip');
+        VersioningService::appendNewVersion($bundle_path);
 
         // Done. Send webhooks
 
