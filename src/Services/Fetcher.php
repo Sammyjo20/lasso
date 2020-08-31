@@ -177,26 +177,18 @@ class Fetcher
             return json_decode($file, true);
         }
 
-        // Secondly, let's check if the filesystem has a "bundle-meta.next.json"
-        // file in it's directory. If we have this, we will want to prefer this,
-        // as Lasso has created this for our next deployment.
+        // If there isn't a "lasso-bundle.json" file in the root directory,
+        // that's okay - this means that the commit is in "non-git" mode. So
+        // let's just grab that file.If we don't have a file on the server
+        // however; we need to throw an exception.
 
-        if ($filesystem->has($base_path . '/bundle-meta.next.json')) {
-            $file = $filesystem->get($base_path . '/bundle-meta.next.json');
-            return json_decode($file, true);
-        }
-
-        // If there isn't a "bundle-meta.next.json" file, that's okay - we probably
-        // have a "bundle-meta.json" file from a previous deployment. Let's just grab that.
-        // If we don't however. We need to throw an exception.
-
-        if (!$filesystem->has($base_path . '/bundle-meta.json')) {
+        if (!$filesystem->has($base_path . '/lasso-bundle.json')) {
             $this->rollBack(
-                FetchCommandFailed::because('A valid "bundle-meta.json" file could not be found for the current environment.')
+                FetchCommandFailed::because('A valid "lasso-bundle.json" file could not be found for the current environment.')
             );
         }
 
-        $file = $filesystem->get($base_path . '/bundle-meta.json');
+        $file = $filesystem->get($base_path . '/lasso-bundle.json');
         return json_decode($file, true);
     }
 

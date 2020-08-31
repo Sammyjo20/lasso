@@ -96,7 +96,12 @@ class Bundler
         }
     }
 
-    public function execute(string $environment, bool $use_git = true)
+    /**
+     * @param bool $use_git
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Sammyjo20\Lasso\Exceptions\CommittingFailed
+     */
+    public function execute(bool $use_git = true)
     {
         $public_path = config('lasso.public_path');
 
@@ -125,8 +130,12 @@ class Bundler
             $this->filesystem->delete(base_path('lasso-bundle.json'));
             $this->filesystem->put(base_path('lasso-bundle.json'), $bundle_info);
         } else {
-            $this->filesystem->put(base_path('.lasso/dist/bundle-meta.next.json'), $bundle_info);
-            $this->uploadFile(base_path('.lasso/dist/bundle-meta.next.json'), 'bundle-meta.next.json');
+            // If we're using non-git mode, we should delete any old bundles.
+            $this->filesystem->delete(base_path('lasso-bundle.json'));
+
+            // Now it's time to replace the bundle on the server.
+            $this->filesystem->put(base_path('.lasso/dist/lasso-bundle.json'), $bundle_info);
+            $this->uploadFile(base_path('.lasso/dist/lasso-bundle.json'), 'lasso-bundle.json');
         }
 
         // Delete the .lasso folder
@@ -154,7 +163,6 @@ class Bundler
     public function uploadFile(string $path, string $name)
     {
         $disk = config('lasso.storage.disk');
-        $directory = config('lasso.storage.upload_to');
 
         $upload_path = DirectoryHelper::getFileDirectory($name, $this->environment);
 
