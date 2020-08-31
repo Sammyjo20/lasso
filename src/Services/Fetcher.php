@@ -60,6 +60,65 @@ class Fetcher
         $this->use_git = false;
     }
 
+    public function execute()
+    {
+        // Delete the old .lasso directory locally, if it exists
+        // and create a new one.
+
+        $this->cleanLassoDirectory();
+
+        $bundle_info = $this->retrieveLatestBundleMeta();
+
+        if (!isset($bundle_info['path']) || !isset($bundle_info['checksum'])) {
+            throw FetchCommandFailed::because('The bundle info was missing the required data.');
+        }
+
+        // Grab the Zip.
+        $bundle = $this->retrieveBundle($bundle_info['path'], $bundle_info['checksum']);
+
+        // Now it's time to roll. We should make a backup, so in case
+        // anything goes wrong - we can roll back easily.
+
+        try {
+            if ($this->backup_service->startBackup()) {
+                $public_path = rtrim(config('lasso.public_path'), '/');
+
+                // Now it's time to unzip!
+                (new ZipExtractor($bundle))
+                    ->extractTo(base_path('.lasso/bundle'));
+
+                $files = (new FileLister(base_path('.lasso/bundle')))
+                    ->getFinder();
+
+                foreach($files as $file) {
+                    $relative_path = $file->getRelativePathName();
+                    $path = $public_path . '/' . $relative_path;
+
+                    if ($this->local_filesystem->exists($path)) {
+                        $this->local_filesystem->delete($path);
+                    }
+
+                    $this->local_filesystem->ensureDirectoryExists(
+                        $public_path . '/' . $file->getRelativePath()
+                    );
+
+                    $this->local_filesystem->put(
+                        $path, $file->getContents()
+                    );
+                }
+            }
+        } catch (\Exception $ex) {
+            // If anything goes wrong inside this try block,
+            // we will "roll back" which means we will restore
+            // our backup.
+
+            $this->rollBack($ex);
+        }
+
+        // If it's all successful, it's time to clean everything up.
+        $this->deleteLassoDirectory();
+    }
+
     /**
      * @return void
      */
@@ -113,7 +172,7 @@ class Fetcher
         if ($this->local_filesystem->exists(base_path('lasso-bundle.json'))) {
             $this->use_git = true;
             $file = $this->local_filesystem->get(base_path('lasso-bundle.json'));
-            return (array)json_decode($file, true);
+            return json_decode($file, true);
         }
 
         // Secondly, let's check if the filesystem has a "bundle-meta.next.json"
@@ -122,7 +181,7 @@ class Fetcher
 
         if ($filesystem->has($base_path . '/bundle-meta.next.json')) {
             $file = $filesystem->get($base_path . '/bundle-meta.next.json');
-            return (array)json_decode($file, true);
+            return json_decode($file, true);
         }
 
         // If there isn't a "bundle-meta.next.json" file, that's okay - we probably
@@ -134,19 +193,18 @@ class Fetcher
         }
 
         $file = $filesystem->get($base_path . '/bundle-meta.json');
-        return (array)json_decode($file, true);
+        return json_decode($file, true);
     }
 
     /**
-     * @param string $id
+     * @param string $filesystem_path
      * @param string $checksum
      * @return string
-     * @throws FetchCommandFailed
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
-    private function retrieveBundle(string $id, string $checksum): string
+    private function retrieveBundle(string $filesystem_path, string $checksum): string
     {
-        $filesystem_path = sprintf('%s/%s.zip', $this->lasso_path, $id);
         $local_path = base_path('.lasso') . '/bundle.zip';
 
         $zip = Storage::disk($this->lasso_disk)
@@ -171,64 +229,5 @@ class Fetcher
         }
 
         return $local_path;
-    }
-
-    public function execute()
-    {
-        // Delete the old .lasso directory locally, if it exists
-        // and create a new one.
-
-        $this->cleanLassoDirectory();
-
-        $bundle_info = $this->retrieveLatestBundleMeta();
-
-        if (!isset($bundle_info['id']) || !isset($bundle_info['checksum'])) {
-            throw FetchCommandFailed::because('The bundle info was missing the required data.');
-        }
-
-        // Grab the Zip.
-        $bundle = $this->retrieveBundle($bundle_info['id'], $bundle_info['checksum']);
-
-        // Now it's time to roll. We should make a backup, so in case
-        // anything goes wrong - we can roll back easily.
-
-        try {
-            if ($this->backup_service->startBackup()) {
-                $public_path = rtrim(config('lasso.public_path'), '/');
-
-                // Now it's time to unzip!
-                (new ZipExtractor($bundle))
-                    ->extractTo(base_path('.lasso/bundle'));
-
-                $files = (new FileLister(base_path('.lasso/bundle')))
-                    ->getFinder();
-
-                foreach($files as $file) {
-                    $relative_path = $file->getRelativePathName();
-                    $path = $public_path . '/' . $relative_path;
-
-                    if ($this->local_filesystem->exists($path)) {
-                        $this->local_filesystem->delete($path);
-                    }
-
-                    $this->local_filesystem->ensureDirectoryExists(
-                        $public_path . '/' . $file->getRelativePath()
-                    );
-
-                    $this->local_filesystem->put(
-                        $path, $file->getContents()
-                    );
-                }
-            }
-        } catch (\Exception $ex) {
-            // If anything goes wrong inside this try block,
-            // we will "roll back" which means we will restore
-            // our backup.
-
-            $this->rollBack($ex);
-        }
-
-        // If it's all successful, it's time to clean everything up.
-        $this->deleteLassoDirectory();
     }
 }
