@@ -4,7 +4,7 @@ namespace Sammyjo20\Lasso\Services;
 
 use Illuminate\Filesystem\Filesystem;
 
-class BundleCleaner
+final class BundleCleaner
 {
     /**
      * @var array

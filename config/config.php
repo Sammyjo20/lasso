@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
 
     'compiler' => [
@@ -73,9 +71,9 @@ return [
 
         /*
          * Specify which webhooks should be triggered after a successful
-         * "php artisan lasso:push" command execution.
+         * "php artisan lasso:publish" command execution.
          */
-        'push' => [
+        'publish' => [
             //
         ],
 

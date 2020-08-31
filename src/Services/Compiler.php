@@ -4,10 +4,9 @@
 namespace Sammyjo20\Lasso\Services;
 
 use Sammyjo20\Lasso\Container\Console;
-use Sammyjo20\Lasso\Exceptions\CompilerFailed;
 use Sammyjo20\Lasso\Helpers\CommandHelper;
 
-class Compiler
+final class Compiler
 {
     /**
      * @var Console
@@ -26,7 +25,7 @@ class Compiler
     {
         $command = config('lasso.compiler.script');
 
-        $this->console->info('🔥 Compiling assets...');
+        $this->console->info('⏳ Compiling assets...');
 
         CommandHelper::run($command, function ($process) {
 //            throw new CompilerFailedException('Something really bad happened.');

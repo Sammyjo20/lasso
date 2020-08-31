@@ -2,6 +2,7 @@
 
 namespace Sammyjo20\Lasso\Services;
 
+use Sammyjo20\Lasso\Container\Console;
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
@@ -10,7 +11,7 @@ use Sammyjo20\Lasso\Factories\ZipFactory;
 use Sammyjo20\Lasso\Helpers\DirectoryHelper;
 use Symfony\Component\Finder\Finder;
 
-class Bundler
+final class Bundler
 {
     /**
      * @var Compiler
@@ -33,6 +34,11 @@ class Bundler
     protected $environment;
 
     /**
+     * @var Console
+     */
+    protected $console;
+
+    /**
      * Bundler constructor.
      * @param string|null $environment
      */
@@ -41,6 +47,7 @@ class Bundler
         $this->compiler = new Compiler();
         $this->filesystem = new Filesystem();
         $this->bundle_id = Str::random(20);
+        $this->console = resolve(Console::class);
 
         if (is_null($environment)) {
             $this->environment = config('lasso.storage.environment') ?? 'global';
@@ -87,13 +94,17 @@ class Bundler
     /**
      * @param array $data
      */
-    private function sendWebhooks(array $data)
+    private function sendWebhooks(array $data = [])
     {
-        $webhooks = config('lasso.webhooks.push', []);
+        $this->console->info('⏳ Dispatching Webhooks...');
+
+        $webhooks = config('lasso.webhooks.publish', []);
 
         foreach($webhooks as $webhook) {
-            Webhook::send($webhook, Webhook::PUSH_EVENT, $data);
+            Webhook::send($webhook, Webhook::PUBLISH_EVENT, $data);
         }
+
+        $this->console->info('✅ Webhooks dispatched.');
     }
 
     /**
@@ -107,6 +118,8 @@ class Bundler
 
         $this->compiler->buildAssets();
 
+        $this->console->info('✅ Successfully compiled assets.');
+
         // Now let's move all the files into a temporary location.
         $this->filesystem->copyDirectory($public_path, '.lasso/bundle');
 
@@ -115,13 +128,19 @@ class Bundler
         // Clean any excluded files/directories from the bundle
         (new BundleCleaner())->execute();
 
+        $this->console->info('⏳ Zipping assets...');
+
         $zip = $this->createZipArchiveFromBundle('.lasso/bundle');
+
+        $this->console->info('✅ Successfully zipped assets.');
 
         // Once the Zip is done, we can create the bundle-info file.
         $bundle_info = BundleMetaFactory::create($this->bundle_id, $zip);
 
         // If we are using Git, we will create a lasso-bundle.json file
         // locally inside the git repository, which will then be committed.
+
+        $this->console->info('⏳ Uploading assets to Filesystem...');
 
         // Create the bundle info as a file.
         $this->uploadFile($zip, $this->bundle_id . '.zip');
@@ -148,11 +167,10 @@ class Bundler
             (new Committer())->commitAndPushBundle(); // Could be static
         }
 
-        // Done. Send webhooks
+        $this->console->info('✅ Successfully uploaded assets.');
 
-        $this->sendWebhooks(
-            (array)json_decode($bundle_info)
-        );
+        // Done. Send webhooks
+        $this->sendWebhooks();
     }
 
     /**

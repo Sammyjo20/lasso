@@ -8,7 +8,7 @@ use Sammyjo20\Lasso\Container\Console;
 use Sammyjo20\Lasso\Helpers\ConfigValidator;
 use Sammyjo20\Lasso\Services\Fetcher;
 
-class PullCommand extends Command
+final class PullCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -22,22 +22,13 @@ class PullCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Grab the latest Lasso bundle from the filesystem, and pull down the files.';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Download the latest Lasso bundle from the Filesystem Disk.';
 
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @param Console $console
+     * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
     public function handle(Console $console)
     {
@@ -45,12 +36,11 @@ class PullCommand extends Command
 
         $console->setCommand($this);
 
-        // 1. Pull down the zip and unzip the bundle
-        // 2. Check the integrity of the ZIP
-        // 3. Take a Backup of the public_path, before tampering with it.
-        // 4. If something goes wrong, we just roll back to the backup, but after that throw an exception.
-        // 5. If something doesn't go wrong, whoop.
+        $this->info('🏁 Preparing to download assets from Filesystem.');
 
-        return (new Fetcher())->execute();
+        (new Fetcher())->execute();
+
+        $this->info('✅ Successfully downloaded the latest assets. Yee-haw!');
+        $this->info('❤️  Thank you for using Lasso. https://getlasso.dev');
     }
 }

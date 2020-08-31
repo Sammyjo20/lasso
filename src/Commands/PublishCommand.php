@@ -7,57 +7,49 @@ use Sammyjo20\Lasso\Container\Console;
 use Sammyjo20\Lasso\Helpers\ConfigValidator;
 use Sammyjo20\Lasso\Services\Bundler;
 
-class PushCommand extends Command
+final class PublishCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'lasso:push {--no-git} {--silent}';
+    protected $signature = 'lasso:publish {--no-git} {--silent}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Run the asset compiler and upload the assets to the disk.';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Compile assets and push assets to the specified Lasso Filesystem Disk.';
 
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @param Console $console
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Sammyjo20\Lasso\Exceptions\CommittingFailed
+     * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
     public function handle(Console $console)
     {
+        $use_git = $this->option('no-git') === false;
+        $silent_mode = $this->option('silent');
+
         (new ConfigValidator())->validate();
 
         $console->setCommand($this);
 
         $env = config('lasso.storage.environment', null);
 
-        if (!is_null($env) && !$this->option('silent')) {
+        if ($silent_mode === false && is_null($env) === false) {
             $env = $this->ask('🐎 Which Lasso environment would you like to publish to?', $env);
         }
 
-        // Check to see if the current environment is supported
-        // Also check to see if the git commit contains "no-lasso"
-        $use_git = !$this->option('no-git');
-
-        $this->info('🏁 Starting to publish assets');
+        $this->info('🏁 Preparing to publish assets to Filesystem.');
 
         (new Bundler($env))->execute($use_git);
 
-        $this->info('🐎 Successfully published assets to Filesystem! Yee-haw!');
+        $this->info('✅ Successfully published assets to Filesystem! Yee-haw!');
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Sammyjo20\Lasso\Exceptions\CommittingFailed;
 use Sammyjo20\Lasso\Helpers\CommandHelper;
 
-class Committer
+final class Committer
 {
     /**
      * @var Filesystem

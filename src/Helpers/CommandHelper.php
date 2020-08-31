@@ -5,7 +5,7 @@ namespace Sammyjo20\Lasso\Helpers;
 use Sammyjo20\Lasso\Container\Console;
 use Symfony\Component\Process\Process;
 
-class CommandHelper
+final class CommandHelper
 {
     /**
      * Have a nice easy wrapper around Symfony's process component.

@@ -4,7 +4,7 @@ namespace Sammyjo20\Lasso\Helpers;
 
 use Symfony\Component\Finder\Finder;
 
-class FileLister
+final class FileLister
 {
     /**
      * @var Finder
