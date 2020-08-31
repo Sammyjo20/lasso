@@ -5,7 +5,7 @@ namespace Sammyjo20\Lasso\Services;
 use Illuminate\Filesystem\Filesystem;
 use Sammyjo20\Lasso\Exceptions\RestoreFailed;
 
-class Backup
+final class Backup
 {
     /**
      * @var Filesystem

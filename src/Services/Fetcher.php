@@ -4,13 +4,14 @@ namespace Sammyjo20\Lasso\Services;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
+use Sammyjo20\Lasso\Container\Console;
 use Sammyjo20\Lasso\Exceptions\FetchCommandFailed;
 use Sammyjo20\Lasso\Factories\ZipExtractor;
 use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
 use Sammyjo20\Lasso\Helpers\DirectoryHelper;
 use Sammyjo20\Lasso\Helpers\FileLister;
 
-class Fetcher
+final class Fetcher
 {
     /**
      * @var Filesystem
@@ -43,6 +44,11 @@ class Fetcher
     protected $environment;
 
     /**
+     * @var Console
+     */
+    protected $console;
+
+    /**
      * Fetcher constructor.
      */
     public function __construct()
@@ -50,6 +56,7 @@ class Fetcher
         $this->local_filesystem = new Filesystem();
         $this->lasso_disk = config('lasso.storage.disk');
         $this->environment = config('lasso.storage.environment') ?? 'global';
+        $this->console = resolve(Console::class);
 
         $this->lasso_path = DirectoryHelper::getFileDirectory();
 
@@ -64,6 +71,8 @@ class Fetcher
 
         $this->cleanLassoDirectory();
 
+        $this->console->info('⏳ Reading Bundle meta file...');
+
         $bundle_info = $this->retrieveLatestBundleMeta();
 
         if (!isset($bundle_info['file']) || !isset($bundle_info['checksum'])) {
@@ -72,11 +81,17 @@ class Fetcher
             );
         }
 
+        $this->console->info('⏳ Downloading bundle...');
+
         // Grab the Zip.
         $bundle = $this->retrieveBundle($bundle_info['file'], $bundle_info['checksum']);
 
+        $this->console->info('✅ Successfully downloaded bundle.');
+
         // Now it's time to roll. We should make a backup, so in case
         // anything goes wrong - we can roll back easily.
+
+        $this->console->info('⏳ Updating assets...');
 
         try {
             if ($this->backup_service->startBackup()) {
@@ -119,6 +134,9 @@ class Fetcher
 
         // If it's all successful, it's time to clean everything up.
         $this->deleteLassoDirectory();
+
+        // Done. Send webhooks
+        $this->sendWebhooks();
     }
 
     /**
@@ -238,5 +256,21 @@ class Fetcher
         }
 
         return $local_path;
+    }
+
+    /**
+     * @param array $data
+     */
+    private function sendWebhooks(array $data = [])
+    {
+        $this->console->info('⏳ Dispatching Webhooks...');
+
+        $webhooks = config('lasso.webhooks.pull', []);
+
+        foreach($webhooks as $webhook) {
+            Webhook::send($webhook, Webhook::PULL_EVENT, $data);
+        }
+
+        $this->console->info('✅ Webhooks dispatched.');
     }
 }

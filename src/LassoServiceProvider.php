@@ -3,7 +3,7 @@
 namespace Sammyjo20\Lasso;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Sammyjo20\Lasso\Commands\PushCommand;
+use Sammyjo20\Lasso\Commands\PublishCommand;
 use Sammyjo20\Lasso\Commands\PullCommand;
 use Sammyjo20\Lasso\Container\Console;
 
@@ -19,7 +19,7 @@ class LassoServiceProvider extends BaseServiceProvider
             $this->app->instance(Console::class, new Console());
 
             $this->commands([
-                PushCommand::class,
+                PublishCommand::class,
                 PullCommand::class,
             ]);
         }

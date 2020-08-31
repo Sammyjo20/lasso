@@ -2,7 +2,7 @@
 
 namespace Sammyjo20\Lasso\Helpers;
 
-class BundleIntegrityHelper
+final class BundleIntegrityHelper
 {
     public const ALGORITHM = 'md5';
 

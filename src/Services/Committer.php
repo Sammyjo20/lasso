@@ -5,8 +5,10 @@ namespace Sammyjo20\Lasso\Services;
 use Illuminate\Filesystem\Filesystem;
 use Sammyjo20\Lasso\Exceptions\CommittingFailed;
 use Sammyjo20\Lasso\Helpers\CommandHelper;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
-class Committer
+final class Committer
 {
     /**
      * @var Filesystem
@@ -22,6 +24,21 @@ class Committer
     }
 
     /**
+     * @param string $command
+     */
+    public function commit(string $command)
+    {
+        $process = new Process(explode(' ', $command));
+
+        $process->setTimeout(60)
+            ->run();
+
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+    }
+
+    /**
      * @throws CommittingFailed
      */
     public function commitAndPushBundle()
@@ -34,10 +51,6 @@ class Committer
 
         $command = "git add 'lasso-bundle.json' && git commit -m'Lasso Assets 🐎' --author='Lasso <>' && git push";
 
-        // Todo: Write a much better implementation of this.
-
-        CommandHelper::run(`{$command}`, function () {
-            //
-        });
+        $this->commit(`{$command}`);
     }
 }

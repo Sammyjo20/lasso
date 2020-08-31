@@ -5,7 +5,7 @@ namespace Sammyjo20\Lasso\Factories;
 use Illuminate\Filesystem\Filesystem;
 use ZipArchive;
 
-class ZipFactory
+final class ZipFactory
 {
     /**
      * @var ZipArchive

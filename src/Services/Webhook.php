@@ -4,9 +4,9 @@ namespace Sammyjo20\Lasso\Services;
 
 use Illuminate\Support\Facades\Http;
 
-class Webhook
+final class Webhook
 {
-    public const PUSH_EVENT = 'push';
+    public const PUBLISH_EVENT = 'publish';
 
     public const PULL_EVENT = 'pull';
 

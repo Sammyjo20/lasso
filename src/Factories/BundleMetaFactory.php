@@ -4,7 +4,7 @@ namespace Sammyjo20\Lasso\Factories;
 
 use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
 
-class BundleMetaFactory
+final class BundleMetaFactory
 {
     /**
      * @param string $bundle_id

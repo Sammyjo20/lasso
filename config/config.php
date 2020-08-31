@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
 
     'compiler' => [
@@ -12,6 +10,13 @@ return [
          * you may choose what you would like to execute.
          */
         'script' => 'npm run production',
+
+        /*
+         * Configure the amount of time (in seconds) the compiler
+         * should run before it times out. By default this is set
+         * to 600 seconds (10 minutes).
+         */
+        'timeout' => 600,
 
         /*
          * If there any directories/files you would like to Lasso to
@@ -73,9 +78,9 @@ return [
 
         /*
          * Specify which webhooks should be triggered after a successful
-         * "php artisan lasso:push" command execution.
+         * "php artisan lasso:publish" command execution.
          */
-        'push' => [
+        'publish' => [
             //
         ],
 
