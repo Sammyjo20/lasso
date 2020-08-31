@@ -53,41 +53,13 @@ final class BundleManager
     public function create(): void
     {
         $public_path = config('lasso.public_path');
-
-        // Firstly, let's move all the files into a temporary location.
-        $this->filesystem->copyDirectory($public_path, '.lasso/bundle-unsafe');
-
-        // Now we want to process each file, and make sure it's safe.
-        $this->createSafeDirectory();
-    }
-
-    /**
-     * @return void
-     */
-    private function createSafeDirectory(): void
-    {
         $filesystem = $this->filesystem;
-        $path = base_path('.lasso/bundle-unsafe');
 
-        // Loop through files and delete any "excluded"
-        foreach($this->getForbiddenFiles() as $file) {
-            if ($filesystem->exists($path . '/' . $file)) {
-                $filesystem->delete($path . '/' . $file);
-            }
-        }
-
-        // Loop through directories and delete any "excluded"
-        foreach($this->getForbiddenDirectories() as $directory) {
-            if ($filesystem->exists($path . '/' . $directory)) {
-                $filesystem->deleteDirectory($path . '/' . $directory);
-            }
-        }
-
-        // Now let's create a finder instance from the files remaining.
-        $files = (new FileLister($path))
+        // Let's create a finder instance
+        $files = (new FileLister($public_path))
             ->getFinder();
 
-        $safe_path = base_path('.lasso/bundle-safe');
+        $path = base_path('.lasso/bundle');
 
         // Now we want to iterate through each of Finder's
         // files. We are doing this because Finder will automatically
@@ -107,15 +79,22 @@ final class BundleManager
 
             // Make sure the destination exists
             $filesystem->ensureDirectoryExists(
-                $safe_path . '/' . $file->getRelativePath()
+                $path . '/' . $file->getRelativePath()
             );
 
             // Copy the file!
 
             $filesystem->copy(
                 $file->getPathname(),
-                $safe_path . '/' . $file->getRelativePathname()
+                $path . '/' . $file->getRelativePathname()
             );
+        }
+
+        // Loop through directories and delete any "excluded"
+        foreach($this->getForbiddenDirectories() as $directory) {
+            if ($filesystem->exists($path . '/' . $directory)) {
+                $filesystem->deleteDirectory($path . '/' . $directory);
+            }
         }
     }
 

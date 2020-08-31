@@ -73,7 +73,7 @@ final class Bundler
     private function createZipArchiveFromBundle(string $bundle_directory): string
     {
         $files = (new Finder())
-            ->in(base_path('.lasso/bundle-safe'))
+            ->in(base_path('.lasso/bundle'))
             ->files();
 
         $relative_path = '.lasso/dist/' . $this->bundle_id . '.zip';
@@ -124,7 +124,7 @@ final class Bundler
 
         $this->console->info('⏳ Zipping assets...');
 
-        $zip = $this->createZipArchiveFromBundle('.lasso/bundle-safe');
+        $zip = $this->createZipArchiveFromBundle('.lasso/bundle');
 
         $this->console->info('✅ Successfully zipped assets.');
 
