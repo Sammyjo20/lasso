@@ -67,7 +67,9 @@ class Fetcher
         $bundle_info = $this->retrieveLatestBundleMeta();
 
         if (!isset($bundle_info['file']) || !isset($bundle_info['checksum'])) {
-            throw FetchCommandFailed::because('The bundle info was missing the required data.');
+            $this->rollBack(
+                FetchCommandFailed::because('The bundle info was missing the required data.')
+            );
         }
 
         // Grab the Zip.
@@ -186,7 +188,9 @@ class Fetcher
         // If we don't however. We need to throw an exception.
 
         if (!$filesystem->has($base_path . '/bundle-meta.json')) {
-            throw FetchCommandFailed::because('A valid "bundle-meta.json" file could not be found for the current environment.');
+            $this->rollBack(
+                FetchCommandFailed::because('A valid "bundle-meta.json" file could not be found for the current environment.')
+            );
         }
 
         $file = $filesystem->get($base_path . '/bundle-meta.json');
@@ -206,20 +210,26 @@ class Fetcher
         $filesystem_path = DirectoryHelper::getFileDirectory($file);
 
         if (!Storage::disk($this->lasso_disk)->exists($filesystem_path)) {
-            throw FetchCommandFailed::because('The bundle zip does not exist. If you are using a specific environment, please make sure the LASSO_ENV is the same in your .env file.');
+            $this->rollBack(
+                FetchCommandFailed::because('The bundle zip does not exist. If you are using a specific environment, please make sure the LASSO_ENV is the same in your .env file.')
+            );
         }
 
         $zip = Storage::disk($this->lasso_disk)
             ->get($filesystem_path);
 
         if (!$zip) {
-            throw FetchCommandFailed::because('The bundle Zip could not be found or was inaccessible. If you are using a specific environment, please make sure the LASSO_ENV is the same in your .env file.');
+            $this->rollBack(
+                FetchCommandFailed::because('The bundle Zip could not be found or was inaccessible. If you are using a specific environment, please make sure the LASSO_ENV is the same in your .env file.')
+            );
         }
 
         try {
             $this->local_filesystem->put($local_path, $zip);
         } catch (\Exception $ex) {
-            throw FetchCommandFailed::because('An error occurred while writing to the local path.');
+            $this->rollBack(
+                FetchCommandFailed::because('An error occurred while writing to the local path.')
+            );
         }
 
         // Now we want to check if the integrity of the bundle is okay.
@@ -227,7 +237,9 @@ class Fetcher
         // incorrectly or tampered with!
 
         if (!BundleIntegrityHelper::verifyChecksum($local_path, $checksum)) {
-            throw FetchCommandFailed::because('The bundle Zip\'s checksum is incorrect.');
+            $this->rollBack(
+                FetchCommandFailed::because('The bundle Zip\'s checksum is incorrect.')
+            );
         }
 
         return $local_path;

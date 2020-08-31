@@ -34,13 +34,19 @@ class Bundler
 
     /**
      * Bundler constructor.
+     * @param string|null $environment
      */
-    public function __construct()
+    public function __construct(string $environment = null)
     {
         $this->compiler = new Compiler();
         $this->filesystem = new Filesystem();
         $this->bundle_id = Str::random(20);
-        $this->environment = config('lasso.storage.environment') ?? 'global';
+
+        if (is_null($environment)) {
+            $this->environment = config('lasso.storage.environment') ?? 'global';
+        } else {
+            $this->environment = $environment;
+        }
 
         $this->deleteLassoDirectory();
     }
@@ -90,7 +96,7 @@ class Bundler
         }
     }
 
-    public function execute(bool $use_git = true)
+    public function execute(string $environment, bool $use_git = true)
     {
         $public_path = config('lasso.public_path');
 
@@ -152,7 +158,7 @@ class Bundler
         $disk = config('lasso.storage.disk');
         $directory = config('lasso.storage.upload_to');
 
-        $upload_path = $directory . '/' . $this->environment . '/' . $name;
+        $upload_path = DirectoryHelper::getFileDirectory($name, $this->environment);
 
         Storage::disk($disk)
             ->put($upload_path, $this->filesystem->get($path));

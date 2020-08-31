@@ -14,7 +14,7 @@ class PushCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'lasso:push {--no-git}';
+    protected $signature = 'lasso:push {--no-git} {--silent}';
 
     /**
      * The console command description.
@@ -44,13 +44,19 @@ class PushCommand extends Command
 
         $console->setCommand($this);
 
+        $env = config('lasso.storage.environment', null);
+
+        if (!is_null($env) && !$this->option('silent')) {
+            $env = $this->ask('🐎 Which Lasso environment would you like to publish to?', $env);
+        }
+
         // Check to see if the current environment is supported
         // Also check to see if the git commit contains "no-lasso"
         $use_git = !$this->option('no-git');
 
         $this->info('🏁 Starting to publish assets');
 
-        (new Bundler())->execute($use_git);
+        (new Bundler($env))->execute($use_git);
 
         $this->info('🐎 Successfully published assets to Filesystem! Yee-haw!');
     }
