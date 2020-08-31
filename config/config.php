@@ -33,9 +33,12 @@ return [
 
         /*
          * Specify the directory Lasso should store all of its
-         * files within. By default we will use "lasso-APP_NAME".
+         * files within.
+         *
+         * WARNING: If you have multiple projects all using Lasso,
+         * make sure this is unique for each project.
          */
-        'upload_to' => sprintf('lasso-%s', Str::slug(env('APP_NAME','laravel'))),
+        'upload_to' => 'lasso',
 
         /*
          * Lasso can also create a separate directory containing
