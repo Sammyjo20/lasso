@@ -1,5 +1,6 @@
 {
     "name": "sammyjo20/lasso",
+    "version": "1.0",
     "description": "Lasso - Asset wrangling for Laravel made simple.",
     "type": "library",
     "minimum-stability": "stable",
