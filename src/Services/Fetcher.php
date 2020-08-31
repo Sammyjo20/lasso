@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Sammyjo20\Lasso\Exceptions\FetchCommandFailed;
 use Sammyjo20\Lasso\Factories\ZipExtractor;
 use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
+use Sammyjo20\Lasso\Helpers\DirectoryHelper;
 use Sammyjo20\Lasso\Helpers\FileLister;
 
 class Fetcher
@@ -50,11 +51,7 @@ class Fetcher
         $this->lasso_disk = config('lasso.storage.disk');
         $this->environment = config('lasso.storage.environment') ?? 'global';
 
-        $this->lasso_path = sprintf(
-            '%s/%s',
-            rtrim(config('lasso.storage.upload_to'), '/'),
-            $this->environment
-        );
+        $this->lasso_path = DirectoryHelper::getFileDirectory();
 
         $this->backup_service = new Backup($this->local_filesystem, base_path('.lasso/backup'));
         $this->use_git = false;
@@ -69,12 +66,12 @@ class Fetcher
 
         $bundle_info = $this->retrieveLatestBundleMeta();
 
-        if (!isset($bundle_info['path']) || !isset($bundle_info['checksum'])) {
+        if (!isset($bundle_info['file']) || !isset($bundle_info['checksum'])) {
             throw FetchCommandFailed::because('The bundle info was missing the required data.');
         }
 
         // Grab the Zip.
-        $bundle = $this->retrieveBundle($bundle_info['path'], $bundle_info['checksum']);
+        $bundle = $this->retrieveBundle($bundle_info['file'], $bundle_info['checksum']);
 
         // Now it's time to roll. We should make a backup, so in case
         // anything goes wrong - we can roll back easily.
@@ -90,7 +87,7 @@ class Fetcher
                 $files = (new FileLister(base_path('.lasso/bundle')))
                     ->getFinder();
 
-                foreach($files as $file) {
+                foreach ($files as $file) {
                     $relative_path = $file->getRelativePathName();
                     $path = $public_path . '/' . $relative_path;
 
@@ -197,21 +194,26 @@ class Fetcher
     }
 
     /**
-     * @param string $filesystem_path
+     * @param string $file
      * @param string $checksum
      * @return string
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
-    private function retrieveBundle(string $filesystem_path, string $checksum): string
+    private function retrieveBundle(string $file, string $checksum): string
     {
         $local_path = base_path('.lasso') . '/bundle.zip';
+        $filesystem_path = DirectoryHelper::getFileDirectory($file);
+
+        if (!Storage::disk($this->lasso_disk)->exists($filesystem_path)) {
+            throw FetchCommandFailed::because('The bundle zip does not exist. If you are using a specific environment, please make sure the LASSO_ENV is the same in your .env file.');
+        }
 
         $zip = Storage::disk($this->lasso_disk)
             ->get($filesystem_path);
 
         if (!$zip) {
-            throw FetchCommandFailed::because('The bundle Zip could not be found or was inaccessible.');
+            throw FetchCommandFailed::because('The bundle Zip could not be found or was inaccessible. If you are using a specific environment, please make sure the LASSO_ENV is the same in your .env file.');
         }
 
         try {

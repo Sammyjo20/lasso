@@ -3,7 +3,6 @@
 namespace Sammyjo20\Lasso\Factories;
 
 use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
-use Sammyjo20\Lasso\Helpers\DirectoryHelper;
 
 class BundleMetaFactory
 {
@@ -19,8 +18,7 @@ class BundleMetaFactory
         // and also to check against the download later on.
 
         $checksum = BundleIntegrityHelper::generateChecksum($bundle_path);
-        $path = DirectoryHelper::getFileDirectory($bundle_id . '.zip');
 
-        return json_encode(['path' => $path, 'checksum' => $checksum]);
+        return json_encode(['file' => $bundle_id . '.zip', 'checksum' => $checksum]);
     }
 }
