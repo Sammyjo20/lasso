@@ -52,7 +52,10 @@ class BundleCleaner
         return $this->forbidden_directories;
     }
 
-    public function execute()
+    /**
+     * @return void
+     */
+    public function execute(): void
     {
         $filesystem = new Filesystem();
         $path = base_path('.lasso/bundle');

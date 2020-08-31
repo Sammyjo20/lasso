@@ -18,12 +18,14 @@ final class VersioningService
         $history = self::getHistoryFromDisk();
 
         // 2. We then need to append the new version to the history, keyed with a unix timestamp
-        $history[time()] = $bundle_url;
+        if (!in_array($bundle_url, $history, true)) {
+            $history[time()] = $bundle_url;
+        }
 
         // 3. Then we need to delete any old bundles.
         $history = self::deleteExpiredBundles($history);
 
-        // 4. Update the history.json
+        // 4. Update the history.json, if there's not been any changes.
         self::updateHistory($history);
     }
 

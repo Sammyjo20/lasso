@@ -118,15 +118,16 @@ class Bundler
         // If we are using Git, we will create a lasso-bundle.json file
         // locally inside the git repository, which will then be committed.
 
+        // Create the bundle info as a file.
+        $this->uploadFile($zip, $this->bundle_id . '.zip');
+
         if ($use_git === true) {
-            $this->filesystem->replace(base_path('lasso-bundle.json'), $bundle_info);
+            $this->filesystem->delete(base_path('lasso-bundle.json'));
+            $this->filesystem->put(base_path('lasso-bundle.json'), $bundle_info);
         } else {
             $this->filesystem->put(base_path('.lasso/dist/bundle-meta.next.json'), $bundle_info);
             $this->uploadFile(base_path('.lasso/dist/bundle-meta.next.json'), 'bundle-meta.next.json');
         }
-
-        // Create the bundle info as a file.
-        $this->uploadFile($zip, $this->bundle_id . '.zip');
 
         // Delete the .lasso folder
         $this->deleteLassoDirectory();
@@ -137,9 +138,6 @@ class Bundler
         if ($use_git === true && $push_to_git === true) {
             (new Committer())->commitAndPushBundle(); // Could be static
         }
-
-        $bundle_path = DirectoryHelper::getFileDirectory($this->bundle_id . '.zip');
-        VersioningService::appendNewVersion($bundle_path);
 
         // Done. Send webhooks
 

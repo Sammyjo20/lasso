@@ -114,6 +114,9 @@ class Fetcher
             $this->rollBack($ex);
         }
 
+        $bundle_path = DirectoryHelper::getFileDirectory($bundle_info['file']);
+        VersioningService::appendNewVersion($bundle_path);
+
         // If it's all successful, it's time to clean everything up.
         $this->deleteLassoDirectory();
     }
