@@ -21,7 +21,10 @@ final class Compiler
         $this->console = resolve(Console::class);
     }
 
-    public function buildAssets()
+    /**
+     * @return void
+     */
+    public function buildAssets(): void
     {
         $command = config('lasso.compiler.script');
 
