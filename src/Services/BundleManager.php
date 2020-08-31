@@ -13,13 +13,16 @@ final class BundleManager
     protected $forbidden_files = [
         '.htaccess',
         'index.php',
-        'robots.txt'
+        'robots.txt',
+        'storage'
     ];
 
     /**
      * @var array
      */
-    protected $forbidden_directories = [];
+    protected $forbidden_directories = [
+        'storage'
+    ];
 
     /**
      * @var Filesystem
