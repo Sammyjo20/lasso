@@ -12,6 +12,13 @@ return [
         'script' => 'npm run production',
 
         /*
+         * Configure the amount of time (in seconds) the compiler
+         * should run before it times out. By default this is set
+         * to 600 seconds (10 minutes).
+         */
+        'timeout' => 600,
+
+        /*
          * If there any directories/files you would like to Lasso to
          * exclude when uploading to the Filesystem, specify them below.
          */
