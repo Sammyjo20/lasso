@@ -1,4 +1,4 @@
-![alt text](https://getlasso.dev/images/lasso-logo.png "Lasso")
+![alt text](https://getlasso.dev/images/lasso-logo-small.png "Lasso")
 
 
 
@@ -163,7 +163,7 @@ After running this command, Lasso will create a "lasso-bundle.json" file in your
 
 **Warning: When using the `--no-git` flag, versioning will be limited as the lasso-bundle.json is stored in your Filesystem, rathe than your repository. Using Git is the recommended approach.**
 
-### Pull
+### Pull
 
 The pull command should then be executed on your deployment script, or on the servers which will require the assets to be on. Simply run the command below. If you are using *Laravel Forge*, add this command to your deployment script. If you are using *Laravel Envoyer*, add this to the list of hooks during your deployment. It should be run on **every server**.
 
