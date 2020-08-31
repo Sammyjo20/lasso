@@ -1,10 +1,10 @@
-<p align="center">![alt text](https://getlasso.dev/images/lasso-logo-small.png "Lasso")
-
-
+<p align="center">
+  <img src="https://getlasso.dev/images/lasso-logo-small.png" alt="Lasso">
+</p>
 
 # Lasso
 
-## Asset wrangling for Laravel made simple. (BETA)</p>
+## Asset wrangling for Laravel made simple. (BETA)
 
 [Official Website](https://getlasso.dev)
 
