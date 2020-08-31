@@ -4,7 +4,6 @@ namespace Sammyjo20\Lasso\Services;
 
 use Illuminate\Filesystem\Filesystem;
 use Sammyjo20\Lasso\Exceptions\CommittingFailed;
-use Sammyjo20\Lasso\Helpers\CommandHelper;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 

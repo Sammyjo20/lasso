@@ -73,7 +73,7 @@ final class Bundler
     private function createZipArchiveFromBundle(string $bundle_directory): string
     {
         $files = (new Finder())
-            ->in(base_path('.lasso/bundle'))
+            ->in(base_path('.lasso/bundle-safe'))
             ->files();
 
         $relative_path = '.lasso/dist/' . $this->bundle_id . '.zip';
@@ -100,7 +100,7 @@ final class Bundler
 
         $webhooks = config('lasso.webhooks.publish', []);
 
-        foreach($webhooks as $webhook) {
+        foreach ($webhooks as $webhook) {
             Webhook::send($webhook, Webhook::PUBLISH_EVENT, $data);
         }
 
@@ -114,23 +114,17 @@ final class Bundler
      */
     public function execute(bool $use_git = true)
     {
-        $public_path = config('lasso.public_path');
-
         $this->compiler->buildAssets();
 
         $this->console->info('✅ Successfully compiled assets.');
 
-        // Now let's move all the files into a temporary location.
-        $this->filesystem->copyDirectory($public_path, '.lasso/bundle');
+        (new BundleManager())->create();
 
         $this->filesystem->ensureDirectoryExists('.lasso/dist');
 
-        // Clean any excluded files/directories from the bundle
-        (new BundleCleaner())->execute();
-
         $this->console->info('⏳ Zipping assets...');
 
-        $zip = $this->createZipArchiveFromBundle('.lasso/bundle');
+        $zip = $this->createZipArchiveFromBundle('.lasso/bundle-safe');
 
         $this->console->info('✅ Successfully zipped assets.');
 

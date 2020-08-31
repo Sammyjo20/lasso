@@ -18,9 +18,12 @@ final class FileLister
      */
     public function __construct(string $directory)
     {
-        $this->finder = (new Finder())->files()
+        $this->finder = (new Finder())
+            ->in($directory)
             ->ignoreDotFiles(false)
-            ->in($directory);
+            ->ignoreUnreadableDirs(true)
+            ->ignoreVCS(true)
+            ->files();
     }
 
     /**
