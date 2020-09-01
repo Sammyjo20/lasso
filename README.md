@@ -148,7 +148,11 @@ return [
 ```
 
 ## First things first
-If you would like to use the recommended approach, make sure to add all of your public assets (js/css/images/mix-manifest.json) to your .gitignore file!
+If you would like to use the recommended approach, make sure to add all of your public assets (js/css/images/mix-manifest.json) to your .gitignore file! Please also make sure to add the ".lasso" folder to your .gitignore file:
+
+```php
+.lasso
+```
 
 ## Recommended Usage
 
