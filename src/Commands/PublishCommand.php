@@ -50,6 +50,6 @@ final class PublishCommand extends Command
 
         (new Bundler($env))->execute($use_git);
 
-        $this->info('✅ Successfully published assets to Filesystem! Yee-haw!');
+        $this->info('✅ Successfully published assets to "' . config('lasso.storage.disk')  . '" Filesystem.! Yee-haw!');
     }
 }
