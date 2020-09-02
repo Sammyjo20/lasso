@@ -46,7 +46,7 @@ final class PublishCommand extends Command
             $env = $this->ask('🐎 Which Lasso environment would you like to publish to?', $env);
         }
 
-        $this->info('🏁 Preparing to publish assets to Filesystem.');
+        $this->info('🏁 Preparing to publish assets to "' . config('lasso.storage.disk')  . '" Filesystem.');
 
         (new Bundler($env))->execute($use_git);
 
