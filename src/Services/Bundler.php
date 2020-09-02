@@ -134,7 +134,7 @@ final class Bundler
         // If we are using Git, we will create a lasso-bundle.json file
         // locally inside the git repository, which will then be committed.
 
-        $this->console->info('⏳ Uploading assets to Filesystem...');
+        $this->console->info('⏳ Uploading assets to "' . config('lasso.storage.disk')  . '" Filesystem...');
 
         // Create the bundle info as a file.
         $this->uploadFile($zip, $this->bundle_id . '.zip');
