@@ -113,7 +113,7 @@ return [
     ],
 
     /*
-     * Lasso will can also trigger Webhooks after its commands have been
+     * Lasso can also trigger Webhooks after its commands have been
      * successfully executed. You may specify URLs that Lasso will POST
      * to, for each of the commands.
      */
