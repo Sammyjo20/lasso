@@ -181,7 +181,7 @@ final class Bundler
         $stream = fopen($path, 'rb');
 
         // Use the stream to write the bundle to the Filesystem.
-        Storage::disk($disk)->writeStream($upload_path, $stream);
+        Storage::disk($disk)->putStream($upload_path, $stream);
 
         // Close the Stream pointer because it's good practice.
         if (is_resource($stream)) {
