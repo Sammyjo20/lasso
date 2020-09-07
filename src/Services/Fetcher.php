@@ -105,20 +105,15 @@ final class Fetcher
                     ->getFinder();
 
                 foreach ($files as $file) {
-                    $relative_path = $file->getRelativePathName();
-                    $path = $public_path . '/' . $relative_path;
+                    $source = $file->getRealPath();
+                    $destination = sprintf('%s/%s', $public_path, $file->getRelativePathName());
+                    $directory = sprintf('%s/%s', $public_path, $file->getRelativePath());
 
-                    if ($this->local_filesystem->exists($path)) {
-                        $this->local_filesystem->delete($path);
-                    }
+                    $this->local_filesystem
+                        ->ensureDirectoryExists($directory);
 
-                    $this->local_filesystem->ensureDirectoryExists(
-                        $public_path . '/' . $file->getRelativePath()
-                    );
-
-                    $this->local_filesystem->put(
-                        $path, $file->getContents()
-                    );
+                    $this->local_filesystem
+                        ->copy($source, $destination);
                 }
             }
         } catch (\Exception $ex) {

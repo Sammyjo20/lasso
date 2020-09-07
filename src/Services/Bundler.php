@@ -170,7 +170,7 @@ final class Bundler
     /**
      * @param string $path
      * @param string $name
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Illuminate\Contracts\Filesystem\FileExistsException
      */
     public function uploadFile(string $path, string $name)
     {
@@ -178,7 +178,14 @@ final class Bundler
 
         $upload_path = DirectoryHelper::getFileDirectory($name, $this->environment);
 
-        Storage::disk($disk)
-            ->put($upload_path, $this->filesystem->get($path));
+        $stream = fopen($path, 'rb');
+
+        // Use the stream to write the bundle to the Filesystem.
+        Storage::disk($disk)->writeStream($upload_path, $stream);
+
+        // Close the Stream pointer because it's good practice.
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
     }
 }
