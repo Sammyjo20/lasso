@@ -12,6 +12,7 @@ final class BundleManager
      */
     protected $forbidden_files = [
         '.htaccess',
+        'web.config',
         'index.php',
         'robots.txt',
         'storage'
