@@ -25,7 +25,7 @@ Lasso is still in early development. Therefore, I haven't yet written any tests 
 Lasso requires Laravel 6+ and PHP 7.3 or higher. To install Lasso, simply run the composer require command below:
 
 ```
-composer require sammyjo20/lasso
+composer require sammyjo20/lasso ^1.0
 ```
 
 After that, run the command below to create the lasso.php config file:
