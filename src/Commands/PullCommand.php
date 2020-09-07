@@ -36,7 +36,9 @@ final class PullCommand extends Command
 
         $console->setCommand($this);
 
-        $this->info('🏁 Preparing to download assets from Filesystem.');
+        $disk = config('lasso.storage.disk');
+
+        $this->info('🏁 Preparing to download assets from "' . $disk . '" Filesystem.');
 
         (new Fetcher())->execute();
 

@@ -46,10 +46,12 @@ final class PublishCommand extends Command
             $env = $this->ask('🐎 Which Lasso environment would you like to publish to?', $env);
         }
 
-        $this->info('🏁 Preparing to publish assets to "' . config('lasso.storage.disk')  . '" Filesystem.');
+        $disk = config('lasso.storage.disk');
+
+        $this->info('🏁 Preparing to publish assets to "' . $disk . '" Filesystem.');
 
         (new Bundler($env))->execute($use_git);
 
-        $this->info('✅ Successfully published assets to "' . config('lasso.storage.disk')  . '" Filesystem.! Yee-haw!');
+        $this->info('✅ Successfully published assets to "' . $disk  . '" Filesystem! Yee-haw! 🐎');
     }
 }
