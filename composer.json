@@ -1,10 +1,9 @@
 {
     "name": "sammyjo20/lasso",
+    "type": "library",
+    "description": "Lasso - Asset wrangling for Laravel made simple.",
     "version": "1.1.2",
     "license": "MIT",
-    "description": "Lasso - Asset wrangling for Laravel made simple.",
-    "type": "library",
-    "minimum-stability": "stable",
     "authors": [
         {
             "name": "Sam Carré",
@@ -13,19 +12,14 @@
     ],
     "require": {
         "php": "^7.3",
-        "illuminate/support": "^6.0|^7.0|^8.0",
-        "illuminate/contracts": "^6.0|^7.0|^8.0",
-        "symfony/process": "^4.0|^5.0",
-        "illuminate/filesystem": "^6.0|^7.0|^8.0",
-        "symfony/finder": "^4.0|^5.0",
-        "illuminate/console": "^6.0|^7.0|^8.0",
         "ext-json": "*",
-        "ext-zip": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "Sammyjo20\\Lasso\\": "src/"
-        }
+        "ext-zip": "*",
+        "illuminate/console": "^6.0 || ^7.0 || ^8.0",
+        "illuminate/contracts": "^6.0 || ^7.0 || ^8.0",
+        "illuminate/filesystem": "^6.0 || ^7.0 || ^8.0",
+        "illuminate/support": "^6.0 || ^7.0 || ^8.0",
+        "symfony/finder": "^4.0 || ^5.0",
+        "symfony/process": "^4.0 || ^5.0"
     },
     "extra": {
         "laravel": {
@@ -33,5 +27,11 @@
                 "Sammyjo20\\Lasso\\LassoServiceProvider"
             ]
         }
-    }
+    },
+    "autoload": {
+        "psr-4": {
+            "Sammyjo20\\Lasso\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
 }
