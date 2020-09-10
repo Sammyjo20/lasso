@@ -10,7 +10,7 @@
 
 ### Introduction
 
-Lasso is a Laravel package designed to make your deployments faster and easier. One problem developers have is dealing with their built assets (Webpack/Laravel Mix). Do you store them in Git? Do you deploy them on the server? Each of these solutions for assets can cause headaches for the developer, including merge conflicts and slowing down servers. 
+Lasso is a Laravel package designed to make your deployments faster and easier. One problem developers have is dealing with their built assets (Webpack/Laravel Mix). Do you store them in Git? Do you deploy them on the server? Each of these solutions for assets can cause headaches for the developer, including merge conflicts and slowing down servers.
 
 ### What does Lasso do?
 
@@ -160,7 +160,7 @@ Lasso comes with two commands that should be used by your project/deployment pip
 
 ### Publish
 
-The publish command should be executed when you would like to upload/publish new assets to your application. Lasso will run the provided script (e.g npm run production) and then zip up the files created by the compiler (e.g Webpack). 
+The publish command should be executed when you would like to upload/publish new assets to your application. Lasso will run the provided script (e.g npm run production) and then zip up the files created by the compiler (e.g Webpack).
 
 ```php
 php artisan lasso:publish
@@ -217,7 +217,7 @@ Lasso can also trigger webhooks when a command has been executed successfully. S
   'pull' => [
     //
   ]
-  
+
 ],
 ```
 
@@ -259,4 +259,3 @@ Special thanks to @codepotato for the logo! ❤️
 This is my first Laravel package, I really hope it's been useful to you, if you like my work and want to show some love, consider buying me some coding fuel (Coffee) ❤
 
 [Donate Java (the drink not the language)](https://ko-fi.com/sammyjo20)
-
