@@ -11,24 +11,40 @@ class LassoServiceProvider extends BaseServiceProvider
 {
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/../config/config.php' => config_path('lasso.php'),
-        ]);
+        $this->registerCommands();
+        $this->offerPublishing();
+    }
 
+    public function register()
+    {
+        $this->configure();
+    }
+
+    protected function configure(): void
+    {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/config.php',
+            'lasso'
+        );
+    }
+
+    protected function offerPublishing(): void
+    {
         if ($this->app->runningInConsole()) {
-            $this->app->instance(Console::class, new Console());
+            $this->publishes([
+                __DIR__ . '/../config/config.php' => config_path('lasso.php'),
+            ], 'lasso-config');
+        }
+    }
 
+
+    protected function registerCommands(): void
+    {
+        if ($this->app->runningInConsole()) {
             $this->commands([
                 PublishCommand::class,
                 PullCommand::class,
             ]);
         }
-    }
-
-    public function register()
-    {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/config.php', 'lasso'
-        );
     }
 }

@@ -31,7 +31,7 @@ composer require sammyjo20/lasso ^1.0
 After that, run the command below to create the lasso.php config file:
 
 ```
-php artisan vendor:publish --provider="Sammyjo20\Lasso\LassoServiceProvider"
+php artisan vendor:publish --tag=lasso-config
 ```
 
 ## Configuration
