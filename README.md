@@ -248,6 +248,10 @@ Lasso will copy the public directory during it's publish process. If you have an
 'excluded_directories' => [],
 ```
 
+## Thanks
+
+Special thanks to @codepotato for the logo! ❤️
+
 ---
 
 ## And that's it! ✨
