@@ -168,7 +168,7 @@ php artisan lasso:publish
 
 After running this command, Lasso will create a "lasso-bundle.json" file in your application's root directory. This is the recommended approach as when you commit the file, Lasso will use this to download the latest bundle relating to your commit. If you don't use Git, for example if you are compiling assets within Continuous Integration, you can add the `--no-git` flag to the command.
 
-**Warning: When using the `--no-git` flag, versioning will be limited as the lasso-bundle.json is stored in your Filesystem, rathe than your repository. Using Git is the recommended approach.**
+**Warning: When using the `--no-git` flag, versioning will be limited as the lasso-bundle.json is stored in your Filesystem, rather than your repository. Using Git is the recommended approach.**
 
 ### Pull
 
