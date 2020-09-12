@@ -5,7 +5,8 @@ namespace Sammyjo20\Lasso;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Sammyjo20\Lasso\Commands\PublishCommand;
 use Sammyjo20\Lasso\Commands\PullCommand;
-use Sammyjo20\Lasso\Container\Console;
+use Sammyjo20\Lasso\Container\Artisan;
+use Sammyjo20\Lasso\Helpers\Filesystem;
 
 class LassoServiceProvider extends BaseServiceProvider
 {
@@ -16,7 +17,7 @@ class LassoServiceProvider extends BaseServiceProvider
         ]);
 
         if ($this->app->runningInConsole()) {
-            $this->app->instance(Console::class, new Console());
+            $this->bindsServices();
 
             $this->commands([
                 PublishCommand::class,
@@ -30,5 +31,11 @@ class LassoServiceProvider extends BaseServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/../config/config.php', 'lasso'
         );
+    }
+
+    protected function bindsServices(): void
+    {
+        $this->app->instance(Artisan::class, new Artisan);
+        $this->app->instance(Filesystem::class, new Filesystem);
     }
 }
