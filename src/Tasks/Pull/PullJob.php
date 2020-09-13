@@ -168,6 +168,7 @@ class PullJob extends BaseJob
     /**
      * @param array $bundle
      * @return bool
+     * @throws \Exception
      */
     private function validateBundle(array $bundle): bool
     {

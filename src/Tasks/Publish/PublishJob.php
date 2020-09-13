@@ -21,11 +21,6 @@ final class PublishJob extends BaseJob
     protected $usesGit = true;
 
     /**
-     * @var bool
-     */
-    protected $pushToGit = false;
-
-    /**
      * PublishJob constructor.
      */
     public function __construct()
@@ -34,10 +29,6 @@ final class PublishJob extends BaseJob
 
         $this->generateBundleId()
             ->deleteLassoDirectory();
-
-        if (config('lasso.storage.push_to_git', false) === true) {
-            $this->shouldPushToGit();
-        }
     }
 
     /**
@@ -104,16 +95,6 @@ final class PublishJob extends BaseJob
             $this->cloud->uploadFile($bundlePath, 'lasso-bundle.json');
         }
 
-        // Has the user enabled automatic pushing to git?
-        // If they have, commit that file now.
-
-        if ($this->pushToGit) {
-            (new Command())
-                ->setScript('git add "lasso-bundle.json" || git commit -m"Lasso Assets 🐎" --author="Lasso <>" || git push')
-                ->setTimeout(60)
-                ->run();
-        }
-
         // Done! Let's run some cleanup, and dispatch all of the
         // Webhook URLs defined in the "publish" array.
 
@@ -173,16 +154,6 @@ final class PublishJob extends BaseJob
     public function dontUseGit(): self
     {
         $this->usesGit = false;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function shouldPushToGit(): self
-    {
-        $this->pushToGit = true;
 
         return $this;
     }
