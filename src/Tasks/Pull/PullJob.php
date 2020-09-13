@@ -14,11 +14,6 @@ use Sammyjo20\Lasso\Tasks\Webhook;
 class PullJob extends BaseJob
 {
     /**
-     * @var bool
-     */
-    protected $useGit = true;
-
-    /**
      * @var BackupService
      */
     protected $backup;
@@ -87,11 +82,9 @@ class PullJob extends BaseJob
             $this->rollBack($ex);
         }
 
-        if ($this->useGit === true) {
-            VersioningService::appendNewVersion(
-                $this->cloud->getUploadPath($bundleInfo['file'])
-            );
-        }
+        VersioningService::appendNewVersion(
+            $this->cloud->getUploadPath($bundleInfo['file'])
+        );
 
         $this->cleanUp();
 
@@ -144,14 +137,12 @@ class PullJob extends BaseJob
             return $bundle;
         }
 
-        $this->doesntUseGit();
-
         // If there isn't a "lasso-bundle.json" file in the root directory,
         // that's okay - this means that the commit is in "non-git" mode. So
         // let's just grab that file.If we don't have a file on the server
         // however; we need to throw an exception.
 
-        if (!$this->cloud->has($cloudPath)) {
+        if (!$this->cloud->exists($cloudPath)) {
             $this->rollBack(
                 FetchCommandFailed::because('A valid "lasso-bundle.json" file could not be found in the Filesystem for the current environment.')
             );
@@ -277,15 +268,5 @@ class PullJob extends BaseJob
         $this->filesystem->deleteBaseLassoDirectory();
 
         $this->filesystem->ensureDirectoryExists(base_path('.lasso'));
-    }
-
-    /**
-     * @return $this
-     */
-    public function doesntUseGit(): self
-    {
-        $this->useGit = false;
-
-        return $this;
     }
 }
