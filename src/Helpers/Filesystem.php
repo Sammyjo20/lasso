@@ -14,6 +14,11 @@ class Filesystem extends BaseFilesystem
     /**
      * @var string
      */
+    protected $cloudDisk;
+
+    /**
+     * @var string
+     */
     protected $publicPath;
 
     /**
@@ -22,9 +27,11 @@ class Filesystem extends BaseFilesystem
     public function __construct()
     {
         $lassoEnvironment = config('lasso.storage.environment') ?? 'global';
+        $cloudDisk = config('lasso.storage.disk');
         $publicPath = config('lasso.public_path');
 
         $this->setLassoEnvironment($lassoEnvironment)
+            ->setCloudDisk($cloudDisk)
             ->setPublicPath($publicPath);
     }
 
@@ -36,7 +43,7 @@ class Filesystem extends BaseFilesystem
      * @param string|null $environment
      * @return string
      */
-    public function getLassoPath(string $file = null, string $environment = null): string
+    public function getUploadPath(string $file = null, string $environment = null): string
     {
         $uploadPath = config('lasso.storage.upload_to');
 
@@ -47,6 +54,24 @@ class Filesystem extends BaseFilesystem
         }
 
         return $dir . '/' . ltrim($file, '/');
+    }
+
+    /**
+     * @param array $bundle
+     */
+    public function createFreshLocalBundle(array $bundle): void
+    {
+        $this->deleteLocalBundle();
+
+        $this->put(base_path('lasso-bundle.json'), json_encode($bundle));
+    }
+
+    /**
+     * @return bool
+     */
+    public function deleteLocalBundle(): bool
+    {
+        return $this->delete(base_path('lasso-bundle.json'));
     }
 
     /**
@@ -85,6 +110,25 @@ class Filesystem extends BaseFilesystem
     public function setPublicPath(string $publicPath): self
     {
         $this->publicPath = $publicPath;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCloudDisk(): string
+    {
+        return $this->cloudDisk;
+    }
+
+    /**
+     * @param string $disk
+     * @return $this
+     */
+    public function setCloudDisk(string $disk): self
+    {
+        $this->cloudDisk = $disk;
 
         return $this;
     }

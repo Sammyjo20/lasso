@@ -31,38 +31,47 @@ final class PublishCommand extends Command
      *
      * @param Artisan $artisan
      * @param Filesystem $filesystem
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Sammyjo20\Lasso\Exceptions\CommittingFailed
-     * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
     public function handle(Artisan $artisan, Filesystem $filesystem)
     {
-        $artisan->setCommand($this);
+        $dontUseGit = $this->option('no-git') === true;
+        $this->configureApplication($artisan, $filesystem);
 
-        $use_git = $this->option('no-git') === false;
-        $silent_mode = $this->option('silent');
+        $job = new PublishJob;
 
-        (new ConfigValidator())->validate();
-
-        $env = config('lasso.storage.environment', null);
-
-        if ($silent_mode === false && is_null($env) === false) {
-            $env = $this->ask('🐎 Which Lasso environment would you like to publish to?', $env);
-
-            $filesystem->setLassoEnvironment($env);
+        if ($dontUseGit) {
+            $job->dontUseGit();
         }
 
-        (new PublishJob())
-            ->run();
+        $artisan->note(sprintf(
+            '🏁 Preparing to publish assets to "%s" filesystem...', $filesystem->getCloudDisk()
+        ));
 
-        dd('Done');
+        $job->run();
 
-        $disk = config('lasso.storage.disk');
+        $artisan->note(sprintf(
+            '✅ Successfully published assets to "%s" filesystem! Yee-haw! 🐎', $filesystem->getCloudDisk()
+        ));
+    }
 
-        $this->info('🏁 Preparing to publish assets to "' . $disk . '" Filesystem.');
+    /**
+     * Configure the Artisan console and the Filesystem, ready for publishing.
+     *
+     * @param Artisan $artisan
+     * @param Filesystem $filesystem
+     * @return void
+     */
+    private function configureApplication(Artisan $artisan, Filesystem $filesystem): void
+    {
+        $noPrompt = $this->option('silent') === true;
+        $lassoEnvironment = config('lasso.storage.environment', null);
 
-        (new Bundler($env))->execute($use_git);
+        $artisan->setCommand($this);
 
-        $this->info('✅ Successfully published assets to "' . $disk  . '" Filesystem! Yee-haw! 🐎');
+        if ($noPrompt === false && !is_null($lassoEnvironment)) {
+            $definedEnv = $this->ask('🐎 Which Lasso environment would you like to publish to?', $lassoEnvironment);
+
+            $filesystem->setLassoEnvironment($definedEnv);
+        }
     }
 }

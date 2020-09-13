@@ -1,13 +1,11 @@
 <?php
 
+namespace Sammyjo20\Lasso\Tasks;
 
-namespace Sammyjo20\Lasso\Tasks\Publish;
-
-use Sammyjo20\Lasso\Interfaces\JobInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-final class CompilationJob implements JobInterface
+final class Command
 {
     /**
      * @var array
@@ -20,7 +18,7 @@ final class CompilationJob implements JobInterface
     protected $timeout;
 
     /**
-     * Run the asset compiler. This job will run the given command/
+     * Run the command. This task will run the given script/
      * if anything goes wrong, it will throw a ProcessFailedException.
      *
      * @throws ProcessFailedException
