@@ -2,7 +2,7 @@
     "name": "sammyjo20/lasso",
     "type": "library",
     "description": "Lasso - Asset wrangling for Laravel made simple.",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "license": "MIT",
     "authors": [
         {
