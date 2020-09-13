@@ -13,11 +13,6 @@ class Zip
     protected $zip;
 
     /**
-     * @var string
-     */
-    protected $destinationPath;
-
-    /**
      * @var Filesystem
      */
     protected $filesystem;
@@ -54,36 +49,11 @@ class Zip
     }
 
     /**
-     * @param string $path
-     * @param string $relative_path
-     * @return $this
-     */
-    public function addFile(string $path, string $relative_path): self
-    {
-        if ($this->filesystem->exists($path)) {
-            $this->zip->addFile($path, ltrim($relative_path, DIRECTORY_SEPARATOR));
-        }
-
-        return $this;
-    }
-
-    /**
      * @return $this
      */
     private function setFilesystem(): self
     {
         $this->filesystem = resolve(Filesystem::class);
-
-        return $this;
-    }
-
-    /**
-     * @param string $destination
-     * @return $this
-     */
-    private function setDestinationPath(string $destination): self
-    {
-        $this->destinationPath = $destination;
 
         return $this;
     }

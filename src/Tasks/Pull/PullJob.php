@@ -2,7 +2,7 @@
 
 namespace Sammyjo20\Lasso\Tasks\Pull;
 
-use Sammyjo20\Lasso\Exceptions\FetchCommandFailed;
+use Sammyjo20\Lasso\Exceptions\PullJobFailed;
 use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
 use Sammyjo20\Lasso\Helpers\FileLister;
 use Sammyjo20\Lasso\Services\ArchiveService;
@@ -11,7 +11,7 @@ use Sammyjo20\Lasso\Services\VersioningService;
 use Sammyjo20\Lasso\Tasks\BaseJob;
 use Sammyjo20\Lasso\Tasks\Webhook;
 
-class PullJob extends BaseJob
+final class PullJob extends BaseJob
 {
     /**
      * @var BackupService
@@ -29,10 +29,10 @@ class PullJob extends BaseJob
     }
 
     /**
-     * @throws FetchCommandFailed
+     * @return void
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
-     * @return void
+     * @throws PullJobFailed
      */
     public function run(): void
     {
@@ -144,7 +144,7 @@ class PullJob extends BaseJob
 
         if (!$this->cloud->exists($cloudPath)) {
             $this->rollBack(
-                FetchCommandFailed::because('A valid "lasso-bundle.json" file could not be found in the Filesystem for the current environment.')
+                PullJobFailed::because('A valid "lasso-bundle.json" file could not be found in the Filesystem for the current environment.')
             );
         }
 
@@ -165,7 +165,7 @@ class PullJob extends BaseJob
     {
         if (!isset($bundle['file']) || !isset($bundle['checksum'])) {
             $this->rollBack(
-                FetchCommandFailed::because('The bundle info was missing the required data.')
+                PullJobFailed::because('The bundle info was missing the required data.')
             );
         }
 
@@ -176,7 +176,7 @@ class PullJob extends BaseJob
      * @param string $file
      * @param string $checksum
      * @return string
-     * @throws FetchCommandFailed
+     * @throws PullJobFailed
      */
     private function downloadBundleZip(string $file, string $checksum): string
     {
@@ -185,7 +185,7 @@ class PullJob extends BaseJob
 
         if (!$this->cloud->exists($bundlePath)) {
             $this->rollBack(
-                FetchCommandFailed::because('The bundle zip does not exist. If you are using a specific environment, please make sure the LASSO_ENV is the same in your .env file.')
+                PullJobFailed::because('The bundle zip does not exist. If you are using a specific environment, please make sure the LASSO_ENV is the same in your .env file.')
             );
         }
 
@@ -201,7 +201,7 @@ class PullJob extends BaseJob
             }
         } catch (\Exception $ex) {
             $this->rollBack(
-                FetchCommandFailed::because('An error occurred while writing to the local path.')
+                PullJobFailed::because('An error occurred while writing to the local path.')
             );
         }
 
@@ -211,7 +211,7 @@ class PullJob extends BaseJob
 
         if (!BundleIntegrityHelper::verifyChecksum($localBundlePath, $checksum)) {
             $this->rollBack(
-                FetchCommandFailed::because('The bundle Zip\'s checksum is incorrect.')
+                PullJobFailed::because('The bundle Zip\'s checksum is incorrect.')
             );
         }
 

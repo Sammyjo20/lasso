@@ -5,7 +5,7 @@ namespace Sammyjo20\Lasso\Container;
 use Illuminate\Console\Command;
 use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
 
-class Artisan
+final class Artisan
 {
     /**
      * @var Command
