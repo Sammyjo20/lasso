@@ -44,7 +44,7 @@ final class PublishJob extends BaseJob
 
             (new Command())
                 ->setScript(config('lasso.compiler.script'))
-                ->setTimeout(config('lasso.compiler.timeout'))
+                ->setTimeout(config('lasso.compiler.timeout', 600))
                 ->run();
 
             $this->artisan->note('✅ Compiled assets.')
