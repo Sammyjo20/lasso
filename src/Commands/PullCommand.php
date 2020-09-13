@@ -4,9 +4,10 @@
 namespace Sammyjo20\Lasso\Commands;
 
 use Illuminate\Console\Command;
-use Sammyjo20\Lasso\Container\Console;
+use Sammyjo20\Lasso\Container\Artisan;
 use Sammyjo20\Lasso\Helpers\ConfigValidator;
-use Sammyjo20\Lasso\Services\Fetcher;
+use Sammyjo20\Lasso\Helpers\Filesystem;
+use Sammyjo20\Lasso\Tasks\Pull\PullJob;
 
 final class PullCommand extends Command
 {
@@ -27,20 +28,22 @@ final class PullCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param Console $console
+     * @param Artisan $artisan
+     * @param Filesystem $filesystem
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
-    public function handle(Console $console)
+    public function handle(Artisan $artisan, Filesystem $filesystem)
     {
         (new ConfigValidator())->validate();
 
-        $console->setCommand($this);
+        $artisan->setCommand($this);
 
-        $disk = config('lasso.storage.disk');
+        $this->info(sprintf(
+            '🏁 Preparing to download assets from "%s" filesystem.', $filesystem->getCloudDisk()
+        ));
 
-        $this->info('🏁 Preparing to download assets from "' . $disk . '" Filesystem.');
-
-        (new Fetcher())->execute();
+        (new PullJob())
+            ->run();
 
         $this->info('✅ Successfully downloaded the latest assets. Yee-haw!');
         $this->info('❤️  Thank you for using Lasso. https://getlasso.dev');

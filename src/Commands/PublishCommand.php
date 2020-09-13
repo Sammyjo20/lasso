@@ -31,9 +31,12 @@ final class PublishCommand extends Command
      *
      * @param Artisan $artisan
      * @param Filesystem $filesystem
+     * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
     public function handle(Artisan $artisan, Filesystem $filesystem)
     {
+        (new ConfigValidator())->validate();
+
         $dontUseGit = $this->option('no-git') === true;
         $this->configureApplication($artisan, $filesystem);
 

@@ -3,6 +3,7 @@
 namespace Sammyjo20\Lasso\Helpers;
 
 use Illuminate\Support\Facades\Storage;
+use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
 use Sammyjo20\Lasso\Helpers\Filesystem as LocalFilesystem;
 
 class Cloud
@@ -34,12 +35,29 @@ class Cloud
     }
 
     /**
+     * @param $name
+     * @param $arguments
+     * @return mixed|void
+     * @throws ConsoleMethodException
+     */
+    public function __call($name, $arguments)
+    {
+        if (method_exists($this->cloudFilesystem, $name)) {
+            return call_user_func_array([$this->cloudFilesystem, $name], $arguments);
+        }
+
+        throw new ConsoleMethodException(sprintf(
+            'Method %s::%s does not exist.', get_class($this->cloudFilesystem), $name
+        ));
+    }
+
+    /**
      * @param string $path
      * @param string $name
      */
     public function uploadFile(string $path, string $name): void
     {
-        $upload_path = $this->localFilesystem->getUploadPath($name);
+        $upload_path = $this->getUploadPath($name);
 
         $stream = fopen($path, 'rb');
 
@@ -50,6 +68,26 @@ class Cloud
         if (is_resource($stream)) {
             fclose($stream);
         }
+    }
+
+    /**
+     * Returns the Lasso upload directory. You can specify a file
+     * to create a fully qualified URL.
+     *
+     * @param string|null $file
+     * @return string
+     */
+    public function getUploadPath(string $file = null): string
+    {
+        $uploadPath = config('lasso.storage.upload_to');
+
+        $dir = sprintf('%s/%s', $uploadPath, $this->localFilesystem->getLassoEnvironment());
+
+        if (is_null($file)) {
+            return $dir;
+        }
+
+        return $dir . '/' . ltrim($file, '/');
     }
 
     /**

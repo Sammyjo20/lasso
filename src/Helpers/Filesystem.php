@@ -36,24 +36,19 @@ class Filesystem extends BaseFilesystem
     }
 
     /**
-     * Returns the Lasso upload directory. You can specify a file
-     * to create a fully qualified URL.
-     *
-     * @param string|null $file
-     * @param string|null $environment
-     * @return string
+     * @param $resource
+     * @param string $destination
+     * @return bool
      */
-    public function getUploadPath(string $file = null, string $environment = null): string
+    public function putStream($resource, string $destination): bool
     {
-        $uploadPath = config('lasso.storage.upload_to');
+        $stream = fopen($destination, 'w+b');
 
-        $dir = sprintf('%s/%s', $uploadPath, $environment);
-
-        if (is_null($file)) {
-            return $dir;
+        if ( ! $stream || stream_copy_to_stream($resource, $stream) === false || ! fclose($stream)) {
+            return false;
         }
 
-        return $dir . '/' . ltrim($file, '/');
+        return true;
     }
 
     /**
@@ -82,6 +77,14 @@ class Filesystem extends BaseFilesystem
     public function deleteBaseLassoDirectory(): bool
     {
         return $this->deleteDirectory('.lasso');
+    }
+
+    /**
+     * @return string
+     */
+    public function getLassoEnvironment(): string
+    {
+        return $this->lassoEnvironment;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Sammyjo20\Lasso\Services;
 
+use Sammyjo20\Lasso\Helpers\Unzipper;
 use Sammyjo20\Lasso\Helpers\Zip;
 
 class ArchiveService
@@ -17,8 +18,13 @@ class ArchiveService
             ->closeZip();
     }
 
+    /**
+     * @param string $source
+     * @param string $destination
+     */
     public static function extract(string $source, string $destination)
     {
-        // Extract a Zip file from a directory...
+        (new Unzipper($source, $destination))
+            ->run();
     }
 }

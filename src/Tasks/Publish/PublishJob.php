@@ -122,7 +122,7 @@ final class PublishJob extends BaseJob
         $this->artisan->note('✅ Successfully published assets.')
             ->note('⏳ Dispatching webhooks...');
 
-        $this->sendWebhooks();
+        $this->dispatchWebhooks();
 
         $this->artisan->note('✅ Webhooks dispatched.');
     }
@@ -138,7 +138,7 @@ final class PublishJob extends BaseJob
     /**
      * @return void
      */
-    public function sendWebhooks(): void
+    public function dispatchWebhooks(): void
     {
         $webhooks = config('lasso.webhooks.publish', []);
 

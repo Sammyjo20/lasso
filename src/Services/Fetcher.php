@@ -60,7 +60,7 @@ final class Fetcher
 
         $this->lasso_path = DirectoryHelper::getFileDirectory();
 
-        $this->backup_service = new Backup($this->local_filesystem, base_path('.lasso/backup'));
+        $this->backup_service = new BackupService($this->local_filesystem, base_path('.lasso/backup'));
         $this->use_git = false;
     }
 
