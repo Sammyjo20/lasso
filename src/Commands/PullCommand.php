@@ -3,19 +3,19 @@
 
 namespace Sammyjo20\Lasso\Commands;
 
-use Illuminate\Console\Command;
-use Sammyjo20\Lasso\Container\Console;
+use Sammyjo20\Lasso\Container\Artisan;
 use Sammyjo20\Lasso\Helpers\ConfigValidator;
-use Sammyjo20\Lasso\Services\Fetcher;
+use Sammyjo20\Lasso\Helpers\Filesystem;
+use Sammyjo20\Lasso\Tasks\Pull\PullJob;
 
-final class PullCommand extends Command
+final class PullCommand extends BaseCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'lasso:pull';
+    protected $signature = 'lasso:pull {--silent}';
 
     /**
      * The console command description.
@@ -27,22 +27,26 @@ final class PullCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param Console $console
+     * @param Artisan $artisan
+     * @param Filesystem $filesystem
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
-    public function handle(Console $console)
+    public function handle(Artisan $artisan, Filesystem $filesystem)
     {
         (new ConfigValidator())->validate();
 
-        $console->setCommand($this);
+        $this->configureApplication($artisan, $filesystem);
 
-        $disk = config('lasso.storage.disk');
+        $artisan->setCommand($this);
 
-        $this->info('🏁 Preparing to download assets from "' . $disk . '" Filesystem.');
+        $artisan->note(sprintf(
+            '🏁 Preparing to download assets from "%s" filesystem.', $filesystem->getCloudDisk()
+        ));
 
-        (new Fetcher())->execute();
+        (new PullJob())
+            ->run();
 
-        $this->info('✅ Successfully downloaded the latest assets. Yee-haw!');
-        $this->info('❤️  Thank you for using Lasso. https://getlasso.dev');
+        $artisan->note('✅ Successfully downloaded the latest assets. Yee-haw!');
+        $artisan->note('❤️  Thank you for using Lasso. https://getlasso.dev');
     }
 }

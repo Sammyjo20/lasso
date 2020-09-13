@@ -5,22 +5,12 @@ namespace Sammyjo20\Lasso;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Sammyjo20\Lasso\Commands\PublishCommand;
 use Sammyjo20\Lasso\Commands\PullCommand;
-use Sammyjo20\Lasso\Container\Console;
+use Sammyjo20\Lasso\Container\Artisan;
+use Sammyjo20\Lasso\Helpers\Filesystem;
 
 class LassoServiceProvider extends BaseServiceProvider
 {
-    public function boot()
-    {
-        $this->registerCommands();
-        $this->offerPublishing();
-    }
-
     public function register()
-    {
-        $this->configure();
-    }
-
-    protected function configure(): void
     {
         $this->mergeConfigFrom(
             __DIR__ . '/../config/config.php',
@@ -28,23 +18,48 @@ class LassoServiceProvider extends BaseServiceProvider
         );
     }
 
-    protected function offerPublishing(): void
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('lasso.php'),
-            ], 'lasso-config');
+            $this->registerCommands()
+                ->offerPublishing()
+                ->bindsServices();
         }
     }
 
-
-    protected function registerCommands(): void
+    /**
+     * @return $this
+     */
+    protected function registerCommands(): self
     {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                PublishCommand::class,
-                PullCommand::class,
-            ]);
-        }
+        $this->commands([
+            PublishCommand::class,
+            PullCommand::class,
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function offerPublishing(): self
+    {
+        $this->publishes([
+            __DIR__ . '/../config/config.php' => config_path('lasso.php'),
+        ], 'lasso-config');
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function bindsServices(): self
+    {
+        $this->app->instance(Artisan::class, new Artisan);
+        $this->app->instance(Filesystem::class, new Filesystem);
+
+        return $this;
     }
 }

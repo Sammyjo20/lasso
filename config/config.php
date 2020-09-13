@@ -53,14 +53,6 @@ return [
         'environment' => env('LASSO_ENV', null),
 
         /*
-         * After running "php artisan lasso:push", by default Lasso will
-         * create a "lasso-bundle.json" file. If you would like Lasso to
-         * automatically commit and push the file to Git after running the
-         * command, enable this.
-         */
-        'push_to_git' => false,
-
-        /*
          * Lasso will automatically version the assets. This is useful if you
          * suddenly need to roll-back a deployment and use an older version
          * of built files. You can set the maximum amount of files stored here.

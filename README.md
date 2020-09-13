@@ -25,7 +25,7 @@ Lasso is still in early development. Therefore, I haven't yet written any tests 
 Lasso requires Laravel 6+ and PHP 7.3 or higher. To install Lasso, simply run the composer require command below:
 
 ```
-composer require sammyjo20/lasso ^1.0
+composer require sammyjo20/lasso ^1.2
 ```
 
 After that, run the command below to create the lasso.php config file:
@@ -96,14 +96,6 @@ return [
         'environment' => env('LASSO_ENV', null),
 
         /*
-         * After running "php artisan lasso:push", by default Lasso will
-         * create a "lasso-bundle.json" file. If you would like Lasso to
-         * automatically commit and push the file to Git after running the
-         * command, enable this.
-         */
-        'push_to_git' => false,
-
-        /*
          * Lasso will automatically version the assets. This is useful if you
          * suddenly need to roll-back a deployment and use an older version
          * of built files. You can set the maximum amount of files stored here.
@@ -168,7 +160,7 @@ php artisan lasso:publish
 
 After running this command, Lasso will create a "lasso-bundle.json" file in your application's root directory. This is the recommended approach as when you commit the file, Lasso will use this to download the latest bundle relating to your commit. If you don't use Git, for example if you are compiling assets within Continuous Integration, you can add the `--no-git` flag to the command.
 
-**Warning: When using the `--no-git` flag, versioning will be limited as the lasso-bundle.json is stored in your Filesystem, rathe than your repository. Using Git is the recommended approach.**
+**Warning: When using the `--no-git` flag, versioning will be limited as the lasso-bundle.json is stored in your Filesystem, rather than your repository. Using Git is the recommended approach.**
 
 ### Pull
 

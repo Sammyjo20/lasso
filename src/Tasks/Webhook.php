@@ -1,15 +1,11 @@
 <?php
 
-namespace Sammyjo20\Lasso\Services;
+namespace Sammyjo20\Lasso\Tasks;
 
 use Illuminate\Support\Facades\Http;
 
 final class Webhook
 {
-    public const PUBLISH_EVENT = 'publish';
-
-    public const PULL_EVENT = 'pull';
-
     /**
      * @param string $url
      * @param string $event

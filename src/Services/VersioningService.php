@@ -4,7 +4,7 @@ namespace Sammyjo20\Lasso\Services;
 
 use Illuminate\Support\Facades\Storage;
 use Sammyjo20\Lasso\Exceptions\VersioningFailed;
-use Sammyjo20\Lasso\Helpers\DirectoryHelper;
+use Sammyjo20\Lasso\Helpers\Cloud;
 
 final class VersioningService
 {
@@ -39,7 +39,7 @@ final class VersioningService
     private static function getHistoryFromDisk(): array
     {
         $disk = self::getDisk();
-        $path = DirectoryHelper::getFileDirectory('history.json');
+        $path = self::getFileDirectory('history.json');
 
         // If there is no history to be found in the Filesystem,
         // that's completely fine. Let's just return an empty
@@ -132,7 +132,7 @@ final class VersioningService
     private static function updateHistory(array $history): bool
     {
         $disk = self::getDisk();
-        $path = DirectoryHelper::getFileDirectory('history.json');
+        $path = self::getFileDirectory('history.json');
 
         try {
             $encoded = json_encode($history);
@@ -142,6 +142,15 @@ final class VersioningService
                 'Lasso could not update the history.json on the Filesystem.'
             );
         }
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    private static function getFileDirectory(string $path): string
+    {
+        return (new Cloud())->getUploadPath($path);
     }
 
     /**

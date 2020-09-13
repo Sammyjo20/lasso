@@ -2,12 +2,12 @@
 
 namespace Sammyjo20\Lasso\Commands;
 
-use Illuminate\Console\Command;
-use Sammyjo20\Lasso\Container\Console;
+use Sammyjo20\Lasso\Container\Artisan;
 use Sammyjo20\Lasso\Helpers\ConfigValidator;
-use Sammyjo20\Lasso\Services\Bundler;
+use Sammyjo20\Lasso\Helpers\Filesystem;
+use Sammyjo20\Lasso\Tasks\Publish\PublishJob;
 
-final class PublishCommand extends Command
+final class PublishCommand extends BaseCommand
 {
     /**
      * The name and signature of the console command.
@@ -26,32 +26,33 @@ final class PublishCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param Console $console
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     * @throws \Sammyjo20\Lasso\Exceptions\CommittingFailed
+     * @param Artisan $artisan
+     * @param Filesystem $filesystem
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
-    public function handle(Console $console)
+    public function handle(Artisan $artisan, Filesystem $filesystem)
     {
-        $use_git = $this->option('no-git') === false;
-        $silent_mode = $this->option('silent');
-
         (new ConfigValidator())->validate();
 
-        $console->setCommand($this);
+        $this->configureApplication($artisan, $filesystem, true);
 
-        $env = config('lasso.storage.environment', null);
+        $dontUseGit = $this->option('no-git') === true;
+        $this->configureApplication($artisan, $filesystem);
 
-        if ($silent_mode === false && is_null($env) === false) {
-            $env = $this->ask('🐎 Which Lasso environment would you like to publish to?', $env);
+        $job = new PublishJob;
+
+        if ($dontUseGit) {
+            $job->dontUseGit();
         }
 
-        $disk = config('lasso.storage.disk');
+        $artisan->note(sprintf(
+            '🏁 Preparing to publish assets to "%s" filesystem...', $filesystem->getCloudDisk()
+        ));
 
-        $this->info('🏁 Preparing to publish assets to "' . $disk . '" Filesystem.');
+        $job->run();
 
-        (new Bundler($env))->execute($use_git);
-
-        $this->info('✅ Successfully published assets to "' . $disk  . '" Filesystem! Yee-haw! 🐎');
+        $artisan->note(sprintf(
+            '✅ Successfully published assets to "%s" filesystem! Yee-haw! 🐎', $filesystem->getCloudDisk()
+        ));
     }
 }
