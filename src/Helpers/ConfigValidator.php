@@ -5,7 +5,7 @@ namespace Sammyjo20\Lasso\Helpers;
 use Illuminate\Filesystem\Filesystem;
 use Sammyjo20\Lasso\Exceptions\ConfigFailedValidation;
 
-final class ConfigValidator
+class ConfigValidator
 {
     /**
      * @var Filesystem
@@ -71,6 +71,10 @@ final class ConfigValidator
      */
     public function validate(): void
     {
+        if ($this->get('storage.push_to_git') === true) {
+            throw ConfigFailedValidation::because('Lasso no longer supports automatically committing lasso-bundle.json. Please remove "push_to_git" from your lasso.php config file and commit the bundle file manually.');
+        }
+
         if (!$this->checkCompilerScript($this->get('compiler.script'))) {
             throw ConfigFailedValidation::because('You must specify a script to run the compiler. (E.g: npm run production)');
         }
