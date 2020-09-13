@@ -200,9 +200,7 @@ final class PullJob extends BaseJob
                 fclose($bundleZip);
             }
         } catch (\Exception $ex) {
-            $this->rollBack(
-                PullJobFailed::because('An error occurred while writing to the local path.')
-            );
+            $this->rollBack($ex);
         }
 
         // Now we want to check if the integrity of the bundle is okay.
