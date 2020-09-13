@@ -13,6 +13,11 @@ class Artisan
     protected $command;
 
     /**
+     * @var bool
+     */
+    protected $isSilent = false;
+
+    /**
      * @param $name
      * @param $arguments
      * @return mixed|void
@@ -36,8 +41,10 @@ class Artisan
      */
     public function note(string $message, bool $error = false): self
     {
-        $command = $error === true ? 'error' : 'info';
-        $this->$command($message);
+        if (!$this->isSilent) {
+            $command = $error === true ? 'error' : 'info';
+            $this->$command($message);
+        }
 
         return $this;
     }
@@ -49,6 +56,16 @@ class Artisan
     public function setCommand(Command $command): self
     {
         $this->command = $command;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function silent(): self
+    {
+        $this->isSilent = true;
 
         return $this;
     }

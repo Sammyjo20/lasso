@@ -5,7 +5,7 @@ namespace Sammyjo20\Lasso\Helpers;
 use Illuminate\Filesystem\Filesystem;
 use Sammyjo20\Lasso\Exceptions\ConfigFailedValidation;
 
-final class ConfigValidator
+class ConfigValidator
 {
     /**
      * @var Filesystem

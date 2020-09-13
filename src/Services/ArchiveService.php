@@ -5,7 +5,7 @@ namespace Sammyjo20\Lasso\Services;
 use Sammyjo20\Lasso\Helpers\Unzipper;
 use Sammyjo20\Lasso\Helpers\Zip;
 
-class ArchiveService
+final class ArchiveService
 {
     /**
      * @param string $sourceDirectory
