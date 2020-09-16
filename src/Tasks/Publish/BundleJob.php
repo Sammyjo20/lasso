@@ -28,7 +28,8 @@ final class BundleJob extends BaseJob
      * @var array
      */
     protected $forbiddenDirectories = [
-        'storage'
+        'storage',
+        'hot'
     ];
 
     /**
