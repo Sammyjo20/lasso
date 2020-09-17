@@ -4,7 +4,7 @@
 
 # Lasso
 
-## Asset wrangling for Laravel made simple. (BETA)
+## Asset wrangling for Laravel made simple.
 
 [Official Website](https://getlasso.dev)
 
