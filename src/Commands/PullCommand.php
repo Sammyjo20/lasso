@@ -31,7 +31,7 @@ final class PullCommand extends BaseCommand
      * @param Filesystem $filesystem
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
-    public function handle(Artisan $artisan, Filesystem $filesystem)
+    public function handle(Artisan $artisan, Filesystem $filesystem): int
     {
         (new ConfigValidator())->validate();
 
@@ -48,5 +48,7 @@ final class PullCommand extends BaseCommand
 
         $artisan->note('✅ Successfully downloaded the latest assets. Yee-haw!');
         $artisan->note('❤️  Thank you for using Lasso. https://getlasso.dev');
+
+        return 0;
     }
 }

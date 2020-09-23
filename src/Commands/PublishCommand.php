@@ -30,7 +30,7 @@ final class PublishCommand extends BaseCommand
      * @param Filesystem $filesystem
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
-    public function handle(Artisan $artisan, Filesystem $filesystem)
+    public function handle(Artisan $artisan, Filesystem $filesystem): int
     {
         (new ConfigValidator())->validate();
 
@@ -54,5 +54,7 @@ final class PublishCommand extends BaseCommand
         $artisan->note(sprintf(
             '✅ Successfully published assets to "%s" filesystem! Yee-haw! 🐎', $filesystem->getCloudDisk()
         ));
+
+        return 0;
     }
 }
