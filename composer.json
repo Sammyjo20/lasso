@@ -21,6 +21,9 @@
         "symfony/finder": "^4.0 || ^5.0",
         "symfony/process": "^4.0 || ^5.0"
     },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16"
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -33,5 +36,8 @@
             "Sammyjo20\\Lasso\\": "src/"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "scripts": {
+        "format": "vendor/bin/php-cs-fixer fix"
+    }
 }
