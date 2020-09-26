@@ -24,13 +24,13 @@ Lasso is still in early development. Therefore, I haven't yet written any tests 
 
 Lasso requires Laravel 6+ and PHP 7.3 or higher. To install Lasso, simply run the composer require command below:
 
-```
+```bash
 composer require sammyjo20/lasso ^1.2
 ```
 
 After that, run the command below to create the lasso.php config file:
 
-```
+```bash
 php artisan vendor:publish --tag=lasso-config
 ```
 
@@ -142,7 +142,7 @@ return [
 ## First things first
 If you would like to use the recommended approach, make sure to add all of your public assets (js/css/images/mix-manifest.json) to your .gitignore file! Please also make sure to add the ".lasso" folder to your .gitignore file:
 
-```php
+```text
 .lasso
 ```
 
@@ -154,7 +154,7 @@ Lasso comes with two commands that should be used by your project/deployment pip
 
 The publish command should be executed when you would like to upload/publish new assets to your application. Lasso will run the provided script (e.g npm run production) and then zip up the files created by the compiler (e.g Webpack).
 
-```php
+```bash
 php artisan lasso:publish
 ```
 
@@ -166,7 +166,7 @@ After running this command, Lasso will create a "lasso-bundle.json" file in your
 
 The pull command should then be executed on your deployment script, or on the servers which will require the assets to be on. Simply run the command below. If you are using *Laravel Forge*, add this command to your deployment script. If you are using *Laravel Envoyer*, add this to the list of hooks during your deployment. It should be run on **every server**.
 
-```php
+```bash
 php artisan lasso:pull
 ```
 
