@@ -6,6 +6,7 @@
 
 # Lasso
 
+[![Code style][ico-code-style]][link-code-style] 
 [![Tests][ico-tests]][link-tests]
 
 ## Asset wrangling for Laravel made simple.
@@ -162,5 +163,10 @@ This is my first Laravel package, I really hope it's been useful to you, if you 
 
 [Donate Java (the drink not the language)](https://ko-fi.com/sammyjo20)
 
+<<<<<<< HEAD
 [ico-tests]: https://img.shields.io/github/workflow/status/Sammyjo20/Lasso/tests/master?label=tests&style=flat-square
 [link-tests]: https://github.com/Sammyjo20/Lasso/actions?query=workflow%3Atests
+=======
+[ico-code-style]: https://github.com/Sammyjo20/Lasso/workflows/code%20style/badge.svg
+[link-code-style]: https://github.com/Sammyjo20/Lasso/actions?query=workflow%3A%22code+style%22
+>>>>>>> 47b3fbb... Add PHP CS fixer
