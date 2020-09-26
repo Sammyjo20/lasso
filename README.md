@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://getlasso.dev/images/lasso-logo-small.png" alt="Lasso">
+  <img src="https://getlasso.dev/images/lasso-logo-small.png" alt="Lasso" height="150">
 </p>
 
 # Lasso
