@@ -4,7 +4,7 @@ All notable changes to `lasso` will be documented in this file.
 
 ## [Unreleased]
 
-## [v1.2.3] - 2020-09-20
+## [v1.2.3] - 2020-09-26
 
 ## [v1.2.2] - 2020-09-20
 
