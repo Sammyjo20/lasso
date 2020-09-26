@@ -26,7 +26,7 @@ class BaseCommand extends Command
             $artisan->silent();
         }
 
-        if ($checkFilesystem === true && $noPrompt === false && !is_null($lassoEnvironment)) {
+        if ($checkFilesystem === true && $noPrompt === false && ! is_null($lassoEnvironment)) {
             $definedEnv = $this->ask('🐎 Which Lasso environment would you like to publish to?', $lassoEnvironment);
 
             $filesystem->setLassoEnvironment($definedEnv);

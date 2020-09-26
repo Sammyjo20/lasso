@@ -55,7 +55,7 @@ final class BackupService
      */
     public function restoreBackup(string $destinationDirectory): bool
     {
-        if (!$this->filesystem->exists($this->backupPath)) {
+        if (! $this->filesystem->exists($this->backupPath)) {
             throw RestoreFailed::because('Couldn\'t find backup directory.');
         }
 
@@ -82,7 +82,7 @@ final class BackupService
      */
     public function hasBackup(): bool
     {
-        return !is_null($this->backupPath);
+        return ! is_null($this->backupPath);
     }
 
     /**

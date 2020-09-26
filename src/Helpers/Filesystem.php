@@ -44,7 +44,7 @@ class Filesystem extends BaseFilesystem
     {
         $stream = fopen($destination, 'w+b');
 
-        if ( ! $stream || stream_copy_to_stream($resource, $stream) === false || ! fclose($stream)) {
+        if (! $stream || stream_copy_to_stream($resource, $stream) === false || ! fclose($stream)) {
             return false;
         }
 

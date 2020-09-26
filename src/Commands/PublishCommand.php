@@ -46,13 +46,15 @@ final class PublishCommand extends BaseCommand
         }
 
         $artisan->note(sprintf(
-            '🏁 Preparing to publish assets to "%s" filesystem...', $filesystem->getCloudDisk()
+            '🏁 Preparing to publish assets to "%s" filesystem...',
+            $filesystem->getCloudDisk()
         ));
 
         $job->run();
 
         $artisan->note(sprintf(
-            '✅ Successfully published assets to "%s" filesystem! Yee-haw! 🐎', $filesystem->getCloudDisk()
+            '✅ Successfully published assets to "%s" filesystem! Yee-haw! 🐎',
+            $filesystem->getCloudDisk()
         ));
     }
 }

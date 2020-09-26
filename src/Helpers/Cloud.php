@@ -47,7 +47,9 @@ class Cloud
         }
 
         throw new ConsoleMethodException(sprintf(
-            'Method %s::%s does not exist.', get_class($this->cloudFilesystem), $name
+            'Method %s::%s does not exist.',
+            get_class($this->cloudFilesystem),
+            $name
         ));
     }
 

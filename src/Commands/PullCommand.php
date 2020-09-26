@@ -40,7 +40,8 @@ final class PullCommand extends BaseCommand
         $artisan->setCommand($this);
 
         $artisan->note(sprintf(
-            '🏁 Preparing to download assets from "%s" filesystem.', $filesystem->getCloudDisk()
+            '🏁 Preparing to download assets from "%s" filesystem.',
+            $filesystem->getCloudDisk()
         ));
 
         (new PullJob())

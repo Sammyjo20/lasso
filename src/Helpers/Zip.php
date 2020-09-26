@@ -41,7 +41,7 @@ class Zip
         $files = (new FileLister($directory))
             ->getFinder();
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $this->zip->addFile($file->getPathname(), $file->getRelativePathname());
         }
 
