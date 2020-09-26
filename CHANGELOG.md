@@ -4,6 +4,8 @@ All notable changes to `lasso` will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.2.3] - 2020-09-20
+
 ## [v1.2.2] - 2020-09-20
 
 ## [v1.2.1] - 2020-09-13
@@ -66,7 +68,8 @@ All notable changes to `lasso` will be documented in this file.
 
 ## v0.1.4 - 2020-08-30
 
-[Unreleased]: https://github.com/Sammyjo20/Lasso/compare/v1.2.2...HEAD
+[Unreleased]: https://github.com/Sammyjo20/Lasso/compare/v1.2.3...HEAD
+[v1.2.3]: https://github.com/Sammyjo20/Lasso/compare/v1.2.2...v1.2.3
 [v1.2.2]: https://github.com/Sammyjo20/Lasso/compare/v1.2.1...v1.2.2
 [v1.2.1]: https://github.com/Sammyjo20/Lasso/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/Sammyjo20/Lasso/compare/v1.1.3...v1.2.0
