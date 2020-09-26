@@ -2,8 +2,6 @@
 
 namespace Sammyjo20\Lasso\Tests;
 
-use PHPUnit\Framework\TestCase;
-
 class ExampleTest extends TestCase
 {
     /** @test */

@@ -11,6 +11,13 @@ jobs:
         php: [7.4, 7.3]
         laravel: [^8.0, ^7.0, ^6.0]
         dependency-version: [prefer-lowest, prefer-stable]
+        include:
+          - laravel: ^8.0
+            testbench: ^6.0
+          - laravel: ^7.0
+            testbench: ^5.0
+          - laravel: ^6.0
+            testbench: ^4.0
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
@@ -32,7 +39,7 @@ jobs:
 
       - name: Install composer dependencies
         run: |
-          composer require "illuminate/contracts:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "illuminate/contracts:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
 
       - name: Execute tests
