@@ -21,7 +21,7 @@ final class BundleJob extends BaseJob
         'web.config',
         'index.php',
         'robots.txt',
-        'storage'
+        'storage',
     ];
 
     /**
@@ -29,7 +29,7 @@ final class BundleJob extends BaseJob
      */
     protected $forbiddenDirectories = [
         'storage',
-        'hot'
+        'hot',
     ];
 
     /**
@@ -65,7 +65,7 @@ final class BundleJob extends BaseJob
         // files. We are doing this because Finder will automatically
         // ignore unreadable directories, VCS files, and include dot-files.
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
 
             // Make sure it's not an excluded file.
             if (in_array($file->getFilename(), $this->forbiddenFiles, true)) {
@@ -73,7 +73,7 @@ final class BundleJob extends BaseJob
             }
 
             // Make sure the file exists and is readable.
-            if (!$filesystem->exists($file->getPathname()) || !$filesystem->isReadable($file->getPathname())) {
+            if (! $filesystem->exists($file->getPathname()) || ! $filesystem->isReadable($file->getPathname())) {
                 continue;
             }
 
@@ -91,7 +91,7 @@ final class BundleJob extends BaseJob
         }
 
         // Loop through directories and delete any "excluded"
-        foreach($this->forbiddenDirectories as $directory) {
+        foreach ($this->forbiddenDirectories as $directory) {
             if ($filesystem->exists($workingPath . '/' . $directory)) {
                 $filesystem->deleteDirectory($workingPath . '/' . $directory);
             }

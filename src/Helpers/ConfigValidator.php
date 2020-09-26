@@ -35,7 +35,7 @@ class ConfigValidator
      */
     private function checkCompilerScript($value): bool
     {
-        return !is_null($value);
+        return ! is_null($value);
     }
 
     /**
@@ -53,7 +53,7 @@ class ConfigValidator
      */
     private function checkDiskExists($value): bool
     {
-        return !is_null(config('filesystems.disks.' . $value, null));
+        return ! is_null(config('filesystems.disks.' . $value, null));
     }
 
     /**
@@ -75,19 +75,19 @@ class ConfigValidator
             throw ConfigFailedValidation::because('Lasso no longer supports automatically committing lasso-bundle.json. Please remove "push_to_git" from your lasso.php config file and commit the bundle file manually.');
         }
 
-        if (!$this->checkCompilerScript($this->get('compiler.script'))) {
+        if (! $this->checkCompilerScript($this->get('compiler.script'))) {
             throw ConfigFailedValidation::because('You must specify a script to run the compiler. (E.g: npm run production)');
         }
 
-        if (!$this->checkDiskExists($this->get('storage.disk'))) {
+        if (! $this->checkDiskExists($this->get('storage.disk'))) {
             throw ConfigFailedValidation::because('The specified upload disk is not a valid disk.');
         }
 
-        if (!$this->checkBundleToKeepCount($this->get('storage.max_bundles'))) {
+        if (! $this->checkBundleToKeepCount($this->get('storage.max_bundles'))) {
             throw ConfigFailedValidation::because('You must specify how many bundles should be kept. (Min: 1)');
         }
 
-        if (!$this->checkIfPublicPathExists($this->get('public_path'))) {
+        if (! $this->checkIfPublicPathExists($this->get('public_path'))) {
             throw ConfigFailedValidation::because('The specified public directory is not a valid or accessible directory.');
         }
     }

@@ -30,7 +30,7 @@ final class Command
         $process->setTimeout($this->timeout)
             ->run();
 
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
     }
@@ -41,7 +41,7 @@ final class Command
      */
     public function setScript($script): self
     {
-        if (!is_array($script)) {
+        if (! is_array($script)) {
             $script = explode(' ', $script);
         }
 

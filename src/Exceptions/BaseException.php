@@ -16,7 +16,9 @@ class BaseException extends \Exception
     public static function because(string $reason)
     {
         return new static(sprintf(
-            '%s Reason: %s', static::$event, $reason
+            '%s Reason: %s',
+            static::$event,
+            $reason
         ));
     }
 }

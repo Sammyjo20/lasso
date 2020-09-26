@@ -30,7 +30,9 @@ final class Artisan
         }
 
         throw new ConsoleMethodException(sprintf(
-            'Method %s::%s does not exist.', get_class($this->command), $name
+            'Method %s::%s does not exist.',
+            get_class($this->command),
+            $name
         ));
     }
 
@@ -41,7 +43,7 @@ final class Artisan
      */
     public function note(string $message, bool $error = false): self
     {
-        if (!$this->isSilent) {
+        if (! $this->isSilent) {
             $command = $error === true ? 'error' : 'info';
             $this->$command($message);
         }

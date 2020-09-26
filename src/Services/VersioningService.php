@@ -18,7 +18,7 @@ final class VersioningService
         $history = self::getHistoryFromDisk();
 
         // 2. We then need to append the new version to the history, keyed with a unix timestamp
-        if (!in_array($bundle_url, $history, true)) {
+        if (! in_array($bundle_url, $history, true)) {
             $history[time()] = $bundle_url;
         }
 
@@ -45,7 +45,7 @@ final class VersioningService
         // that's completely fine. Let's just return an empty
         // array, ready to be populated!
 
-        if (!Storage::disk($disk)->exists($path)) {
+        if (! Storage::disk($disk)->exists($path)) {
             return [];
         }
 
@@ -136,6 +136,7 @@ final class VersioningService
 
         try {
             $encoded = json_encode($history);
+
             return Storage::disk($disk)->put($path, $encoded);
         } catch (\Exception $ex) {
             throw VersioningFailed::because(
