@@ -6,6 +6,8 @@
 
 ## Asset wrangling for Laravel made simple.
 
+[![Latest Stable Version](https://poser.pugx.org/sammyjo20/lasso/v)](//packagist.org/packages/sammyjo20/lasso) [![Total Downloads](https://poser.pugx.org/sammyjo20/lasso/downloads)](//packagist.org/packages/sammyjo20/lasso) [![License](https://poser.pugx.org/sammyjo20/lasso/license)](//packagist.org/packages/sammyjo20/lasso)
+
 [Official Website](https://getlasso.dev)
 
 ### Introduction
