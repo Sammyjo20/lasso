@@ -20,7 +20,7 @@ Lasso compiles your assets on your local machine or in Continuous Integration an
 
 ## Disclaimer
 
-Lasso is still in early development. Therefore, I haven't yet written any tests for Lasso, and the code may still be a little messy! I'm hoping to improve Lasso massively over time, but I was too excited not to share Lasso with the world. If you find any bugs, please open an issue on Github and I'll do my best to get back to you quickly. If you find any security related issues, please send me an email to sam.carre2000@gmail.com.
+Lasso is still in early development. Therefore, I haven't yet written any tests for Lasso, and the code may still be a little messy! I'm hoping to improve Lasso massively over time, but I was too excited not to share Lasso with the world. If you find any bugs, please open an issue on Github and I'll do my best to get back to you quickly. If you find any security related issues, please send me an email to samcarredev@gmail.com.
 
 ## Installation
 
