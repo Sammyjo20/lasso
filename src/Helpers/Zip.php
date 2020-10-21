@@ -42,7 +42,7 @@ class Zip
             ->getFinder();
 
         foreach($files as $file) {
-            $this->zip->addFile($file->getPathname(), $file->getRelativePathname());
+            $this->zip->addFile(str_replace('\\', '/', $file->getPathname()), str_replace('\\', '/', $file->getRelativePathname()));
         }
 
         return $this;
