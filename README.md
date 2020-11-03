@@ -36,110 +36,14 @@ After that, run the command below to create the lasso.php config file:
 php artisan vendor:publish --tag=lasso-config
 ```
 
+## Integrate Lasso with your current CI/CD deployment pipeline
+Read this excellent blog post by Alex Justesen on how to integrate Lasso with your CI/CD pipeline: https://lasso-ci-cd.alexjustesen.com/
+
 ## Configuration
 
 Now make sure to configure the lasso.php config file in your app/config directory. Make sure to specify a Filesystem Disk you would like Lasso to use.
 
 **Warning: If you have multiple projects, make sure to change the "upload_to" path, otherwise you may have asset conflicts in your applications.**
-
-```php
-<?php
-
-return [
-
-    'compiler' => [
-
-        /*
-         * Configure which command Lasso should run in its deployment
-         * phase. This will most likely be "npm run production" but
-         * you may choose what you would like to execute.
-         */
-        'script' => 'npm run production',
-
-        /*
-         * Configure the amount of time (in seconds) the compiler
-         * should run before it times out. By default this is set
-         * to 600 seconds (10 minutes).
-         */
-        'timeout' => 600,
-
-        /*
-         * If there any directories/files you would like to Lasso to
-         * exclude when uploading to the Filesystem, specify them below.
-         */
-        'excluded_files' => [],
-
-        'excluded_directories' => [],
-
-    ],
-
-    'storage' => [
-
-        /*
-         * Specify the filesystem Lasso should use to use to store
-         * and retrieve its files.
-         */
-        'disk' => 'assets',
-
-        /*
-         * Specify the directory Lasso should store all of its
-         * files within.
-         *
-         * WARNING: If you have multiple projects all using Lasso,
-         * make sure this is unique for each project.
-         */
-        'upload_to' => 'lasso',
-
-        /*
-         * Lasso can also create a separate directory containing
-         * the environment the files will be stored in. Specify this
-         * here.
-         */
-        'environment' => env('LASSO_ENV', null),
-
-        /*
-         * Lasso will automatically version the assets. This is useful if you
-         * suddenly need to roll-back a deployment and use an older version
-         * of built files. You can set the maximum amount of files stored here.
-         */
-        'max_bundles' => 5,
-
-    ],
-
-    /*
-     * Lasso can also trigger Webhooks after its commands have been
-     * successfully executed. You may specify URLs that Lasso will POST
-     * to, for each of the commands.
-     */
-    'webhooks' => [
-
-        /*
-         * Specify which webhooks should be triggered after a successful
-         * "php artisan lasso:publish" command execution.
-         */
-        'publish' => [
-            //
-        ],
-
-        /*
-         * Specify which webhooks should be triggered after a successful
-         * "php artisan lasso:pull" command execution.
-         */
-        'pull' => [
-            //
-        ]
-
-    ],
-
-    /*
-     * Where are your assets stored? Most of the time, they will
-     * be stored within the /public directory in Laravel - but if
-     * you have changed this - please specify it below.
-     */
-    'public_path' => public_path(),
-
-];
-```
 
 ## First things first
 If you would like to use the recommended approach, make sure to add all of your public assets (js/css/images/mix-manifest.json) to your .gitignore file! Please also make sure to add the ".lasso" folder to your .gitignore file:
