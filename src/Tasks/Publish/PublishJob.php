@@ -100,7 +100,6 @@ final class PublishJob extends BaseJob
             // Webhook URLs defined in the "publish" array.
 
             $this->cleanUp();
-
             $webhooks = config('lasso.webhooks.publish', []);
             $this->dispatchWebhooks($webhooks);
         } catch (\Exception $ex) {
@@ -132,7 +131,7 @@ final class PublishJob extends BaseJob
      */
     public function dispatchWebhooks(array $webhooks = []): void
     {
-        if (!count($webhooks)) {
+        if (! count($webhooks)) {
             return;
         }
 
