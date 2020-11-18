@@ -88,12 +88,8 @@ final class PullJob extends BaseJob
 
         $this->cleanUp();
 
-        $this->artisan->note('✅ Successfully updated assets.')
-            ->note('⏳ Dispatching webhooks...');
-
-        $this->dispatchWebhooks();
-
-        $this->artisan->note('✅ Webhooks dispatched.');
+        $webhooks = config('lasso.webhooks.pull', []);
+        $this->dispatchWebhooks($webhooks);
     }
 
     /**
@@ -105,15 +101,21 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @return void
+     * @param array $webhooks
      */
-    public function dispatchWebhooks(): void
+    public function dispatchWebhooks(array $webhooks = []): void
     {
-        $webhooks = config('lasso.webhooks.pull', []);
+        if (!count($webhooks)) {
+            return;
+        }
+
+        $this->artisan->note('⏳ Dispatching webhooks...');
 
         foreach ($webhooks as $webhook) {
             Webhook::send($webhook, 'pull');
         }
+
+        $this->artisan->note('✅ Webhooks dispatched.');
     }
 
     /**
