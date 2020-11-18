@@ -88,12 +88,8 @@ final class PullJob extends BaseJob
 
         $this->cleanUp();
 
-        $this->artisan->note('✅ Successfully updated assets.')
-            ->note('⏳ Dispatching webhooks...');
-
-        $this->dispatchWebhooks();
-
-        $this->artisan->note('✅ Webhooks dispatched.');
+        $webhooks = config('lasso.webhooks.pull', []);
+        $this->dispatchWebhooks($webhooks);
     }
 
     /**
@@ -105,15 +101,21 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @return void
+     * @param array $webhooks
      */
-    public function dispatchWebhooks(): void
+    public function dispatchWebhooks(array $webhooks = []): void
     {
-        $webhooks = config('lasso.webhooks.pull', []);
+        if (! count($webhooks)) {
+            return;
+        }
+
+        $this->artisan->note('⏳ Dispatching webhooks...');
 
         foreach ($webhooks as $webhook) {
             Webhook::send($webhook, 'pull');
         }
+
+        $this->artisan->note('✅ Webhooks dispatched.');
     }
 
     /**
@@ -142,7 +144,7 @@ final class PullJob extends BaseJob
         // let's just grab that file.If we don't have a file on the server
         // however; we need to throw an exception.
 
-        if (!$this->cloud->exists($cloudPath)) {
+        if (! $this->cloud->exists($cloudPath)) {
             $this->rollBack(
                 PullJobFailed::because('A valid "lasso-bundle.json" file could not be found in the Filesystem for the current environment.')
             );
@@ -163,7 +165,7 @@ final class PullJob extends BaseJob
      */
     private function validateBundle(array $bundle): bool
     {
-        if (!isset($bundle['file']) || !isset($bundle['checksum'])) {
+        if (! isset($bundle['file']) || ! isset($bundle['checksum'])) {
             $this->rollBack(
                 PullJobFailed::because('The bundle info was missing the required data.')
             );
@@ -183,7 +185,7 @@ final class PullJob extends BaseJob
         $bundlePath = $this->cloud->getUploadPath($file);
         $localBundlePath = base_path('.lasso/bundle.zip');
 
-        if (!$this->cloud->exists($bundlePath)) {
+        if (! $this->cloud->exists($bundlePath)) {
             $this->rollBack(
                 PullJobFailed::because('The bundle zip does not exist. If you are using a specific environment, please make sure the LASSO_ENV is the same in your .env file.')
             );
@@ -207,7 +209,7 @@ final class PullJob extends BaseJob
         // If the integrity is incorrect, it could have been downloaded
         // incorrectly or tampered with!
 
-        if (!BundleIntegrityHelper::verifyChecksum($localBundlePath, $checksum)) {
+        if (! BundleIntegrityHelper::verifyChecksum($localBundlePath, $checksum)) {
             $this->rollBack(
                 PullJobFailed::because('The bundle Zip\'s checksum is incorrect.')
             );

@@ -100,13 +100,8 @@ final class PublishJob extends BaseJob
             // Webhook URLs defined in the "publish" array.
 
             $this->cleanUp();
-
-            $this->artisan->note('✅ Successfully published assets.')
-                ->note('⏳ Dispatching webhooks...');
-
-            $this->dispatchWebhooks();
-
-            $this->artisan->note('✅ Webhooks dispatched.');
+            $webhooks = config('lasso.webhooks.publish', []);
+            $this->dispatchWebhooks($webhooks);
         } catch (\Exception $ex) {
             $this->rollBack($ex);
         }
@@ -132,15 +127,21 @@ final class PublishJob extends BaseJob
     }
 
     /**
-     * @return void
+     * @param array $webhooks
      */
-    public function dispatchWebhooks(): void
+    public function dispatchWebhooks(array $webhooks = []): void
     {
-        $webhooks = config('lasso.webhooks.publish', []);
+        if (! count($webhooks)) {
+            return;
+        }
+
+        $this->artisan->note('⏳ Dispatching webhooks...');
 
         foreach ($webhooks as $webhook) {
             Webhook::send($webhook, 'publish');
         }
+
+        $this->artisan->note('✅ Webhooks dispatched.');
     }
 
     /**
