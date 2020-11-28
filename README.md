@@ -22,9 +22,9 @@ Lasso is a Laravel package designed to make your deployments faster and easier. 
 
 Lasso compiles your assets on your local machine or in Continuous Integration and then uploads the assets to a Laravel Filesystem (Flysystem). On deployment, Lasso will then download those assets from the Filesystem. It uses Git to keep track of the last asset bundle created, as well as automatically cleans old bundles.
 
-## Disclaimer
+## Security
 
-Lasso is still in early development. Therefore, I haven't yet written any tests for Lasso, and the code may still be a little messy! I'm hoping to improve Lasso massively over time, but I was too excited not to share Lasso with the world. If you find any bugs, please open an issue on Github and I'll do my best to get back to you quickly. If you find any security related issues, please send me an email to samcarredev@gmail.com.
+If you find any security related issues, please send me an email to samcarredev@gmail.com.
 
 ## Installation
 
