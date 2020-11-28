@@ -6,6 +6,8 @@
 
 # Lasso
 
+[![Tests][ico-tests]][link-tests]
+
 ## Asset wrangling for Laravel made simple.
 
 [![Latest Stable Version](https://poser.pugx.org/sammyjo20/lasso/v)](//packagist.org/packages/sammyjo20/lasso) [![Total Downloads](https://poser.pugx.org/sammyjo20/lasso/downloads)](//packagist.org/packages/sammyjo20/lasso) [![License](https://poser.pugx.org/sammyjo20/lasso/license)](//packagist.org/packages/sammyjo20/lasso)
@@ -159,3 +161,6 @@ Special thanks to @codepotato for the logo! ❤️
 This is my first Laravel package, I really hope it's been useful to you, if you like my work and want to show some love, consider buying me some coding fuel (Coffee) ❤
 
 [Donate Java (the drink not the language)](https://ko-fi.com/sammyjo20)
+
+[ico-tests]: https://img.shields.io/github/workflow/status/Sammyjo20/Lasso/tests/master?label=tests&style=flat-square
+[link-tests]: https://github.com/Sammyjo20/Lasso/actions?query=workflow%3Atests
