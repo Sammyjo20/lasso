@@ -22,10 +22,6 @@ Lasso is a Laravel package designed to make your deployments faster and easier. 
 
 Lasso compiles your assets on your local machine or in Continuous Integration and then uploads the assets to a Laravel Filesystem (Flysystem). On deployment, Lasso will then download those assets from the Filesystem. It uses Git to keep track of the last asset bundle created, as well as automatically cleans old bundles.
 
-## Security
-
-If you find any security related issues, please send me an email to samcarredev@gmail.com.
-
 ## Installation
 
 Lasso requires Laravel 6+ and PHP 7.3 or higher. To install Lasso, simply run the composer require command below:
@@ -155,6 +151,10 @@ Lasso will copy the public directory during it's publish process. If you have an
 Special thanks to @codepotato for the logo! ❤️
 
 ---
+
+## Security
+
+If you find any security related issues, please send me an email to samcarredev@gmail.com.
 
 ## And that's it! ✨
 
