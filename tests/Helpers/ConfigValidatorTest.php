@@ -66,7 +66,7 @@ class ConfigValidatorTest extends TestCase
     }
 
     /** @test */
-    public function final_test()
+    public function it_throws_exception_when_public_path_is_inaccessible()
     {
         $this->expectException(ConfigFailedValidation::class);
         $this->expectExceptionMessageMatches("/accessible directory/");
