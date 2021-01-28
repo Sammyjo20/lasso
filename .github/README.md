@@ -45,9 +45,14 @@ Now make sure to configure the lasso.php config file in your app/config director
 **Warning: If you have multiple projects, make sure to change the "upload_to" path, otherwise you may have asset conflicts in your applications.**
 
 ## First things first
-If you would like to use the recommended approach, make sure to add all of your public assets (js/css/images/mix-manifest.json) to your .gitignore file! Please also make sure to add the ".lasso" folder to your .gitignore file:
+Make sure to add all of your public assets (js/css/images/mix-manifest.json) that are created by Webpack/Laravel Mix to your .gitignore file. Please also make sure to add the ".lasso" folder to your .gitignore file.
+
+Example:
 
 ```text
+mix-manifest.json
+public/css/*
+public/js/*
 .lasso
 ```
 > The .lasso folder is a temporary directory created by Lasso to keep assets while they're being zipped up. This folder is automatically created and deleted, but it's good to ignore this directory anyway, just in case Lasso falls over before it reaches the cleanup phase.
