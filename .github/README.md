@@ -35,9 +35,6 @@ After that, run the command below to create the lasso.php config file:
 php artisan vendor:publish --tag=lasso-config
 ```
 
-## Integrate Lasso with your current CI/CD deployment pipeline
-Read this excellent blog post by Alex Justesen on how to integrate Lasso with your CI/CD pipeline: https://lasso-ci-cd.alexjustesen.com/
-
 ## Configuration
 
 Now make sure to configure the lasso.php config file in your app/config directory. Make sure to specify a Filesystem Disk you would like Lasso to use.
@@ -84,6 +81,8 @@ php artisan lasso:pull
 ## Usage within Continuous Integration (CI) e.g Github Actions
 
 To use Lasso during continuous integration, it's recommended to run the `php artisan lasso:publish` command, and then commit the "lasso-bundle.json" file which is created. If you aren't able to commit files during your CI process, use the `--no-git` flag on the command, e.g: `php artisan lasso:publish --no-git`
+
+Read this excellent blog post by Alex Justesen on how to integrate Lasso with your CI/CD pipeline: https://lasso-ci-cd.alexjustesen.com/
 
 ## Multiple Environments
 
