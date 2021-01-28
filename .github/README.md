@@ -44,8 +44,8 @@ Now make sure to configure the lasso.php config file in your app/config director
 
 **Warning: If you have multiple projects, make sure to change the "upload_to" path, otherwise you may have asset conflicts in your applications.**
 
-## First things first
-Make sure to add all of your public assets (js/css/images/mix-manifest.json) that are created by Webpack/Laravel Mix to your .gitignore file. Please also make sure to add the ".lasso" folder to your .gitignore file.
+## Getting Setup
+Make sure to add all of your public assets that are created by Webpack/Laravel Mix to your .gitignore file. Make sure to also add the ".lasso" directory to your .gitignore file.
 
 Example:
 
@@ -59,7 +59,7 @@ public/js/*
 
 ## Recommended Usage
 
-Lasso comes with two commands that should be used by your project/deployment pipeline. The recommended usage is to run the "publish" command on your local machine, which is likely much more powerful than Continuous Integration or compiling on the server.
+Lasso comes with two commands that should be used by your project/deployment process. The recommended usage is to run the "publish" command on your local machine, which is likely much more powerful than Continuous Integration or compiling on the server.
 
 ### Publish
 
