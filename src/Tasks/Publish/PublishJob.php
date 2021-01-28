@@ -43,13 +43,16 @@ final class PublishJob extends BaseJob
             // Start with the compiler. This will run the "script" which
             // has been defined in the config file (e.g npm run production).
 
-            (new Compiler())
+            $compiler = (new Compiler())
                 ->setCommand(config('lasso.compiler.script'))
                 ->setTimeout(config('lasso.compiler.timeout', 600))
                 ->execute();
 
-            $this->artisan->note('✅ Compiled assets.')
-                ->note('⏳ Copying and zipping compiled assets...');
+            $this->artisan->note(sprintf(
+                '✅ Compiled assets in %s seconds.', $compiler->getCompilationTime()
+            ));
+
+            $this->artisan->note('⏳ Copying and zipping compiled assets...');
 
             // Once we have compiled all of our assets, we need to "bundle"
             // them up. Todo: Remove this step in the future.

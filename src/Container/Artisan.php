@@ -70,7 +70,7 @@ final class Artisan
         return $this;
     }
 
-    public function compilerLine(string $line): void
+    public function compilerOutput(string $line): void
     {
         $mode = $this->compilerOutputMode;
 
@@ -104,7 +104,7 @@ final class Artisan
         }
 
         $bar = $this->command->getOutput()->createProgressBar(100);
-        $bar->setFormat('🏁 [%bar%] 🏆 %percent:3s%% in %elapsed%');
+        $bar->setFormat('🏁 [%bar%] 🏆 %percent:3s%%');
         $bar->setProgressCharacter('🐎');
         $bar->setBarCharacter('=');
         $bar->setEmptyBarCharacter('-');

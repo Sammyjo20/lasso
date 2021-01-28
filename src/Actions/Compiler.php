@@ -2,8 +2,8 @@
 
 namespace Sammyjo20\Lasso\Actions;
 
+use AlecRabbit\Snake\Spinner;
 use Sammyjo20\Lasso\Container\Artisan;
-use Sammyjo20\Lasso\Helpers\CompilerOutputFormatter;
 use Symfony\Component\Process\Process;
 
 class Compiler
@@ -22,17 +22,30 @@ class Compiler
      */
     protected $timeout;
 
-    public function execute(): void
+    /**
+     * The time it has taken for the compiler to Lasso up the assets.
+     *
+     * @var float
+     */
+    protected $compilationTime;
+
+    public function execute(): self
     {
         $artisan = resolve(Artisan::class);
 
         Process::fromShellCommandline($this->command)
             ->setTimeout($this->timeout)
             ->mustRun(function ($type, $line) use ($artisan) {
-                $artisan->compilerLine($line);
+                $artisan->compilerOutput($line);
             });
 
+        $processTime = microtime(true) - $startProcess;
+
         $artisan->compilerComplete();
+
+        $this->setCompilationTime($processTime);
+
+        return $this;
     }
 
     public function setCommand($command): self
@@ -49,10 +62,15 @@ class Compiler
         return $this;
     }
 
-    private function line($line, $bar)
+    private function setCompilationTime(float $time): self
     {
-        $progress = CompilerOutputFormatter::getWebpackProgress($line);
+        $this->compilationTime = round($time, 2);
 
-        $bar->setProgress($progress);
+        return $this;
+    }
+
+    public function getCompilationTime(): float
+    {
+        return $this->compilationTime;
     }
 }
