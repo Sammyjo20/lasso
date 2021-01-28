@@ -93,6 +93,7 @@ final class Artisan
     {
         if ($this->progressBar instanceof ProgressBar) {
             $this->progressBar->finish();
+            $this->command->getOutput()->newLine();
         }
     }
 
@@ -103,6 +104,10 @@ final class Artisan
         }
 
         $bar = $this->command->getOutput()->createProgressBar(100);
+        $bar->setFormat('🏁 [%bar%] 🏆 %percent:3s%% in %elapsed%');
+        $bar->setProgressCharacter('🐎');
+        $bar->setBarCharacter('=');
+        $bar->setEmptyBarCharacter('-');
         $bar->start();
 
         $this->setProgressBar($bar);
