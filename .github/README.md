@@ -50,6 +50,7 @@ If you would like to use the recommended approach, make sure to add all of your 
 ```text
 .lasso
 ```
+> The .lasso folder is a temporary directory created by Lasso to keep assets while they're being zipped up. This folder is automatically created and deleted, but it's good to ignore this directory anyway, just in case Lasso falls over before it reaches the cleanup phase.
 
 ## Recommended Usage
 
