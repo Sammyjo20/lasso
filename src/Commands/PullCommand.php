@@ -29,7 +29,11 @@ final class PullCommand extends BaseCommand
      *
      * @param Artisan $artisan
      * @param Filesystem $filesystem
+     * @return int
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
+     * @throws \Sammyjo20\Lasso\Exceptions\PullJobFailed
      */
     public function handle(Artisan $artisan, Filesystem $filesystem): int
     {

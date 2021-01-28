@@ -42,6 +42,15 @@ class ConfigValidator
      * @param $value
      * @return bool
      */
+    private function checkCompilerOutputSetting($value): bool
+    {
+        return in_array($value, ['all', 'progress', 'disable']);
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
     private function checkIfPublicPathExists($value): bool
     {
         return $this->filesystem->exists($value) && $this->filesystem->isReadable($value) && $this->filesystem->isWritable($value);
@@ -77,6 +86,10 @@ class ConfigValidator
 
         if (! $this->checkCompilerScript($this->get('compiler.script'))) {
             throw ConfigFailedValidation::because('You must specify a script to run the compiler. (E.g: npm run production)');
+        }
+
+        if (! $this->checkCompilerOutputSetting($this->get('compiler.output'))) {
+            throw ConfigFailedValidation::because('You must specify a valid output setting. Available options: all, progress, disable.');
         }
 
         if (! $this->checkDiskExists($this->get('storage.disk'))) {
