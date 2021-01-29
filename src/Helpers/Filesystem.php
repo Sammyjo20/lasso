@@ -27,8 +27,8 @@ class Filesystem extends BaseFilesystem
     public function __construct()
     {
         $lassoEnvironment = config('lasso.storage.environment') ?? 'global';
-        $cloudDisk = config('lasso.storage.disk');
-        $publicPath = config('lasso.public_path');
+        $cloudDisk = config('lasso.storage.disk', 'assets');
+        $publicPath = config('lasso.public_path', public_path());
 
         $this->setLassoEnvironment($lassoEnvironment)
             ->setCloudDisk($cloudDisk)
