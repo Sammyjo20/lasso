@@ -2,10 +2,7 @@
   <img src="https://getlasso.dev/images/lasso-logo-small.png" alt="Lasso" height="150">
 </p>
 
-> Help support the maintenance of this package by [buying me a coffee or two](https://ko-fi.com/sammyjo20).
-
 # Lasso
-
 ### Asset wrangling for Laravel made simple.
 
 [![Latest Stable Version](https://poser.pugx.org/sammyjo20/lasso/v)](//packagist.org/packages/sammyjo20/lasso) [![Total Downloads](https://poser.pugx.org/sammyjo20/lasso/downloads)](//packagist.org/packages/sammyjo20/lasso) [![License](https://poser.pugx.org/sammyjo20/lasso/license)](//packagist.org/packages/sammyjo20/lasso)
