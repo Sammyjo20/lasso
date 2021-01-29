@@ -40,7 +40,7 @@ php artisan vendor:publish --tag=lasso-config
 
 Now make sure to configure the lasso.php config file in your app/config directory. Make sure to specify a Filesystem Disk you would like Lasso to use.
 
-**Warning: If you have multiple projects, make sure to change the "upload_to" path, otherwise you may have asset conflicts in your applications.**
+**If you have multiple projects, make sure to change the "upload_to" path, otherwise you may have asset conflicts in your applications.**
 
 ## Getting Setup
 Make sure to add all of your public assets that are created by Webpack/Laravel Mix to your .gitignore file. Make sure to also add the ".lasso" directory to your .gitignore file.
