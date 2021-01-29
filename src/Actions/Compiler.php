@@ -33,13 +33,15 @@ class Compiler
     {
         $artisan = resolve(Artisan::class);
 
+        $startTime = microtime(true);
+
         Process::fromShellCommandline($this->command)
             ->setTimeout($this->timeout)
             ->mustRun(function ($type, $line) use ($artisan) {
                 $artisan->compilerOutput($line);
             });
 
-        $processTime = microtime(true) - $startProcess;
+        $processTime = microtime(true) - $startTime;
 
         $artisan->compilerComplete();
 
