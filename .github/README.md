@@ -15,7 +15,7 @@
 
 ### Introduction
 
-Deploying Webpack assets in Laravel can be a nightmare. One problem developers have is dealing with their built assets (created by Webpack/Laravel Mix). Do you store them in version control? Do you deploy them on the server? What if I'm working with a team?
+Deploying Webpack assets in Laravel can be a nightmare. One problem developers have is dealing with their built assets (created by Webpack/Laravel Mix). Do you store them in version control? Do you deploy them on the server? What if I'm working with a team? Each of these solutions for assets can cause headaches for the developer, including merge conflicts and slowing down servers.
 
 Lasso is a Laravel package designed to take the headaches out of deploying assets to your servers. It works great on load balanced environments too.
 
