@@ -13,7 +13,7 @@ class LassoServiceProvider extends BaseServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/config.php',
+            __DIR__ . '/../config/lasso.php',
             'lasso'
         );
     }
@@ -46,7 +46,7 @@ class LassoServiceProvider extends BaseServiceProvider
     protected function offerPublishing(): self
     {
         $this->publishes([
-            __DIR__ . '/../config/config.php' => config_path('lasso.php'),
+            __DIR__ . '/../config/lasso.php' => config_path('lasso.php'),
         ], 'lasso-config');
 
         return $this;
@@ -57,8 +57,13 @@ class LassoServiceProvider extends BaseServiceProvider
      */
     protected function bindsServices(): self
     {
-        $this->app->instance(Artisan::class, new Artisan);
-        $this->app->instance(Filesystem::class, new Filesystem);
+        $this->app->singleton(Artisan::class, function () {
+            return new Artisan;
+        });
+
+        $this->app->singleton(Filesystem::class, function () {
+            return new Filesystem;
+        });
 
         return $this;
     }

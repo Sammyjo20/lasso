@@ -2,10 +2,7 @@
   <img src="https://getlasso.dev/images/lasso-logo-small.png" alt="Lasso" height="150">
 </p>
 
-> Help support the maintenance of this package by [buying me a coffee or two](https://ko-fi.com/sammyjo20).
-
 # Lasso
-
 ### Asset wrangling for Laravel made simple.
 
 [![Latest Stable Version](https://poser.pugx.org/sammyjo20/lasso/v)](//packagist.org/packages/sammyjo20/lasso) [![Total Downloads](https://poser.pugx.org/sammyjo20/lasso/downloads)](//packagist.org/packages/sammyjo20/lasso) [![License](https://poser.pugx.org/sammyjo20/lasso/license)](//packagist.org/packages/sammyjo20/lasso)
@@ -15,11 +12,15 @@
 
 ### Introduction
 
-Lasso is a Laravel package designed to make your deployments faster and easier. One problem developers have is dealing with their built assets (Webpack/Laravel Mix). Do you store them in Git? Do you deploy them on the server? Each of these solutions for assets can cause headaches for the developer, including merge conflicts and slowing down servers.
+Deploying Webpack assets in Laravel can be a nightmare. One problem developers have is dealing with their built assets (created by Webpack/Laravel Mix). Do you store them in version control? Do you deploy them on the server? What if I'm working with a team? Each of these solutions for assets can cause headaches for the developer, including merge conflicts and slowing down servers.
+
+Lasso is a Laravel package designed to take the headaches out of deploying assets to your servers. It works great on load balanced environments too.
 
 ### What does Lasso do?
 
-Lasso compiles your assets on your local machine or in Continuous Integration and then uploads the assets to a Laravel Filesystem (Flysystem). On deployment, Lasso will then download those assets from the Filesystem. It uses Git to keep track of the last asset bundle created, as well as automatically cleans old bundles.
+Lasso compiles your assets on your local machine or within Continuous Integration (e.g GitHub Actions) and then uploads the assets to one of your Laravel Filesystems. This harnesses the power of your local machine which is likely much more powerful than the server. 
+
+During deployment, Lasso will then download your assets from the filesystem. It uses Git to keep track of the last asset bundle created, as well as automatically cleans old bundles.
 
 ## Installation
 
@@ -39,7 +40,7 @@ php artisan vendor:publish --tag=lasso-config
 
 Now make sure to configure the lasso.php config file in your app/config directory. Make sure to specify a Filesystem Disk you would like Lasso to use.
 
-**Warning: If you have multiple projects, make sure to change the "upload_to" path, otherwise you may have asset conflicts in your applications.**
+**If you have multiple projects, make sure to change the "upload_to" path, otherwise you may have asset conflicts in your applications.**
 
 ## Getting Setup
 Make sure to add all of your public assets that are created by Webpack/Laravel Mix to your .gitignore file. Make sure to also add the ".lasso" directory to your .gitignore file.
