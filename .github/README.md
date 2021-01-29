@@ -15,11 +15,13 @@
 
 ### Introduction
 
-Lasso is a Laravel package designed to make your deployments faster and easier. One problem developers have is dealing with their built assets (Webpack/Laravel Mix). Do you store them in Git? Do you deploy them on the server? Each of these solutions for assets can cause headaches for the developer, including merge conflicts and slowing down servers.
+Deploying Webpack assets in Laravel can be a nightmare. One problem developers have is dealing with their built assets (created by Webpack/Laravel Mix). Do you store them in version control? Do you deploy them on the server? What if I'm working with a team?
+
+Lasso is a Laravel package designed to take the headaches out of deploying assets to your servers. It works great on load balanced environments too.
 
 ### What does Lasso do?
 
-Lasso compiles your assets on your local machine or in Continuous Integration and then uploads the assets to a Laravel Filesystem (Flysystem). On deployment, Lasso will then download those assets from the Filesystem. It uses Git to keep track of the last asset bundle created, as well as automatically cleans old bundles.
+Lasso compiles your assets on your local machine or within Continuous Integration (e.g GitHub Actions) and then uploads the assets to one of your Laravel Filesystems. During deployment, Lasso will then download your assets from the filesystem. It uses Git to keep track of the last asset bundle created, as well as automatically cleans old bundles.
 
 ## Installation
 
