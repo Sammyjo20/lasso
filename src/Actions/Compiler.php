@@ -2,7 +2,6 @@
 
 namespace Sammyjo20\Lasso\Actions;
 
-use AlecRabbit\Snake\Spinner;
 use Sammyjo20\Lasso\Container\Artisan;
 use Symfony\Component\Process\Process;
 

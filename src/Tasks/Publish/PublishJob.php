@@ -6,7 +6,6 @@ use Illuminate\Support\Str;
 use Sammyjo20\Lasso\Actions\Compiler;
 use Sammyjo20\Lasso\Helpers\Bundle;
 use Sammyjo20\Lasso\Tasks\BaseJob;
-use Sammyjo20\Lasso\Tasks\Command;
 use Sammyjo20\Lasso\Tasks\Webhook;
 
 final class PublishJob extends BaseJob
@@ -49,7 +48,8 @@ final class PublishJob extends BaseJob
                 ->execute();
 
             $this->artisan->note(sprintf(
-                '✅ Compiled assets in %s seconds.', $compiler->getCompilationTime()
+                '✅ Compiled assets in %s seconds.',
+                $compiler->getCompilationTime()
             ));
 
             $this->artisan->note('⏳ Copying and zipping compiled assets...');
