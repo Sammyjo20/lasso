@@ -18,7 +18,9 @@ Lasso is a Laravel package designed to take the headaches out of deploying asset
 
 ### What does Lasso do?
 
-Lasso compiles your assets on your local machine or within Continuous Integration (e.g GitHub Actions) and then uploads the assets to one of your Laravel Filesystems. During deployment, Lasso will then download your assets from the filesystem. It uses Git to keep track of the last asset bundle created, as well as automatically cleans old bundles.
+Lasso compiles your assets on your local machine or within Continuous Integration (e.g GitHub Actions) and then uploads the assets to one of your Laravel Filesystems. This harnesses the power of your local machine which is likely much more powerful than the server. 
+
+During deployment, Lasso will then download your assets from the filesystem. It uses Git to keep track of the last asset bundle created, as well as automatically cleans old bundles.
 
 ## Installation
 
