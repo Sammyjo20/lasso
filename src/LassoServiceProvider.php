@@ -57,8 +57,13 @@ class LassoServiceProvider extends BaseServiceProvider
      */
     protected function bindsServices(): self
     {
-        $this->app->instance(Artisan::class, new Artisan);
-        $this->app->instance(Filesystem::class, new Filesystem);
+        $this->app->singleton(Artisan::class, function () {
+            return new Artisan;
+        });
+
+        $this->app->singleton(Filesystem::class, function () {
+            return new Filesystem;
+        });
 
         return $this;
     }
