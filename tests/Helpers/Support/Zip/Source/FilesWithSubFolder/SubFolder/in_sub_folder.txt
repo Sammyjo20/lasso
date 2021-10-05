@@ -1,0 +1,2 @@
+## Subfolder test
+This is a text file inside a sub folder.
