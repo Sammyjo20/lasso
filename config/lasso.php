@@ -13,13 +13,13 @@ return [
 
         /*
          * Configure the amount of time (in seconds) the compiler
-         * should run before it times out. By default this is set
+         * should run before it times out. By default, this is set
          * to 600 seconds (10 minutes).
          */
         'timeout' => 600,
 
         /*
-         * If there any directories/files you would like to Lasso to
+         * If there are any directories/files you would like to Lasso to
          * exclude when uploading to the Filesystem, specify them below.
          */
         'excluded_files' => [],
@@ -31,7 +31,7 @@ return [
     'storage' => [
 
         /*
-         * Specify the filesystem Lasso should use to use to store
+         * Specify the filesystem Lasso should use to store
          * and retrieve its files.
          */
         'disk' => 'assets',
@@ -54,7 +54,7 @@ return [
 
         /*
          * Lasso will automatically version the assets. This is useful if you
-         * suddenly need to roll-back a deployment and use an older version
+         * suddenly need to roll back a deployment and use an older version
          * of built files. You can set the maximum amount of files stored here.
          */
         'max_bundles' => 5,

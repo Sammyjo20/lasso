@@ -31,7 +31,7 @@ final class VersioningService
 
     /**
      * Get the versioning file from the Filesystem Disk.
-     * This is a file Lasso stores to keep track of it's versions.
+     * This is a file Lasso stores to keep track of its versions.
      *
      * @return array
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
