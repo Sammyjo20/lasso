@@ -40,7 +40,7 @@ final class PublishJob extends BaseJob
             $this->artisan->note('⏳ Compiling assets...');
 
             // Start with the compiler. This will run the "script" which
-            // has been defined in the config file (e.g npm run production).
+            // has been defined in the config file (e.g. npm run production).
 
             (new Command())
                 ->setScript(config('lasso.compiler.script'))
@@ -61,9 +61,9 @@ final class PublishJob extends BaseJob
 
             $this->artisan->note('✅ Successfully copied and zipped assets.');
 
-            // Now we want to create the data which will go inside of the
+            // Now we want to create the data which will go inside the
             // "lasso-bundle.json" file. After that, we will create a Zip file
-            // with all of the assets inside.
+            // with all the assets inside.
 
             $bundle = (new Bundle())
                 ->setBundleId($this->bundleId)
@@ -96,7 +96,7 @@ final class PublishJob extends BaseJob
                 $this->cloud->uploadFile($bundlePath, 'lasso-bundle.json');
             }
 
-            // Done! Let's run some cleanup, and dispatch all of the
+            // Done! Let's run some cleanup, and dispatch all the
             // Webhook URLs defined in the "publish" array.
 
             $this->cleanUp();
