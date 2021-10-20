@@ -83,13 +83,7 @@ class ZipTest extends TestCase
 
         $this->assertZipFileContains($sourceFiles, $zipFile);
     }
-
-    /** @test */
-    public function it_can_unzip_an_existing_zip_file_correctly(): void
-    {
-        dd(hash_file('md5', $this->sourceDirectory));
-    }
-
+    
     private function assertZipFileContains(array $sourceFiles, string $destinationZipFile): void
     {
         $inspectZipFile = new ZipArchive();
