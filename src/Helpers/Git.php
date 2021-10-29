@@ -13,9 +13,7 @@ class Git
     public static function getCommitHash():? string
     {
         try {
-            $hash = file_get_contents(
-                sprintf(base_path() . '/.git/refs/heads/%s', config('lasso.git_branch'))
-            );
+            $hash = file_get_contents(base_path() . '/.git/HEAD');
         } catch (\Exception $exception) {
             throw new GitHashException($exception->getMessage(), $exception);
         }
