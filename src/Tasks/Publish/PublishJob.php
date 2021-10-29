@@ -157,8 +157,8 @@ final class PublishJob extends BaseJob
     private function generateBundleId(): self
     {
         $id = Str::random(20);
-        if ($this->useCommit) {
 
+        if ($this->useCommit) {
             $id = Git::getCommitHash();
         }
 

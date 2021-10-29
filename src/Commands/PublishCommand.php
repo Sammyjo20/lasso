@@ -28,6 +28,7 @@ final class PublishCommand extends BaseCommand
      *
      * @param Artisan $artisan
      * @param Filesystem $filesystem
+     * @return int
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
     public function handle(Artisan $artisan, Filesystem $filesystem): int

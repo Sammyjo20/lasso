@@ -2,7 +2,6 @@
 
 namespace Sammyjo20\Lasso\Tasks\Pull;
 
-use Sammyjo20\Lasso\Exceptions\GitHashException;
 use Sammyjo20\Lasso\Exceptions\PullJobFailed;
 use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
 use Sammyjo20\Lasso\Helpers\FileLister;
@@ -293,11 +292,7 @@ final class PullJob extends BaseJob
     private function getBundlePath(string $file): string
     {
         if ($this->useCommit) {
-            try {
-                $file = Git::getCommitHash() . '.zip';
-            } catch (GitHashException $exception) {
-                //
-            }
+            $file = Git::getCommitHash() . '.zip';
         }
 
         return  $this->cloud->getUploadPath($file);
