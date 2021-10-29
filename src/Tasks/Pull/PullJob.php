@@ -215,7 +215,6 @@ final class PullJob extends BaseJob
         // If the integrity is incorrect, it could have been downloaded
         // incorrectly or tampered with!
 
-
         if (! BundleIntegrityHelper::verifyChecksum($localBundlePath, $checksum)) {
 
             if ($this->useCommit) {
