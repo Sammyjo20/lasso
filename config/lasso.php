@@ -93,4 +93,5 @@ return [
      */
     'public_path' => public_path(),
 
+    'git_branch' => env('LASSO_GIT_BRANCH', 'main'),
 ];

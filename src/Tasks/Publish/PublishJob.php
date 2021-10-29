@@ -4,6 +4,7 @@ namespace Sammyjo20\Lasso\Tasks\Publish;
 
 use Illuminate\Support\Str;
 use Sammyjo20\Lasso\Helpers\Bundle;
+use Sammyjo20\Lasso\Helpers\Git;
 use Sammyjo20\Lasso\Tasks\BaseJob;
 use Sammyjo20\Lasso\Tasks\Command;
 use Sammyjo20\Lasso\Tasks\Webhook;
@@ -21,14 +22,18 @@ final class PublishJob extends BaseJob
     protected $usesGit = true;
 
     /**
+     * @var bool
+     */
+    protected $useCommit = false;
+
+    /**
      * PublishJob constructor.
      */
     public function __construct()
     {
         parent::__construct();
 
-        $this->generateBundleId()
-            ->deleteLassoDirectory();
+        $this->deleteLassoDirectory();
     }
 
     /**
@@ -37,6 +42,8 @@ final class PublishJob extends BaseJob
     public function run(): void
     {
         try {
+            $this->generateBundleId();
+
             $this->artisan->note('⏳ Compiling assets...');
 
             // Start with the compiler. This will run the "script" which
@@ -149,7 +156,13 @@ final class PublishJob extends BaseJob
      */
     private function generateBundleId(): self
     {
-        $this->bundleId = Str::random(20);
+        $id = Str::random(20);
+        if ($this->useCommit) {
+
+            $id = Git::getCommitHash();
+        }
+
+        $this->bundleId = $id;
 
         return $this;
     }
@@ -170,6 +183,16 @@ final class PublishJob extends BaseJob
     public function dontUseGit(): self
     {
         $this->usesGit = false;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function useCommit(): self
+    {
+        $this->useCommit = true;
 
         return $this;
     }
