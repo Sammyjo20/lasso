@@ -15,7 +15,7 @@ final class PullCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'lasso:pull {--silent} {--use-commit}';
+    protected $signature = 'lasso:pull {--silent} {--use-commit} {--with-commit?=}';
 
     /**
      * The console command description.
@@ -40,6 +40,7 @@ final class PullCommand extends BaseCommand
         (new ConfigValidator())->validate();
 
         $useCommit = $this->option('use-commit') === true;
+        $withCommit = $this->option('with-commit');
         $this->configureApplication($artisan, $filesystem);
 
         $artisan->setCommand($this);
@@ -53,6 +54,10 @@ final class PullCommand extends BaseCommand
 
         if ($useCommit) {
             $job->useCommit();
+        }
+
+        if ($withCommit) {
+            $job->setCommit($withCommit);
         }
 
         $job->run();

@@ -25,6 +25,11 @@ final class PullJob extends BaseJob
     protected $useCommit = false;
 
     /**
+     * @var string?
+     */
+    protected $commitHash = null;
+
+    /**
      * PullJob constructor.
      */
     public function __construct()
@@ -290,11 +295,15 @@ final class PullJob extends BaseJob
      */
     private function getBundlePath(string $file): string
     {
-        if ($this->useCommit) {
-            $file = Git::getCommitHash() . '.zip';
+        if ($this->commitHash) {
+            return $this->cloud->getUploadPath($this->commitHash . '.zip');
         }
 
-        return  $this->cloud->getUploadPath($file);
+        if ($this->useCommit) {
+           return $this->cloud->getUploadPath(Git::getCommitHash() . '.zip');
+        }
+
+        return $this->cloud->getUploadPath($file);
 
     }
 
@@ -304,6 +313,16 @@ final class PullJob extends BaseJob
     public function useCommit(): self
     {
         $this->useCommit = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function withCommit(string $commitHash): self
+    {
+        $this->commitHash = $commitHash;
 
         return $this;
     }
