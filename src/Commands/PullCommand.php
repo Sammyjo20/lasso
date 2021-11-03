@@ -15,7 +15,7 @@ final class PullCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'lasso:pull {--silent} {--use-commit} {--with-commit?=}';
+    protected $signature = 'lasso:pull {--silent} {--use-commit} {--with-commit=}';
 
     /**
      * The console command description.
