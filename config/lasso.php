@@ -53,6 +53,13 @@ return [
         'environment' => env('LASSO_ENV', null),
 
         /*
+         * Lasso can add a prefix to the bundle file, in order to store
+         * multiple bundle files in the same filesystem for different
+         * environments
+         */
+        'prefix' => env('LASSO_PREFIX', ''),
+
+        /*
          * Lasso will automatically version the assets. This is useful if you
          * suddenly need to roll back a deployment and use an older version
          * of built files. You can set the maximum amount of files stored here.
