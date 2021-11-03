@@ -13,7 +13,8 @@ class Git
     public static function getCommitHash():? string
     {
         try {
-            $hash = file_get_contents(base_path() . '/.git/HEAD');
+            $branch = str_replace("\n", '', last(explode('/', file_get_contents(base_path() . '/.git/HEAD'))));
+            $hash = file_get_contents(base_path() . '/.git/refs/heads/' . $branch);
         } catch (\Exception $exception) {
             throw new GitHashException($exception->getMessage(), $exception);
         }
