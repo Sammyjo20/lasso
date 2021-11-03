@@ -222,7 +222,7 @@ final class PullJob extends BaseJob
 
         if (! BundleIntegrityHelper::verifyChecksum($localBundlePath, $checksum)) {
 
-            if ($this->useCommit) {
+            if ($this->useCommit || $this->commitHash) {
 
                 $this->artisan->note('Could not verify checksum using commit hash for bundle id ...');
 
