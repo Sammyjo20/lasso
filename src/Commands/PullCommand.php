@@ -57,7 +57,7 @@ final class PullCommand extends BaseCommand
         }
 
         if ($withCommit) {
-            $job->withCommit($withCommit);
+            $job->withCommit(substr(0, 12, $withCommit));
         }
 
         $job->run();
