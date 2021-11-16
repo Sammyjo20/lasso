@@ -83,7 +83,7 @@ php artisan lasso:pull
 
 To use Lasso during continuous integration, it's recommended to run the `php artisan lasso:publish` command, and then commit the "lasso-bundle.json" file which is created. If you aren't able to commit files during your CI process, use the `--no-git` flag on the command, e.g: `php artisan lasso:publish --no-git`
 
-Read this excellent blog post by Alex Justesen on how to integrate Lasso with your CI/CD pipeline: https://lasso-ci-cd.alexjustesen.com/
+Read this excellent blog post by Alex Justesen on how to integrate Lasso with your CI/CD pipeline: https://dev.to/alexjustesen/laravel-cicd-pipeline-w-lasso-and-github-actions-53gm
 
 ## Multiple Environments
 
