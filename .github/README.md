@@ -159,7 +159,7 @@ Special thanks to @codepotato for the logo! ❤️
 
 ## Security
 
-If you find any security related issues, please send me an email to samcarredev@gmail.com.
+If you find any security related issues, please send me an email to import.lorises_0c@icloud.com.
 
 ## And that's it! ✨
 
