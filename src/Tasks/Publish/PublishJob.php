@@ -2,7 +2,9 @@
 
 namespace Sammyjo20\Lasso\Tasks\Publish;
 
+use Exception;
 use Illuminate\Support\Str;
+use Sammyjo20\Lasso\Exceptions\GitHashException;
 use Sammyjo20\Lasso\Helpers\Bundle;
 use Sammyjo20\Lasso\Helpers\Git;
 use Sammyjo20\Lasso\Tasks\BaseJob;
@@ -27,6 +29,11 @@ final class PublishJob extends BaseJob
     protected $useCommit = false;
 
     /**
+     * @var string?
+     */
+    protected $commit = null;
+
+    /**
      * PublishJob constructor.
      */
     public function __construct()
@@ -38,6 +45,7 @@ final class PublishJob extends BaseJob
 
     /**
      * @return void
+     * @throws Exception
      */
     public function run(): void
     {
@@ -109,7 +117,7 @@ final class PublishJob extends BaseJob
             $this->cleanUp();
             $webhooks = config('lasso.webhooks.publish', []);
             $this->dispatchWebhooks($webhooks);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->rollBack($ex);
         }
     }
@@ -123,10 +131,10 @@ final class PublishJob extends BaseJob
     }
 
     /**
-     * @param \Exception $exception
-     * @throws \Exception
+     * @param Exception $exception
+     * @throws Exception
      */
-    private function rollBack(\Exception $exception)
+    private function rollBack(Exception $exception)
     {
         $this->deleteLassoDirectory();
 
@@ -153,6 +161,7 @@ final class PublishJob extends BaseJob
 
     /**
      * @return $this
+     * @throws GitHashException
      */
     private function generateBundleId(): self
     {
@@ -160,6 +169,10 @@ final class PublishJob extends BaseJob
 
         if ($this->useCommit) {
             $id = Git::getCommitHash();
+        }
+
+        if ($this->commit) {
+            $id = $this->commit;
         }
 
         $this->bundleId = $id;
@@ -193,6 +206,13 @@ final class PublishJob extends BaseJob
     public function useCommit(): self
     {
         $this->useCommit = true;
+
+        return $this;
+    }
+
+    public function withCommit(string $commitHash): self
+    {
+        $this->commit = $commitHash;
 
         return $this;
     }

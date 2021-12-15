@@ -14,14 +14,14 @@ final class PublishCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'lasso:publish {--no-git} {--silent} {--use-commit}';
+    protected $signature = 'lasso:publish {--no-git} {--silent} {--use-commit} {--with-commit=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Compile assets and push assets to the specified Lasso Filesystem Disk.';
+    protected $description = 'Compile and push assets to the specified Lasso Filesystem Disk.';
 
     /**
      * Execute the console command.
@@ -39,6 +39,7 @@ final class PublishCommand extends BaseCommand
 
         $dontUseGit = $this->option('no-git') === true;
         $useCommit = $this->option('use-commit') === true;
+        $withCommit = $this->option('with-commit');
         $this->configureApplication($artisan, $filesystem);
 
         $job = new PublishJob;
@@ -49,6 +50,10 @@ final class PublishCommand extends BaseCommand
 
         if ($useCommit) {
             $job->useCommit();
+        }
+
+        if ($withCommit) {
+            $job->withCommit($withCommit);
         }
 
         $artisan->note(sprintf(
