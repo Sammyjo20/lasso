@@ -221,9 +221,7 @@ final class PullJob extends BaseJob
         // incorrectly or tampered with!
 
         if (! BundleIntegrityHelper::verifyChecksum($localBundlePath, $checksum)) {
-
             if ($this->useCommit || $this->commitHash) {
-
                 $this->artisan->note('Could not verify checksum using commit hash for bundle id ...');
 
                 return $localBundlePath;
@@ -300,11 +298,10 @@ final class PullJob extends BaseJob
         }
 
         if ($this->useCommit) {
-           return $this->cloud->getUploadPath(Git::getCommitHash() . '.zip');
+            return $this->cloud->getUploadPath(Git::getCommitHash() . '.zip');
         }
 
         return $this->cloud->getUploadPath($file);
-
     }
 
     /**
