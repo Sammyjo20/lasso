@@ -136,7 +136,7 @@ final class PullJob extends BaseJob
     private function getLatestBundleInfo(): array
     {
         $localPath = base_path('lasso-bundle.json');
-        $cloudPath = $this->cloud->getUploadPath('lasso-bundle.json');
+        $cloudPath = $this->cloud->getUploadPath(config('lasso.storage.prefix') . 'lasso-bundle.json');
 
         // Firstly, let's check if the local filesystem has a "lasso-bundle.json"
         // file in it's root directory.
