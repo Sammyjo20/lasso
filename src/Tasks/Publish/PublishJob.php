@@ -2,9 +2,15 @@
 
 namespace Sammyjo20\Lasso\Tasks\Publish;
 
+use Exception;
 use Illuminate\Support\Str;
+<<<<<<< HEAD
 use Sammyjo20\Lasso\Actions\Compiler;
+=======
+use Sammyjo20\Lasso\Exceptions\GitHashException;
+>>>>>>> master
 use Sammyjo20\Lasso\Helpers\Bundle;
+use Sammyjo20\Lasso\Helpers\Git;
 use Sammyjo20\Lasso\Tasks\BaseJob;
 use Sammyjo20\Lasso\Tasks\Webhook;
 
@@ -21,26 +27,38 @@ final class PublishJob extends BaseJob
     protected $usesGit = true;
 
     /**
+     * @var bool
+     */
+    protected $useCommit = false;
+
+    /**
+     * @var string?
+     */
+    protected $commit = null;
+
+    /**
      * PublishJob constructor.
      */
     public function __construct()
     {
         parent::__construct();
 
-        $this->generateBundleId()
-            ->deleteLassoDirectory();
+        $this->deleteLassoDirectory();
     }
 
     /**
      * @return void
+     * @throws Exception
      */
     public function run(): void
     {
         try {
+            $this->generateBundleId();
+
             $this->artisan->note('⏳ Compiling assets...');
 
             // Start with the compiler. This will run the "script" which
-            // has been defined in the config file (e.g npm run production).
+            // has been defined in the config file (e.g. npm run production).
 
             $compiler = (new Compiler())
                 ->setCommand(config('lasso.compiler.script'))
@@ -65,9 +83,9 @@ final class PublishJob extends BaseJob
 
             $this->artisan->note('✅ Successfully copied and zipped assets.');
 
-            // Now we want to create the data which will go inside of the
+            // Now we want to create the data which will go inside the
             // "lasso-bundle.json" file. After that, we will create a Zip file
-            // with all of the assets inside.
+            // with all the assets inside.
 
             $bundle = (new Bundle())
                 ->setBundleId($this->bundleId)
@@ -97,16 +115,16 @@ final class PublishJob extends BaseJob
 
                 $this->filesystem->put($bundlePath, json_encode($bundle));
 
-                $this->cloud->uploadFile($bundlePath, 'lasso-bundle.json');
+                $this->cloud->uploadFile($bundlePath, config('lasso.storage.prefix') . 'lasso-bundle.json');
             }
 
-            // Done! Let's run some cleanup, and dispatch all of the
+            // Done! Let's run some cleanup, and dispatch all the
             // Webhook URLs defined in the "publish" array.
 
             $this->cleanUp();
             $webhooks = config('lasso.webhooks.publish', []);
             $this->dispatchWebhooks($webhooks);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->rollBack($ex);
         }
     }
@@ -120,10 +138,10 @@ final class PublishJob extends BaseJob
     }
 
     /**
-     * @param \Exception $exception
-     * @throws \Exception
+     * @param Exception $exception
+     * @throws Exception
      */
-    private function rollBack(\Exception $exception)
+    private function rollBack(Exception $exception)
     {
         $this->deleteLassoDirectory();
 
@@ -150,10 +168,21 @@ final class PublishJob extends BaseJob
 
     /**
      * @return $this
+     * @throws GitHashException
      */
     private function generateBundleId(): self
     {
-        $this->bundleId = Str::random(20);
+        $id = Str::random(20);
+
+        if ($this->useCommit) {
+            $id = Git::getCommitHash();
+        }
+
+        if ($this->commit) {
+            $id = $this->commit;
+        }
+
+        $this->bundleId = $id;
 
         return $this;
     }
@@ -174,6 +203,23 @@ final class PublishJob extends BaseJob
     public function dontUseGit(): self
     {
         $this->usesGit = false;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function useCommit(): self
+    {
+        $this->useCommit = true;
+
+        return $this;
+    }
+
+    public function withCommit(string $commitHash): self
+    {
+        $this->commit = $commitHash;
 
         return $this;
     }

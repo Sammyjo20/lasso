@@ -71,10 +71,12 @@ After running this command, Lasso will create a "lasso-bundle.json" file in your
 
 **Warning: When using the `--no-git` flag, versioning will be limited as the lasso-bundle.json is stored in your Filesystem, rather than your repository. Using Git is the recommended approach.**
 
+If you use git, and want to easily keep track of which bundle file is for what commit, use the `--use-commit` flag. It will ensure the bundle zip file name is the first 12 characters of the commit hash. This also adds the advantage of publishing the bundles during your CI pipeline, without having to make a new commit, whilst giving the versioning benefits of using git.
 ### Pull
 
 The pull command should then be executed on your deployment script, or on the servers which will require the assets to be on. Simply run the command below. If you are using *Laravel Forge*, add this command to your deployment script. If you are using *Laravel Envoyer*, add this to the list of hooks during your deployment. It should be run on **every server**.
 
+Use the `--use-commit` flag when pulling, if you are publishing the bundles with the `--use-commit` flag.
 ```bash
 php artisan lasso:pull
 ```
@@ -83,7 +85,7 @@ php artisan lasso:pull
 
 To use Lasso during continuous integration, it's recommended to run the `php artisan lasso:publish` command, and then commit the "lasso-bundle.json" file which is created. If you aren't able to commit files during your CI process, use the `--no-git` flag on the command, e.g: `php artisan lasso:publish --no-git`
 
-Read this excellent blog post by Alex Justesen on how to integrate Lasso with your CI/CD pipeline: https://lasso-ci-cd.alexjustesen.com/
+Read this excellent blog post by Alex Justesen on how to integrate Lasso with your CI/CD pipeline: https://dev.to/alexjustesen/laravel-cicd-pipeline-w-lasso-and-github-actions-53gm
 
 ## Multiple Environments
 
@@ -159,7 +161,7 @@ Special thanks to @codepotato for the logo! ❤️
 
 ## Security
 
-If you find any security related issues, please send me an email to samcarredev@gmail.com.
+If you find any security related issues, please send me an email to import.lorises_0c@icloud.com.
 
 ## And that's it! ✨
 
