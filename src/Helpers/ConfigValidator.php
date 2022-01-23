@@ -42,6 +42,28 @@ class ConfigValidator
      * @param $value
      * @return bool
      */
+    private function checkCompilerScriptType($value): bool
+    {
+        return is_string($value);
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    private function checkCompilerOutputSetting($value): bool
+    {
+        if (is_null($value)) {
+            return true;
+        }
+
+        return in_array($value, ['all', 'progress', 'disable']);
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
     private function checkIfPublicPathExists($value): bool
     {
         return $this->filesystem->exists($value) && $this->filesystem->isReadable($value) && $this->filesystem->isWritable($value);
@@ -77,6 +99,14 @@ class ConfigValidator
 
         if (! $this->checkCompilerScript($this->get('compiler.script'))) {
             throw ConfigFailedValidation::because('You must specify a script to run the compiler. (E.g: npm run production)');
+        }
+
+        if (! $this->checkCompilerScriptType($this->get('compiler.script'))) {
+            throw ConfigFailedValidation::because('Your compiler script must be a string. Since version 1.3.0, you can now write your script on one line. E.g: npm install && npm run production.');
+        }
+
+        if (! $this->checkCompilerOutputSetting($this->get('compiler.output'))) {
+            throw ConfigFailedValidation::because('You must specify a valid output setting. Available options: all, progress, disable.');
         }
 
         if (! $this->checkDiskExists($this->get('storage.disk'))) {

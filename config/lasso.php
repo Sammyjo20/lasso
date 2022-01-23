@@ -19,6 +19,20 @@ return [
         'timeout' => 600,
 
         /*
+         * Lasso will attempt to display the compilation progress
+         * from webpack. If your progress bar isn't incrementing, it's
+         * likely you have the `--no-progress` flag on your script
+         * (e.g npm run production). Change it to `--progress`.
+         *
+         * Available progress options are:
+         *
+         * - 'all': Display everything from the compiler.
+         * - 'progress': Display compilation progress.
+         * - 'disable': Disable the progress.
+         */
+        'output' => 'progress',
+
+        /*
          * If there are any directories/files you would like to Lasso to
          * exclude when uploading to the Filesystem, specify them below.
          */

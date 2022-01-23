@@ -4,11 +4,11 @@ namespace Sammyjo20\Lasso\Tasks\Publish;
 
 use Exception;
 use Illuminate\Support\Str;
+use Sammyjo20\Lasso\Actions\Compiler;
 use Sammyjo20\Lasso\Exceptions\GitHashException;
 use Sammyjo20\Lasso\Helpers\Bundle;
 use Sammyjo20\Lasso\Helpers\Git;
 use Sammyjo20\Lasso\Tasks\BaseJob;
-use Sammyjo20\Lasso\Tasks\Command;
 use Sammyjo20\Lasso\Tasks\Webhook;
 
 final class PublishJob extends BaseJob
@@ -57,13 +57,17 @@ final class PublishJob extends BaseJob
             // Start with the compiler. This will run the "script" which
             // has been defined in the config file (e.g. npm run production).
 
-            (new Command())
-                ->setScript(config('lasso.compiler.script'))
+            $compiler = (new Compiler())
+                ->setCommand(config('lasso.compiler.script'))
                 ->setTimeout(config('lasso.compiler.timeout', 600))
-                ->run();
+                ->execute();
 
-            $this->artisan->note('✅ Compiled assets.')
-                ->note('⏳ Copying and zipping compiled assets...');
+            $this->artisan->note(sprintf(
+                '✅ Compiled assets in %s seconds.',
+                $compiler->getCompilationTime()
+            ));
+
+            $this->artisan->note('⏳ Copying and zipping compiled assets...');
 
             // Once we have compiled all of our assets, we need to "bundle"
             // them up. Todo: Remove this step in the future.
