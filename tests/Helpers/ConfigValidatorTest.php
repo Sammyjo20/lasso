@@ -46,7 +46,7 @@ class ConfigValidatorTest extends TestCase
         $this->expectException(ConfigFailedValidation::class);
         $this->expectExceptionMessage('You must specify a valid output setting. Available options: all, progress, disable.');
 
-        config()->set(['lasso.compiler.output' => null]);
+        config()->set(['lasso.compiler.output' => 'abc']);
 
         (new ConfigValidator())->validate();
     }
