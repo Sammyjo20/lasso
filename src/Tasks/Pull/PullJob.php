@@ -5,6 +5,7 @@ namespace Sammyjo20\Lasso\Tasks\Pull;
 use Sammyjo20\Lasso\Exceptions\PullJobFailed;
 use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
 use Sammyjo20\Lasso\Helpers\FileLister;
+use Sammyjo20\Lasso\Helpers\Git;
 use Sammyjo20\Lasso\Services\ArchiveService;
 use Sammyjo20\Lasso\Services\BackupService;
 use Sammyjo20\Lasso\Services\VersioningService;
@@ -17,6 +18,16 @@ final class PullJob extends BaseJob
      * @var BackupService
      */
     protected $backup;
+
+    /**
+     * @var bool
+     */
+    protected $useCommit = false;
+
+    /**
+     * @var string?
+     */
+    protected $commitHash = null;
 
     /**
      * PullJob constructor.
@@ -141,7 +152,7 @@ final class PullJob extends BaseJob
 
         // If there isn't a "lasso-bundle.json" file in the root directory,
         // that's okay - this means that the commit is in "non-git" mode. So
-        // let's just grab that file.If we don't have a file on the server
+        // let's just grab that file. If we don't have a file on the server
         // however; we need to throw an exception.
 
         if (! $this->cloud->exists($cloudPath)) {
@@ -178,11 +189,11 @@ final class PullJob extends BaseJob
      * @param string $file
      * @param string $checksum
      * @return string
-     * @throws PullJobFailed
+     * @throws PullJobFailed|\Exception
      */
     private function downloadBundleZip(string $file, string $checksum): string
     {
-        $bundlePath = $this->cloud->getUploadPath($file);
+        $bundlePath = $this->getBundlePath($file);
         $localBundlePath = base_path('.lasso/bundle.zip');
 
         if (! $this->cloud->exists($bundlePath)) {
@@ -210,6 +221,14 @@ final class PullJob extends BaseJob
         // incorrectly or tampered with!
 
         if (! BundleIntegrityHelper::verifyChecksum($localBundlePath, $checksum)) {
+
+            if ($this->useCommit || $this->commitHash) {
+
+                $this->artisan->note('Could not verify checksum using commit hash for bundle id ...');
+
+                return $localBundlePath;
+            }
+
             $this->rollBack(
                 PullJobFailed::because('The bundle Zip\'s checksum is incorrect.')
             );
@@ -268,5 +287,43 @@ final class PullJob extends BaseJob
         $this->filesystem->deleteBaseLassoDirectory();
 
         $this->filesystem->ensureDirectoryExists(base_path('.lasso'));
+    }
+
+    /**
+     * @param string $file
+     * @return string
+     */
+    private function getBundlePath(string $file): string
+    {
+        if ($this->commitHash) {
+            return $this->cloud->getUploadPath($this->commitHash . '.zip');
+        }
+
+        if ($this->useCommit) {
+           return $this->cloud->getUploadPath(Git::getCommitHash() . '.zip');
+        }
+
+        return $this->cloud->getUploadPath($file);
+
+    }
+
+    /**
+     * @return $this
+     */
+    public function useCommit(): self
+    {
+        $this->useCommit = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function withCommit(string $commitHash): self
+    {
+        $this->commitHash = $commitHash;
+
+        return $this;
     }
 }

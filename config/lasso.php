@@ -92,5 +92,4 @@ return [
      * you have changed this - please specify it below.
      */
     'public_path' => public_path(),
-
 ];

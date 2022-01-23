@@ -15,7 +15,7 @@ final class PullCommand extends BaseCommand
      *
      * @var string
      */
-    protected $signature = 'lasso:pull {--silent}';
+    protected $signature = 'lasso:pull {--silent} {--use-commit} {--with-commit=}';
 
     /**
      * The console command description.
@@ -29,12 +29,18 @@ final class PullCommand extends BaseCommand
      *
      * @param Artisan $artisan
      * @param Filesystem $filesystem
+     * @return int
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
+     * @throws \Sammyjo20\Lasso\Exceptions\PullJobFailed
      */
     public function handle(Artisan $artisan, Filesystem $filesystem): int
     {
         (new ConfigValidator())->validate();
 
+        $useCommit = $this->option('use-commit') === true;
+        $withCommit = $this->option('with-commit');
         $this->configureApplication($artisan, $filesystem);
 
         $artisan->setCommand($this);
@@ -44,8 +50,17 @@ final class PullCommand extends BaseCommand
             $filesystem->getCloudDisk()
         ));
 
-        (new PullJob())
-            ->run();
+        $job = new PullJob();
+
+        if ($useCommit) {
+            $job->useCommit();
+        }
+
+        if ($withCommit) {
+            $job->withCommit(substr($withCommit, 0, 12));
+        }
+
+        $job->run();
 
         $artisan->note('✅ Successfully downloaded the latest assets. Yee-haw!');
         $artisan->note('❤️  Thank you for using Lasso. https://getlasso.dev');
