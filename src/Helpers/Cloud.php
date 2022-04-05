@@ -64,7 +64,7 @@ class Cloud
         $stream = fopen($path, 'rb');
 
         // Use the stream to write the bundle to the Filesystem.
-        $this->cloudFilesystem->putStream($upload_path, $stream);
+        $this->cloudFilesystem->writeStream($upload_path, $stream);
 
         // Close the Stream pointer because it's good practice.
         if (is_resource($stream)) {
