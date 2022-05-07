@@ -65,9 +65,7 @@ class Cloud
         $stream = fopen($path, 'rb');
 
         // Use the stream to write the bundle to the Filesystem.
-        $writeResponse = $this->cloudFilesystem->writeStream($upload_path, $stream);
-
-        if ($writeResponse !== true) {
+        if ($this->cloudFilesystem->writeStream($upload_path, $stream) === false) {
             throw new UnableToWriteFile("Unable to write file at location " . $upload_path);
         }
 
