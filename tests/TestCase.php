@@ -2,8 +2,8 @@
 
 namespace Sammyjo20\Lasso\Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
 use Sammyjo20\Lasso\LassoServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {

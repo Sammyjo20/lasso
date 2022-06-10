@@ -2,9 +2,9 @@
 
 namespace Sammyjo20\Lasso\Tests\Helpers;
 
-use Sammyjo20\Lasso\Exceptions\ConfigFailedValidation;
-use Sammyjo20\Lasso\Helpers\ConfigValidator;
 use Sammyjo20\Lasso\Tests\TestCase;
+use Sammyjo20\Lasso\Helpers\ConfigValidator;
+use Sammyjo20\Lasso\Exceptions\ConfigFailedValidation;
 
 class ConfigValidatorTest extends TestCase
 {
@@ -14,7 +14,7 @@ class ConfigValidatorTest extends TestCase
         config()->set([
             'filesystems.disks' => [
                 'assets' => [
-                    "driver" => "s3",
+                    'driver' => 's3',
                 ],
             ],
         ]);

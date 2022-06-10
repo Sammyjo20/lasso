@@ -66,7 +66,7 @@ class Cloud
 
         // Use the stream to write the bundle to the Filesystem.
         if ($this->cloudFilesystem->writeStream($upload_path, $stream) === false) {
-            throw new UnableToWriteFile("Unable to write file at location " . $upload_path);
+            throw new UnableToWriteFile('Unable to write file at location ' . $upload_path);
         }
 
         // Close the Stream pointer because it's good practice.

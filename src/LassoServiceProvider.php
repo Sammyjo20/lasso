@@ -2,11 +2,11 @@
 
 namespace Sammyjo20\Lasso;
 
-use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Sammyjo20\Lasso\Commands\PublishCommand;
-use Sammyjo20\Lasso\Commands\PullCommand;
 use Sammyjo20\Lasso\Container\Artisan;
 use Sammyjo20\Lasso\Helpers\Filesystem;
+use Sammyjo20\Lasso\Commands\PullCommand;
+use Sammyjo20\Lasso\Commands\PublishCommand;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class LassoServiceProvider extends BaseServiceProvider
 {

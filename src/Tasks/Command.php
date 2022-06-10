@@ -2,8 +2,8 @@
 
 namespace Sammyjo20\Lasso\Tasks;
 
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 final class Command
 {

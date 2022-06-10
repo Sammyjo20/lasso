@@ -2,9 +2,9 @@
 
 namespace Sammyjo20\Lasso\Services;
 
+use Sammyjo20\Lasso\Helpers\Cloud;
 use Illuminate\Support\Facades\Storage;
 use Sammyjo20\Lasso\Exceptions\VersioningFailed;
-use Sammyjo20\Lasso\Helpers\Cloud;
 
 final class VersioningService
 {

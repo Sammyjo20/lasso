@@ -2,9 +2,9 @@
 
 namespace Sammyjo20\Lasso\Tasks\Publish;
 
+use Sammyjo20\Lasso\Tasks\BaseJob;
 use Sammyjo20\Lasso\Helpers\FileLister;
 use Sammyjo20\Lasso\Services\ArchiveService;
-use Sammyjo20\Lasso\Tasks\BaseJob;
 
 final class BundleJob extends BaseJob
 {

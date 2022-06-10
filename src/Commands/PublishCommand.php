@@ -3,8 +3,8 @@
 namespace Sammyjo20\Lasso\Commands;
 
 use Sammyjo20\Lasso\Container\Artisan;
-use Sammyjo20\Lasso\Helpers\ConfigValidator;
 use Sammyjo20\Lasso\Helpers\Filesystem;
+use Sammyjo20\Lasso\Helpers\ConfigValidator;
 use Sammyjo20\Lasso\Tasks\Publish\PublishJob;
 
 final class PublishCommand extends BaseCommand

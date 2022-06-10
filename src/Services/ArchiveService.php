@@ -2,8 +2,8 @@
 
 namespace Sammyjo20\Lasso\Services;
 
-use Sammyjo20\Lasso\Helpers\Unzipper;
 use Sammyjo20\Lasso\Helpers\Zip;
+use Sammyjo20\Lasso\Helpers\Unzipper;
 
 final class ArchiveService
 {

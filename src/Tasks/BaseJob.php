@@ -2,8 +2,8 @@
 
 namespace Sammyjo20\Lasso\Tasks;
 
-use Sammyjo20\Lasso\Container\Artisan;
 use Sammyjo20\Lasso\Helpers\Cloud;
+use Sammyjo20\Lasso\Container\Artisan;
 use Sammyjo20\Lasso\Helpers\Filesystem;
 use Sammyjo20\Lasso\Interfaces\JobInterface;
 

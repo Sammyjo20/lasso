@@ -10,7 +10,7 @@ class Git
      * @return string|null
      * @throws GitHashException
      */
-    public static function getCommitHash():? string
+    public static function getCommitHash(): ? string
     {
         try {
             $branch = str_replace("\n", '', last(explode('/', file_get_contents(base_path() . '/.git/HEAD'))));

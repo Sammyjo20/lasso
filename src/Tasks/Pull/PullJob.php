@@ -2,15 +2,15 @@
 
 namespace Sammyjo20\Lasso\Tasks\Pull;
 
-use Sammyjo20\Lasso\Exceptions\PullJobFailed;
-use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
-use Sammyjo20\Lasso\Helpers\FileLister;
 use Sammyjo20\Lasso\Helpers\Git;
-use Sammyjo20\Lasso\Services\ArchiveService;
-use Sammyjo20\Lasso\Services\BackupService;
-use Sammyjo20\Lasso\Services\VersioningService;
 use Sammyjo20\Lasso\Tasks\BaseJob;
 use Sammyjo20\Lasso\Tasks\Webhook;
+use Sammyjo20\Lasso\Helpers\FileLister;
+use Sammyjo20\Lasso\Services\BackupService;
+use Sammyjo20\Lasso\Services\ArchiveService;
+use Sammyjo20\Lasso\Exceptions\PullJobFailed;
+use Sammyjo20\Lasso\Services\VersioningService;
+use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
 
 final class PullJob extends BaseJob
 {

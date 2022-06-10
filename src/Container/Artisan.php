@@ -3,9 +3,9 @@
 namespace Sammyjo20\Lasso\Container;
 
 use Illuminate\Console\Command;
-use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
-use Sammyjo20\Lasso\Helpers\CompilerOutputFormatter;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Sammyjo20\Lasso\Helpers\CompilerOutputFormatter;
+use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
 
 final class Artisan
 {

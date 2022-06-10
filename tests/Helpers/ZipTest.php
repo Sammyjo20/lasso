@@ -2,10 +2,10 @@
 
 namespace Sammyjo20\Lasso\Tests\Helpers;
 
-use Illuminate\Support\Facades\File;
+use ZipArchive;
 use Sammyjo20\Lasso\Helpers\Zip;
 use Sammyjo20\Lasso\Tests\TestCase;
-use ZipArchive;
+use Illuminate\Support\Facades\File;
 
 class ZipTest extends TestCase
 {
@@ -64,7 +64,7 @@ class ZipTest extends TestCase
     /** @test */
     public function it_adds_all_files_within_a_source_directory_including_sub_folders_to_a_zip_file(): void
     {
-       $sourceFiles = [
+        $sourceFiles = [
             'FilesWithSubFolder/SubFolder/in_sub_folder.txt',
             'FilesWithSubFolder/SubFolder/logo_in_sub_folder.png',
             'FilesWithSubFolder/logo_in_root_folder.png',
@@ -120,7 +120,7 @@ class ZipTest extends TestCase
         $rootDirectory = explode('/', $filePath)[0];
 
         // Remove the root directory from the given path
-        $normalizedPath = str_replace($rootDirectory, "", $filePath);
+        $normalizedPath = str_replace($rootDirectory, '', $filePath);
 
         // Remove preliminary forward slash "/Dir" -> "Dir"
         $relativePath = substr($normalizedPath, 1);

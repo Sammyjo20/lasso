@@ -24,7 +24,8 @@
         "phpunit/phpunit": "^9.3",
         "orchestra/testbench": "^7.0",
         "friendsofphp/php-cs-fixer": "^3.1.0",
-        "spatie/ray": "^1.33"
+        "spatie/ray": "^1.33",
+        "pestphp/pest": "^1.21"
     },
     "extra": {
         "laravel": {
@@ -40,8 +41,17 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "format": "vendor/bin/php-cs-fixer fix"
+        "test": [
+            "./vendor/bin/pest"
+        ],
+        "fix-code": [
+            "./vendor/bin/php-cs-fixer fix"
+        ]
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
 }
