@@ -3,6 +3,7 @@
 namespace Sammyjo20\Lasso\Helpers;
 
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToWriteFile;
 use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
 use Sammyjo20\Lasso\Helpers\Filesystem as LocalFilesystem;
 
@@ -64,7 +65,9 @@ class Cloud
         $stream = fopen($path, 'rb');
 
         // Use the stream to write the bundle to the Filesystem.
-        $this->cloudFilesystem->writeStream($upload_path, $stream);
+        if ($this->cloudFilesystem->writeStream($upload_path, $stream) === false) {
+            throw new UnableToWriteFile("Unable to write file at location " . $upload_path);
+        }
 
         // Close the Stream pointer because it's good practice.
         if (is_resource($stream)) {
