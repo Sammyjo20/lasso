@@ -59,23 +59,12 @@ public/
 
 ## Vite Support
 
-Lasso supports Vite with a few config changes.  In `config/lasso.php`, change `compiler.script` to `yarn run build` and `compiler.output` to `disable` (progress bar output is not yet supported for Vite).
+Lasso supports Vite with a few config changes.  In `config/lasso.php`, change `compiler.script` to `yarn run build`, `compiler.excluded_files` to `['hot']` to exclude Vite's "hot" file and `compiler.output` to `disable` (progress bar output is not yet supported for Vite).
 
 ```php
   'script' => 'yarn run build',
   'output' => 'disable',
-```
-
-Also you will likely want to update your `vite.config.js` to not put the `hot` file in public since lasso will be include it in the bundle it uploads.
-
-```javascript
-export default defineConfig({
-  plugins: [
-    laravel({
-      input: ['resources/css/app.css', 'resources/js/app.js'],
-      hotFile: 'storage/vite.hot',
-    }),
-  ]
+  'excluded_files' => ['hot'],
 ```
 
 ## Recommended Usage
