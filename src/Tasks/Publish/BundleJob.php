@@ -66,7 +66,6 @@ final class BundleJob extends BaseJob
         // ignore unreadable directories, VCS files, and include dot-files.
 
         foreach ($files as $file) {
-
             // Make sure it's not an excluded file.
             if (in_array($file->getFilename(), $this->forbiddenFiles, true)) {
                 continue;
