@@ -12,7 +12,7 @@
 
 ### Introduction
 
-Deploying Webpack assets in Laravel can be a nightmare. One problem developers have is dealing with their built assets (created by Webpack/Laravel Mix). Do you store them in version control? Do you deploy them on the server? What if I'm working with a team? Each of these solutions for assets can cause headaches for the developer, including merge conflicts and slowing down servers.
+Deploying assets in Laravel can be a nightmare. One problem developers have is dealing with their built assets (created by Webpack/Laravel Mix or Vite). Do you store them in version control? Do you deploy them on the server? What if I'm working with a team? Each of these solutions for assets can cause headaches for the developer, including merge conflicts and slowing down servers.
 
 Lasso is a Laravel package designed to take the headaches out of deploying assets to your servers. It works great on load balanced environments too.
 
@@ -51,9 +51,21 @@ Example:
 mix-manifest.json
 public/css/*
 public/js/*
+public/build/**/*
+public/
 .lasso
 ```
 > The .lasso folder is a temporary directory created by Lasso to keep assets while they're being zipped up. This folder is automatically created and deleted, but it's good to ignore this directory anyway, just in case Lasso falls over before it reaches the cleanup phase.
+
+## Vite Support
+
+Lasso supports Vite with a few config changes.  In `config/lasso.php`, change `compiler.script` to `yarn run build`, `compiler.excluded_files` to `['hot']` to exclude Vite's "hot" file and `compiler.output` to `disable` (progress bar output is not yet supported for Vite).
+
+```php
+  'script' => 'yarn run build',
+  'output' => 'disable',
+  'excluded_files' => ['hot'],
+```
 
 ## Recommended Usage
 
