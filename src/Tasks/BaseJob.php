@@ -73,6 +73,15 @@ abstract class BaseJob implements JobInterface
      */
     protected function getAlwaysRunWebhooks(array $webhooks): array
     {
-        return array_key_exists('always', $webhooks) ? $webhooks['always'] : [];
+        $numericallyIndexedWebhooks = $this->numericallyIndexedWebhooks($webhooks);
+        
+        return array_key_exists('always', $webhooks) ?
+            array_merge($webhooks['always'], $numericallyIndexedWebhooks) :
+            $numericallyIndexedWebhooks;
+    }
+
+    private function numericallyIndexedWebhooks($webhooks): array
+    {
+        return array_filter(array_values($webhooks), 'is_string');
     }
 }

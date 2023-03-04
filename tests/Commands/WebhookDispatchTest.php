@@ -45,6 +45,18 @@ class WebhookDispatchTest extends TestCase
     }
 
     /** @test */
+    function it_can_always_dispatch_webhooks_which_are_numerically_indexed_in_publish_job(): void {
+        $this->webhooks[0] = 'https://example.com';
+
+        (new PublishJob)->dispatchWebhooks($this->webhooks);
+
+        Http::assertSentCount(3);
+        Http::assertSent(function (Request $request) {
+            return $request->url() === 'https://example.com';
+        });
+    }
+
+    /** @test */
     function it_can_dispatch_webhooks_per_environment_after_successful_pull_command(): void
     {
         (new PullJob)->dispatchWebhooks($this->webhooks);
