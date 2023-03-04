@@ -67,4 +67,12 @@ abstract class BaseJob implements JobInterface
 
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    protected function getAlwaysRunWebhooks(array $webhooks): array
+    {
+        return array_key_exists('always', $webhooks) ? $webhooks['always'] : [];
+    }
 }

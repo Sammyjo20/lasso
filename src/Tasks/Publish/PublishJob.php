@@ -153,10 +153,19 @@ final class PublishJob extends BaseJob
         if (! count($webhooks)) {
             return;
         }
+        
+        $lassoEnvironment = config('lasso.storage.environment', null);
 
         $this->artisan->note('⏳ Dispatching webhooks...');
 
-        foreach ($webhooks as $webhook) {
+
+        if (array_key_exists($lassoEnvironment, $webhooks)) {
+            foreach ($webhooks[$lassoEnvironment] as $webhook) {
+                Webhook::send($webhook, 'publish');
+            }
+        }
+
+        foreach ($this->getAlwaysRunWebhooks($webhooks) as $webhook) {
             Webhook::send($webhook, 'publish');
         }
 

@@ -25,7 +25,8 @@
         "orchestra/testbench": "^7.0 || ^8.0",
         "friendsofphp/php-cs-fixer": "^3.1.0",
         "spatie/ray": "^1.33",
-        "pestphp/pest": "^1.21"
+        "pestphp/pest": "^1.21",
+        "guzzlehttp/guzzle": "^7.5"
     },
     "extra": {
         "laravel": {
