@@ -71,15 +71,28 @@ abstract class BaseJob implements JobInterface
     /**
      * @return array
      */
-    protected function getAlwaysRunWebhooks(array $webhooks): array
+    protected function filterWebhooksToRun(array $webhooks): array
     {
-        $numericallyIndexedWebhooks = $this->numericallyIndexedWebhooks($webhooks);
-        
-        return array_key_exists('always', $webhooks) ?
-            array_merge($webhooks['always'], $numericallyIndexedWebhooks) :
-            $numericallyIndexedWebhooks;
+        $lassoEnvironment = config('lasso.storage.environment', null);
+
+        return array_key_exists($lassoEnvironment, $webhooks) ?
+            array_merge($webhooks[$lassoEnvironment], $this->getAlwaysRunWebhooks($webhooks)) :
+            $this->getAlwaysRunWebhooks($webhooks);
     }
 
+    /**
+     * @return array
+     */
+    protected function getAlwaysRunWebhooks(array $webhooks): array
+    {        
+        return array_key_exists('always', $webhooks) ?
+            array_merge($webhooks['always'], $this->numericallyIndexedWebhooks($webhooks)) :
+            $this->numericallyIndexedWebhooks($webhooks);
+    }
+
+    /**
+     * @return array
+     */
     private function numericallyIndexedWebhooks($webhooks): array
     {
         return array_filter(array_values($webhooks), 'is_string');

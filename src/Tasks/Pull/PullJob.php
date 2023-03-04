@@ -119,18 +119,10 @@ final class PullJob extends BaseJob
         if (! count($webhooks)) {
             return;
         }
-        
-        $lassoEnvironment = config('lasso.storage.environment', null);
 
         $this->artisan->note('⏳ Dispatching webhooks...');
 
-        if (array_key_exists($lassoEnvironment, $webhooks)) {
-            foreach ($webhooks[$lassoEnvironment] as $webhook) {
-                Webhook::send($webhook, 'pull');
-            }
-        }
-
-        foreach ($this->getAlwaysRunWebhooks($webhooks) as $webhook) {
+        foreach ($this->filterWebhooksToRun($webhooks) as $webhook) {
             Webhook::send($webhook, 'pull');
         }
 
