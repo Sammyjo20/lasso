@@ -6,6 +6,7 @@ use Mockery as m;
 use Sammyjo20\Lasso\Tests\TestCase;
 use Illuminate\Http\Client\Request;
 use Sammyjo20\Lasso\Container\Artisan;
+use Sammyjo20\Lasso\Tasks\Pull\PullJob;
 use Sammyjo20\Lasso\Tasks\Publish\PublishJob;
 use Illuminate\Support\Facades\{Http,Storage};
 
@@ -15,6 +16,8 @@ class WebhookDispatchTest extends TestCase
     {
         parent::setUp();
 
+        $this->getMock();
+        
         Storage::fake('assets');
 
         $this->webhooks = $this->webhooks();
@@ -27,12 +30,24 @@ class WebhookDispatchTest extends TestCase
     /** @test */
     function it_can_dispatch_webhooks_per_environment_after_successful_publish_command(): void
     {
-        $mock = m::mock($artisan = new Artisan);
-        $mock->shouldReceive('note')->twice()->andReturn($artisan);
-        $this->app->instance('Sammyjo20\Lasso\Container\Artisan', $mock);
-        $publishJob = new PublishJob;
+        (new PublishJob)->dispatchWebhooks($this->webhooks);
 
-        $publishJob->dispatchWebhooks($this->webhooks);
+        Http::assertSentCount(2);
+        Http::assertSent(function (Request $request) {
+            return $request->url() === 'https://example.com/staging';
+        });
+        Http::assertSent(function (Request $request) {
+            return $request->url() === 'https://example.com/always';
+        });
+        Http::assertNotSent(function (Request $request) {
+            return $request->url() === 'http://example.com/production';
+        });
+    }
+
+    /** @test */
+    function it_can_dispatch_webhooks_per_environment_after_successful_pull_command(): void
+    {
+        (new PullJob)->dispatchWebhooks($this->webhooks);
 
         Http::assertSentCount(2);
         Http::assertSent(function (Request $request) {
@@ -53,6 +68,13 @@ class WebhookDispatchTest extends TestCase
             'staging'    => ['https://example.com/staging'],
             'production' => ['https://example.com/production'],
         ];
+    }
+
+    private function getMock(): void
+    {
+        $mock = m::mock($artisan = new Artisan);
+        $mock->shouldReceive('note')->twice()->andReturn($artisan);
+        $this->app->instance('Sammyjo20\Lasso\Container\Artisan', $mock);
     }
 
     public function tearDown(): void
