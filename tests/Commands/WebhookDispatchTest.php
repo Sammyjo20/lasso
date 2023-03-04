@@ -73,6 +73,18 @@ class WebhookDispatchTest extends TestCase
         });
     }
 
+    /** @test */
+    function it_can_always_dispatch_webhooks_which_are_numerically_indexed_in_pull_job(): void {
+        $this->webhooks[9] = 'https://example.com';
+
+        (new PullJob)->dispatchWebhooks($this->webhooks);
+
+        Http::assertSentCount(3);
+        Http::assertSent(function (Request $request) {
+            return $request->url() === 'https://example.com';
+        });
+    }
+
     private function webhooks(): array
     {
         return [
