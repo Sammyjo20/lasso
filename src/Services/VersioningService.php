@@ -5,6 +5,7 @@ namespace Sammyjo20\Lasso\Services;
 use Sammyjo20\Lasso\Helpers\Cloud;
 use Illuminate\Support\Facades\Storage;
 use Sammyjo20\Lasso\Exceptions\VersioningFailed;
+use League\Flysystem\UnableToCheckFileExistence;
 
 final class VersioningService
 {
@@ -45,7 +46,12 @@ final class VersioningService
         // that's completely fine. Let's just return an empty
         // array, ready to be populated!
 
-        if (! Storage::disk($disk)->exists($path)) {
+        try {
+            if (! Storage::disk($disk)->exists($path)) {
+                return [];
+            }
+        } catch(UnableToCheckFileExistence $e) {
+            Storage::disk($disk)->put($path, '{}');
             return [];
         }
 
