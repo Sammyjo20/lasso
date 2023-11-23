@@ -1,3 +1,3 @@
 # Security Policy
 
-If you discover any security related issues, please email security@yeehaw.dev instead of using the issue tracker.
+If you discover any security related issues, please email **29132017+Sammyjo20@users.noreply.github.com** instead of using the issue tracker.
