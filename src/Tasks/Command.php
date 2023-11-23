@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Tasks;
 
 use Symfony\Component\Process\Process;
@@ -36,7 +38,6 @@ final class Command
     }
 
     /**
-     * @param $script
      * @return $this
      */
     public function setScript($script): self
@@ -51,7 +52,6 @@ final class Command
     }
 
     /**
-     * @param int $timeout
      * @return $this
      */
     public function setTimeout(int $timeout = 600): self

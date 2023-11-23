@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Tasks\Publish;
 
 use Exception;
@@ -44,7 +46,6 @@ final class PublishJob extends BaseJob
     }
 
     /**
-     * @return void
      * @throws Exception
      */
     public function run(): void
@@ -126,16 +127,13 @@ final class PublishJob extends BaseJob
         }
     }
 
-    /**
-     * @return void
-     */
+    
     public function cleanUp(): void
     {
         $this->deleteLassoDirectory();
     }
 
     /**
-     * @param Exception $exception
      * @throws Exception
      */
     private function rollBack(Exception $exception)
@@ -145,9 +143,7 @@ final class PublishJob extends BaseJob
         throw $exception;
     }
 
-    /**
-     * @param array $webhooks
-     */
+    
     public function dispatchWebhooks(array $webhooks = []): void
     {
         if (! count($webhooks)) {

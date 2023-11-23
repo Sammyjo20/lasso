@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Interfaces;
 
 interface JobInterface
 {
-    /**
-     * @return void
-     */
+    
     public function run(): void;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 use Sammyjo20\Lasso\Exceptions\GitHashException;
@@ -7,7 +9,6 @@ use Sammyjo20\Lasso\Exceptions\GitHashException;
 class Git
 {
     /**
-     * @return string|null
      * @throws GitHashException
      */
     public static function getCommitHash(): ? string
@@ -20,7 +21,7 @@ class Git
         }
 
         if ($hash) {
-            return substr($hash, 0, 12);
+            return mb_substr($hash, 0, 12);
         }
 
         return null;

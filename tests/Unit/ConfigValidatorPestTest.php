@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Sammyjo20\Lasso\Helpers\ConfigValidator;
 use Sammyjo20\Lasso\Exceptions\ConfigFailedValidation;
 

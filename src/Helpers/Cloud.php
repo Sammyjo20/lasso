@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 use Illuminate\Support\Facades\Storage;
@@ -36,8 +38,6 @@ class Cloud
     }
 
     /**
-     * @param $name
-     * @param $arguments
      * @return mixed|void
      * @throws ConsoleMethodException
      */
@@ -54,10 +54,7 @@ class Cloud
         ));
     }
 
-    /**
-     * @param string $path
-     * @param string $name
-     */
+    
     public function uploadFile(string $path, string $name): void
     {
         $upload_path = $this->getUploadPath($name);
@@ -78,9 +75,6 @@ class Cloud
     /**
      * Returns the Lasso upload directory. You can specify a file
      * to create a fully qualified URL.
-     *
-     * @param string|null $file
-     * @return string
      */
     public function getUploadPath(string $file = null): string
     {
@@ -95,16 +89,13 @@ class Cloud
         return $dir . '/' . ltrim($file, '/');
     }
 
-    /**
-     * @return string
-     */
+    
     public function getCloudDisk(): string
     {
         return $this->cloudDisk;
     }
 
     /**
-     * @param string $disk
      * @return $this
      */
     public function setCloudDisk(string $disk): self

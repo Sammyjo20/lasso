@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 use \Illuminate\Filesystem\Filesystem as BaseFilesystem;
@@ -35,11 +37,7 @@ class Filesystem extends BaseFilesystem
             ->setPublicPath($publicPath);
     }
 
-    /**
-     * @param $resource
-     * @param string $destination
-     * @return bool
-     */
+    
     public function putStream($resource, string $destination): bool
     {
         $stream = fopen($destination, 'w+b');
@@ -51,9 +49,7 @@ class Filesystem extends BaseFilesystem
         return true;
     }
 
-    /**
-     * @param array $bundle
-     */
+    
     public function createFreshLocalBundle(array $bundle): void
     {
         $this->deleteLocalBundle();
@@ -61,9 +57,7 @@ class Filesystem extends BaseFilesystem
         $this->put(base_path('lasso-bundle.json'), json_encode($bundle));
     }
 
-    /**
-     * @return bool
-     */
+    
     public function deleteLocalBundle(): bool
     {
         return $this->delete(base_path('lasso-bundle.json'));
@@ -71,24 +65,19 @@ class Filesystem extends BaseFilesystem
 
     /**
      * Delete Lasso's base directory (.lasso)
-     *
-     * @return bool
      */
     public function deleteBaseLassoDirectory(): bool
     {
         return $this->deleteDirectory('.lasso');
     }
 
-    /**
-     * @return string
-     */
+    
     public function getLassoEnvironment(): string
     {
         return $this->lassoEnvironment;
     }
 
     /**
-     * @param string $environment
      * @return $this
      */
     public function setLassoEnvironment(string $environment): self
@@ -98,16 +87,13 @@ class Filesystem extends BaseFilesystem
         return $this;
     }
 
-    /**
-     * @return string
-     */
+    
     public function getPublicPath(): string
     {
         return $this->publicPath;
     }
 
     /**
-     * @param string $publicPath
      * @return $this
      */
     public function setPublicPath(string $publicPath): self
@@ -117,16 +103,13 @@ class Filesystem extends BaseFilesystem
         return $this;
     }
 
-    /**
-     * @return string
-     */
+    
     public function getCloudDisk(): string
     {
         return $this->cloudDisk;
     }
 
     /**
-     * @param string $disk
      * @return $this
      */
     public function setCloudDisk(string $disk): self

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Tasks\Pull;
 
 use Sammyjo20\Lasso\Helpers\Git;
@@ -40,7 +42,6 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @return void
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      * @throws PullJobFailed
@@ -103,17 +104,13 @@ final class PullJob extends BaseJob
         $this->dispatchWebhooks($webhooks);
     }
 
-    /**
-     * @return void
-     */
+    
     public function cleanUp(): void
     {
         $this->filesystem->deleteBaseLassoDirectory();
     }
 
-    /**
-     * @param array $webhooks
-     */
+    
     public function dispatchWebhooks(array $webhooks = []): void
     {
         if (! count($webhooks)) {
@@ -130,7 +127,6 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @return array
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function getLatestBundleInfo(): array
@@ -170,8 +166,6 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @param array $bundle
-     * @return bool
      * @throws \Exception
      */
     private function validateBundle(array $bundle): bool
@@ -186,9 +180,6 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @param string $file
-     * @param string $checksum
-     * @return string
      * @throws PullJobFailed|\Exception
      */
     private function downloadBundleZip(string $file, string $checksum): string
@@ -236,7 +227,6 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @param \Exception $exception
      * @throws \Exception
      */
     private function rollBack(\Exception $exception)
@@ -277,9 +267,7 @@ final class PullJob extends BaseJob
         return $this;
     }
 
-    /**
-     * @return void
-     */
+    
     private function cleanLassoDirectory(): void
     {
         $this->filesystem->deleteBaseLassoDirectory();
@@ -287,10 +275,7 @@ final class PullJob extends BaseJob
         $this->filesystem->ensureDirectoryExists(base_path('.lasso'));
     }
 
-    /**
-     * @param string $file
-     * @return string
-     */
+    
     private function getBundlePath(string $file): string
     {
         if ($this->commitHash) {

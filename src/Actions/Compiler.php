@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Actions;
 
 use Sammyjo20\Lasso\Container\Artisan;
@@ -9,15 +11,11 @@ class Compiler
 {
     /**
      * The Process shell command.
-     *
-     * @var mixed
      */
     protected $command;
 
     /**
      * The Process command timeout, if something happens to hang for too long.
-     *
-     * @var
      */
     protected $timeout;
 

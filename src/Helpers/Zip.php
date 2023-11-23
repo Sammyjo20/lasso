@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace Sammyjo20\Lasso\Helpers;
 
@@ -24,7 +26,6 @@ class Zip
      * https://github.com/spatie/laravel-backup/blob/18cf209be56bb086aaeb1397e142c2a7805802b3/src/Tasks/Backup/Zip.php
      *
      * ZipFactory constructor.
-     * @param string $destinationPath
      */
     public function __construct(string $destinationPath)
     {
@@ -33,7 +34,6 @@ class Zip
     }
 
     /**
-     * @param string $directory
      * @return $this
      */
     public function addFilesFromDirectory(string $directory): self
@@ -59,7 +59,6 @@ class Zip
     }
 
     /**
-     * @param string $destination
      * @return $this
      */
     private function createBaseZip(string $destination): self
@@ -70,9 +69,7 @@ class Zip
         return $this;
     }
 
-    /**
-     * @return void
-     */
+    
     public function closeZip(): void
     {
         $this->zip->close();

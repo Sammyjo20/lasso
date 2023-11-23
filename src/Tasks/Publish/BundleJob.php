@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Tasks\Publish;
 
 use Sammyjo20\Lasso\Tasks\BaseJob;
@@ -105,7 +107,6 @@ final class BundleJob extends BaseJob
     }
 
     /**
-     * @param string $bundleId
      * @return $this
      */
     public function setBundleId(string $bundleId): self
@@ -116,7 +117,6 @@ final class BundleJob extends BaseJob
     }
 
     /**
-     * @param array $files
      * @return $this
      */
     private function setForbiddenFiles(array $files): self
@@ -127,7 +127,6 @@ final class BundleJob extends BaseJob
     }
 
     /**
-     * @param array $directories
      * @return $this
      */
     private function setForbiddenDirectories(array $directories): self

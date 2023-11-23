@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Tasks;
 
 use Sammyjo20\Lasso\Helpers\Cloud;

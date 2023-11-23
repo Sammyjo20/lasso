@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Exceptions;
 
 class BaseException extends \Exception
@@ -10,7 +12,6 @@ class BaseException extends \Exception
     public static $event = 'An exception was thrown.';
 
     /**
-     * @param string $reason
      * @return static
      */
     public static function because(string $reason)

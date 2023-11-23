@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 use Symfony\Component\Finder\Finder;
@@ -13,8 +15,6 @@ class FileLister
 
     /**
      * FileLister constructor.
-     *
-     * @param string $directory
      */
     public function __construct(string $directory)
     {

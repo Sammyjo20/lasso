@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 use Illuminate\Filesystem\Filesystem;
@@ -20,37 +22,25 @@ class ConfigValidator
         $this->filesystem = new Filesystem();
     }
 
-    /**
-     * @param string $item
-     * @return mixed
-     */
+    
     private function get(string $item)
     {
         return config('lasso.' . $item, null);
     }
 
-    /**
-     * @param $value
-     * @return bool
-     */
+    
     private function checkCompilerScript($value): bool
     {
         return ! is_null($value);
     }
 
-    /**
-     * @param $value
-     * @return bool
-     */
+    
     private function checkCompilerScriptType($value): bool
     {
         return is_string($value);
     }
 
-    /**
-     * @param $value
-     * @return bool
-     */
+    
     private function checkCompilerOutputSetting($value): bool
     {
         if (is_null($value)) {
@@ -60,28 +50,19 @@ class ConfigValidator
         return in_array($value, ['all', 'progress', 'disable']);
     }
 
-    /**
-     * @param $value
-     * @return bool
-     */
+    
     private function checkIfPublicPathExists($value): bool
     {
         return $this->filesystem->exists($value) && $this->filesystem->isReadable($value) && $this->filesystem->isWritable($value);
     }
 
-    /**
-     * @param $value
-     * @return bool
-     */
+    
     private function checkDiskExists($value): bool
     {
         return ! is_null(config('filesystems.disks.' . $value, null));
     }
 
-    /**
-     * @param $value
-     * @return bool
-     */
+    
     private function checkBundleToKeepCount($value): bool
     {
         return is_int($value) && $value > 0;
@@ -89,7 +70,6 @@ class ConfigValidator
 
     /**
      * @throws ConfigFailedValidation
-     * @return void
      */
     public function validate(): void
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Services;
 
 use Sammyjo20\Lasso\Helpers\Cloud;
@@ -9,7 +11,6 @@ use Sammyjo20\Lasso\Exceptions\VersioningFailed;
 final class VersioningService
 {
     /**
-     * @param string $bundle_url
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
     public static function appendNewVersion(string $bundle_url): void
@@ -33,7 +34,6 @@ final class VersioningService
      * Get the versioning file from the Filesystem Disk.
      * This is a file Lasso stores to keep track of its versions.
      *
-     * @return array
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
     private static function getHistoryFromDisk(): array
@@ -67,10 +67,7 @@ final class VersioningService
         }
     }
 
-    /**
-     * @param array $bundles
-     * @return array
-     */
+    
     private static function deleteExpiredBundles(array $bundles): array
     {
         $bundle_limit = self::getMaxBundlesAllowed();
@@ -96,10 +93,7 @@ final class VersioningService
         return array_diff($bundles, $deleted);
     }
 
-    /**
-     * @param array $deletable
-     * @return array
-     */
+    
     private static function deleteBundles(array $deletable): array
     {
         $disk = self::getDisk();
@@ -125,8 +119,6 @@ final class VersioningService
     }
 
     /**
-     * @param array $history
-     * @return bool
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
     private static function updateHistory(array $history): bool
@@ -145,26 +137,19 @@ final class VersioningService
         }
     }
 
-    /**
-     * @param string $path
-     * @return string
-     */
+    
     private static function getFileDirectory(string $path): string
     {
         return (new Cloud())->getUploadPath($path);
     }
 
-    /**
-     * @return string
-     */
+    
     private static function getDisk(): string
     {
         return config('lasso.storage.disk');
     }
 
-    /**
-     * @return int
-     */
+    
     private static function getMaxBundlesAllowed(): int
     {
         return config('lasso.storage.max_bundles');

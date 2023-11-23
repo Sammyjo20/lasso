@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 class Bundle
@@ -14,9 +16,7 @@ class Bundle
      */
     protected $zipPath;
 
-    /**
-     * @return array
-     */
+    
     public function create(): array
     {
         // Now we will generate a checksum for the file. This is useful
@@ -29,7 +29,6 @@ class Bundle
     }
 
     /**
-     * @param string $bundleId
      * @return $this
      */
     public function setBundleId(string $bundleId): self
@@ -40,7 +39,6 @@ class Bundle
     }
 
     /**
-     * @param string $path
      * @return $this
      */
     public function setZipPath(string $path): self

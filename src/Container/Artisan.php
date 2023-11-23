@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Container;
 
 use Illuminate\Console\Command;
@@ -35,8 +37,6 @@ final class Artisan
     }
 
     /**
-     * @param $name
-     * @param $arguments
      * @return mixed|void
      * @throws ConsoleMethodException
      */
@@ -56,8 +56,6 @@ final class Artisan
     /**
      * Create a note for the front end, set the second parameter to true for an error.
      *
-     * @param string $message
-     * @param bool $error
      * @return $this
      */
     public function note(string $message, bool $error = false): self

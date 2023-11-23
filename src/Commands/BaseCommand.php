@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Commands;
 
 use Illuminate\Console\Command;
@@ -10,10 +12,6 @@ class BaseCommand extends Command
 {
     /**
      * Configure the Artisan console and the Filesystem, ready for publishing.
-     *
-     * @param Artisan $artisan
-     * @param Filesystem $filesystem
-     * @param bool $checkFilesystem
      */
     protected function configureApplication(Artisan $artisan, Filesystem $filesystem, bool $checkFilesystem = false): void
     {

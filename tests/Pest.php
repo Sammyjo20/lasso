@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -13,14 +15,14 @@
 
 use Sammyjo20\Lasso\Tests\TestCase;
 
-uses(TestCase::class)->in('Helpers');
+uses(TestCase::class)->in(__DIR__);
 
 function sourceDirectory(): string
 {
-    return __DIR__ . '/Helpers/Support/Zip/Source';
+    return __DIR__ . '/Unit/Support/Zip/Source';
 }
 
 function destinationDirectory(): string
 {
-    return __DIR__ . '/Helpers/Support/Zip/Destination';
+    return __DIR__ . '/Unit/Support/Zip/Destination';
 }

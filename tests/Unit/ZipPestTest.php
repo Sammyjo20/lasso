@@ -1,9 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\File;
+declare(strict_types=1);
+
 use Sammyjo20\Lasso\Helpers\Zip;
-use function PHPUnit\Framework\assertFileDoesNotExist;
+use Illuminate\Support\Facades\File;
 use function PHPUnit\Framework\assertFileExists;
+use function PHPUnit\Framework\assertFileDoesNotExist;
 use function PHPUnit\Framework\assertStringEqualsFile;
 
 beforeEach(function () {
@@ -74,7 +76,8 @@ function assertZipFileContains(array $sourceFiles, string $destinationZipFile): 
         $relativePath = getRelativePath($filePath);
 
         assertStringEqualsFile(
-            sourceDirectory() . '/' . $filePath, $inspectZipFile->getFromName($relativePath)
+            sourceDirectory() . '/' . $filePath,
+            $inspectZipFile->getFromName($relativePath)
         );
     });
 }
@@ -88,5 +91,5 @@ function getRelativePath(string $filePath): string
     $normalizedPath = str_replace($rootDirectory, '', $filePath);
 
     // Remove preliminary forward slash "/Dir" -> "Dir"
-    return substr($normalizedPath, 1);
+    return mb_substr($normalizedPath, 1);
 }

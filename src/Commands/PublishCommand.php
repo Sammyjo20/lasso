@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Commands;
 
 use Sammyjo20\Lasso\Container\Artisan;
@@ -26,9 +28,6 @@ final class PublishCommand extends BaseCommand
     /**
      * Execute the console command.
      *
-     * @param Artisan $artisan
-     * @param Filesystem $filesystem
-     * @return int
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
     public function handle(Artisan $artisan, Filesystem $filesystem): int

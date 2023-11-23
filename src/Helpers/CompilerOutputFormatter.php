@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 class CompilerOutputFormatter
@@ -8,9 +10,6 @@ class CompilerOutputFormatter
 
     /**
      * Attempt to find the progress percentage from the line returned by the compiler.
-     *
-     * @param string $line
-     * @return int
      */
     public static function getWebpackProgress(string $line): int
     {

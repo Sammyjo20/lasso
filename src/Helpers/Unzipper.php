@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 use ZipArchive;
@@ -28,9 +30,6 @@ class Unzipper
 
     /**
      * Unzipper constructor.
-     *
-     * @param string $source
-     * @param string $destination
      */
     public function __construct(string $source, string $destination)
     {
@@ -39,9 +38,7 @@ class Unzipper
             ->setDestination($destination);
     }
 
-    /**
-     * @return void
-     */
+    
     public function run(): void
     {
         $this->filesystem->ensureDirectoryExists($this->destination);
@@ -61,7 +58,6 @@ class Unzipper
     }
 
     /**
-     * @param string $destination
      * @return $this
      */
     private function createBaseZip(string $destination): self
@@ -73,7 +69,6 @@ class Unzipper
     }
 
     /**
-     * @param string $destination
      * @return $this
      */
     private function setDestination(string $destination): self
@@ -83,9 +78,7 @@ class Unzipper
         return $this;
     }
 
-    /**
-     * @return void
-     */
+    
     public function closeZip(): void
     {
         $this->zip->close();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Tasks;
 
 use Illuminate\Support\Facades\Http;
@@ -7,9 +9,6 @@ use Illuminate\Support\Facades\Http;
 final class Webhook
 {
     /**
-     * @param string $url
-     * @param string $event
-     * @param array $data
      * @return bool
      */
     public static function send(string $url, string $event, array $data = [])

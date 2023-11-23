@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace Sammyjo20\Lasso\Commands;
 
@@ -27,9 +29,6 @@ final class PullCommand extends BaseCommand
     /**
      * Execute the console command.
      *
-     * @param Artisan $artisan
-     * @param Filesystem $filesystem
-     * @return int
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
@@ -57,7 +56,7 @@ final class PullCommand extends BaseCommand
         }
 
         if ($withCommit) {
-            $job->withCommit(substr($withCommit, 0, 12));
+            $job->withCommit(mb_substr($withCommit, 0, 12));
         }
 
         $job->run();

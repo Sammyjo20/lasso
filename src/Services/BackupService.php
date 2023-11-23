@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Services;
 
 use Sammyjo20\Lasso\Helpers\Filesystem;
@@ -19,8 +21,6 @@ final class BackupService
 
     /**
      * Backup constructor.
-     *
-     * @param Filesystem $filesystem
      */
     public function __construct(Filesystem $filesystem)
     {
@@ -29,10 +29,6 @@ final class BackupService
 
     /**
      * Copy a directory to a given location.
-     *
-     * @param string $sourceDirectory
-     * @param string $destinationDirectory
-     * @return bool
      */
     public function createBackup(string $sourceDirectory, string $destinationDirectory): bool
     {
@@ -49,8 +45,6 @@ final class BackupService
     }
 
     /**
-     * @param string $destinationDirectory
-     * @return bool
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
     public function restoreBackup(string $destinationDirectory): bool
@@ -67,7 +61,6 @@ final class BackupService
     }
 
     /**
-     * @param Filesystem $filesystem
      * @return $this
      */
     public function setFilesystem(Filesystem $filesystem): self
@@ -77,16 +70,13 @@ final class BackupService
         return $this;
     }
 
-    /**
-     * @return bool
-     */
+    
     public function hasBackup(): bool
     {
         return ! is_null($this->backupPath);
     }
 
     /**
-     * @param string $path
      * @return $this
      */
     public function setBackupPath(string $path): self
