@@ -12,45 +12,45 @@ use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
 final class Artisan
 {
     /**
-     * @var Command
+     * Command Line
      */
-    protected $command;
+    protected Command $command;
 
     /**
-     * @var bool
+     * Check if the console is running in silent mode
      */
-    protected $isSilent = false;
+    protected bool $isSilent = false;
 
     /**
-     * @var bool
+     * Check the compiler output mode
      */
-    private $compilerOutputMode = 'progress';
+    protected string $compilerOutputMode = 'progress';
 
     /**
-     * @var ProgressBar|null
+     * The progress bar
      */
-    private $progressBar = null;
+    private ?ProgressBar $progressBar = null;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
-        $this->setCompilerOutputMode(config('lasso.compiler.output', 'progress'));
+        $this->compilerOutputMode = config('lasso.compiler.output', 'progress');
     }
 
     /**
-     * @return mixed|void
-     * @throws ConsoleMethodException
+     * Handle a method call
+     *
+     * @throws \Sammyjo20\Lasso\Exceptions\ConsoleMethodException
      */
-    public function __call($name, $arguments)
+    public function __call($name, $arguments): mixed
     {
         if (method_exists($this->command, $name)) {
             return call_user_func_array([$this->command, $name], $arguments);
         }
 
-        throw new ConsoleMethodException(sprintf(
-            'Method %s::%s does not exist.',
-            get_class($this->command),
-            $name
-        ));
+        throw new ConsoleMethodException(sprintf('Method %s::%s does not exist.', get_class($this->command), $name));
     }
 
     /**
@@ -62,19 +62,22 @@ final class Artisan
     {
         if (! $this->isSilent) {
             $command = $error === true ? 'error' : 'info';
+
             $this->$command($message);
         }
 
         return $this;
     }
 
-    public function compilerOutput(string $line): void
+    /**
+     * Show compiler output
+     */
+    public function showCompilerOutput(string $line): void
     {
         $mode = $this->compilerOutputMode;
 
         if ($mode === 'all') {
             $this->note($line);
-
             return;
         }
 
@@ -87,14 +90,26 @@ final class Artisan
         }
     }
 
+    /**
+     * Mark compiler as complete
+     *
+     * @return void
+     */
     public function compilerComplete(): void
     {
-        if ($this->progressBar instanceof ProgressBar) {
-            $this->progressBar->finish();
-            $this->command->getOutput()->newLine();
+        if (! $this->progressBar instanceof ProgressBar) {
+            return;
         }
+
+        $this->progressBar->finish();
+        $this->command->getOutput()->newLine();
     }
 
+    /**
+     * Get the progress bar
+     *
+     * @return \Symfony\Component\Console\Helper\ProgressBar
+     */
     private function getProgressBar(): ProgressBar
     {
         if ($bar = $this->progressBar) {
@@ -108,11 +123,14 @@ final class Artisan
         $bar->setEmptyBarCharacter('-');
         $bar->start();
 
-        $this->setProgressBar($bar);
+        $this->progressBar = $bar;
 
         return $bar;
     }
 
+    /**
+     * Set the command being run
+     */
     public function setCommand(Command $command): self
     {
         $this->command = $command;
@@ -120,23 +138,12 @@ final class Artisan
         return $this;
     }
 
+    /**
+     * Run the artisan console in silent mode
+     */
     public function silent(): self
     {
         $this->isSilent = true;
-
-        return $this;
-    }
-
-    private function setCompilerOutputMode(string $mode): self
-    {
-        $this->compilerOutputMode = $mode;
-
-        return $this;
-    }
-
-    private function setProgressBar(ProgressBar $bar): self
-    {
-        $this->progressBar = $bar;
 
         return $this;
     }

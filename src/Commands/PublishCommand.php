@@ -32,14 +32,13 @@ final class PublishCommand extends BaseCommand
      */
     public function handle(Artisan $artisan, Filesystem $filesystem): int
     {
-        (new ConfigValidator())->validate();
+        (new ConfigValidator)->validate();
 
         $this->configureApplication($artisan, $filesystem, true);
 
         $dontUseGit = $this->option('no-git') === true;
         $useCommit = $this->option('use-commit') === true;
         $withCommit = $this->option('with-commit');
-        $this->configureApplication($artisan, $filesystem);
 
         $job = new PublishJob;
 

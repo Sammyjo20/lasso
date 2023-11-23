@@ -7,16 +7,20 @@ namespace Sammyjo20\Lasso\Helpers;
 class Bundle
 {
     /**
-     * @var string
+     * Bundle ID
      */
-    protected $bundleId;
+    protected string $bundleId;
 
     /**
-     * @var string
+     * ZIP Path
      */
-    protected $zipPath;
+    protected string $zipPath;
 
-    
+    /**
+     * Create a bundle
+     *
+     * @return array<string, string>
+     */
     public function create(): array
     {
         // Now we will generate a checksum for the file. This is useful
@@ -29,7 +33,7 @@ class Bundle
     }
 
     /**
-     * @return $this
+     * Set the bundle ID
      */
     public function setBundleId(string $bundleId): self
     {
@@ -39,7 +43,7 @@ class Bundle
     }
 
     /**
-     * @return $this
+     * Set the ZIP path
      */
     public function setZipPath(string $path): self
     {

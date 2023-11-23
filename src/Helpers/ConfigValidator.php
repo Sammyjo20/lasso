@@ -10,9 +10,9 @@ use Sammyjo20\Lasso\Exceptions\ConfigFailedValidation;
 class ConfigValidator
 {
     /**
-     * @var Filesystem
+     * Filesystem
      */
-    public $filesystem;
+    public Filesystem $filesystem;
 
     /**
      * ConfigValidator constructor.
@@ -22,25 +22,33 @@ class ConfigValidator
         $this->filesystem = new Filesystem();
     }
 
-    
+    /**
+     * Get config parameter
+     */
     private function get(string $item)
     {
         return config('lasso.' . $item, null);
     }
 
-    
+    /**
+     * Check the compiler script
+     */
     private function checkCompilerScript($value): bool
     {
         return ! is_null($value);
     }
 
-    
+    /**
+     * Check compiler script type
+     */
     private function checkCompilerScriptType($value): bool
     {
         return is_string($value);
     }
 
-    
+    /**
+     * Check compiler output
+     */
     private function checkCompilerOutputSetting($value): bool
     {
         if (is_null($value)) {
@@ -50,25 +58,33 @@ class ConfigValidator
         return in_array($value, ['all', 'progress', 'disable']);
     }
 
-    
+    /**
+     * Check if public path exists
+     */
     private function checkIfPublicPathExists($value): bool
     {
         return $this->filesystem->exists($value) && $this->filesystem->isReadable($value) && $this->filesystem->isWritable($value);
     }
 
-    
+    /**
+     * Check disk exists
+     */
     private function checkDiskExists($value): bool
     {
         return ! is_null(config('filesystems.disks.' . $value, null));
     }
 
-    
+    /**
+     * Check bundle to keep count
+     */
     private function checkBundleToKeepCount($value): bool
     {
         return is_int($value) && $value > 0;
     }
 
     /**
+     * Validate config
+     *
      * @throws ConfigFailedValidation
      */
     public function validate(): void

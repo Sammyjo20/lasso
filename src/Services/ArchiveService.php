@@ -9,7 +9,9 @@ use Sammyjo20\Lasso\Helpers\Unzipper;
 
 final class ArchiveService
 {
-    
+    /**
+     * Create a Zip File
+     */
     public static function create(string $sourceDirectory, string $destinationDirectory): void
     {
         (new Zip($destinationDirectory))
@@ -17,10 +19,11 @@ final class ArchiveService
             ->closeZip();
     }
 
-    
-    public static function extract(string $source, string $destination)
+    /**
+     * Extract a Zip File
+     */
+    public static function extract(string $source, string $destination): void
     {
-        (new Unzipper($source, $destination))
-            ->run();
+        (new Unzipper($source, $destination))->run();
     }
 }

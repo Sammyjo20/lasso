@@ -7,19 +7,15 @@ namespace Sammyjo20\Lasso\Exceptions;
 class BaseException extends \Exception
 {
     /**
-     * @var string
+     * Default Event
      */
-    public static $event = 'An exception was thrown.';
+    public static string $event = 'An exception was thrown.';
 
     /**
-     * @return static
+     * Create a new exception with a reason
      */
-    public static function because(string $reason)
+    public static function because(string $reason): self
     {
-        return new static(sprintf(
-            '%s Reason: %s',
-            static::$event,
-            $reason
-        ));
+        return new static(sprintf('%s Reason: %s', static::$event, $reason));
     }
 }

@@ -40,6 +40,7 @@ final class PullCommand extends BaseCommand
 
         $useCommit = $this->option('use-commit') === true;
         $withCommit = $this->option('with-commit');
+
         $this->configureApplication($artisan, $filesystem);
 
         $artisan->setCommand($this);

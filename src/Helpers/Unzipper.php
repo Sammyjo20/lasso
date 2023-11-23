@@ -11,76 +11,54 @@ class Unzipper
     /**
      * @var ZipArchive
      */
-    protected $zip;
+    protected ZipArchive $zip;
 
     /**
      * @var string
      */
-    protected $source;
+    protected string $source;
 
     /**
      * @var string
      */
-    protected $destination;
+    protected string $destination;
 
     /**
      * @var Filesystem
      */
-    protected $filesystem;
+    protected Filesystem $filesystem;
 
     /**
      * Unzipper constructor.
      */
     public function __construct(string $source, string $destination)
     {
-        $this->setFilesystem()
-            ->createBaseZip($source)
-            ->setDestination($destination);
+        $this->filesystem = resolve(Filesystem::class);
+        $this->destination = $destination;
+
+        $this->createBaseZip($source);
     }
 
-    
+    /**
+     * Unzip the source into the destination
+     *
+     * @return void
+     */
     public function run(): void
     {
         $this->filesystem->ensureDirectoryExists($this->destination);
+
         $this->zip->extractTo($this->destination);
 
-        $this->closeZip();
-    }
-
-    /**
-     * @return $this
-     */
-    private function setFilesystem(): self
-    {
-        $this->filesystem = resolve(Filesystem::class);
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    private function createBaseZip(string $destination): self
-    {
-        $this->zip = new ZipArchive();
-        $this->zip->open($destination, ZipArchive::CREATE);
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    private function setDestination(string $destination): self
-    {
-        $this->destination = $destination;
-
-        return $this;
-    }
-
-    
-    public function closeZip(): void
-    {
         $this->zip->close();
+    }
+
+    /**
+     * Create the base ZipArchive
+     */
+    private function createBaseZip(string $destination): void
+    {
+        $this->zip = new ZipArchive;
+        $this->zip->open($destination, ZipArchive::CREATE);
     }
 }

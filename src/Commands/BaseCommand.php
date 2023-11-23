@@ -15,16 +15,16 @@ class BaseCommand extends Command
      */
     protected function configureApplication(Artisan $artisan, Filesystem $filesystem, bool $checkFilesystem = false): void
     {
-        $noPrompt = $this->option('silent') === true;
-        $lassoEnvironment = config('lasso.storage.environment', null);
+        $silent = $this->option('silent') === true;
+        $lassoEnvironment = config('lasso.storage.environment');
 
         $artisan->setCommand($this);
 
-        if ($noPrompt) {
+        if ($silent) {
             $artisan->silent();
         }
 
-        if ($checkFilesystem === true && $noPrompt === false && ! is_null($lassoEnvironment)) {
+        if ($checkFilesystem === true && $silent === false && ! is_null($lassoEnvironment)) {
             $definedEnv = $this->ask('🐎 Which Lasso environment would you like to publish to?', $lassoEnvironment);
 
             $filesystem->setLassoEnvironment($definedEnv);

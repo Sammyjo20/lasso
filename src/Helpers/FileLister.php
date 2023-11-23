@@ -9,16 +9,16 @@ use Symfony\Component\Finder\Finder;
 class FileLister
 {
     /**
-     * @var Finder
+     * Symfony Finder
      */
-    public $finder;
+    public Finder $finder;
 
     /**
      * FileLister constructor.
      */
     public function __construct(string $directory)
     {
-        $this->finder = (new Finder())
+        $this->finder = (new Finder)
             ->in($directory)
             ->ignoreDotFiles(false)
             ->ignoreUnreadableDirs(true)
@@ -27,9 +27,9 @@ class FileLister
     }
 
     /**
-     * @return Finder
+     * Return Finder
      */
-    public function getFinder()
+    public function getFinder(): Finder
     {
         return $this->finder;
     }

@@ -6,122 +6,82 @@ namespace Sammyjo20\Lasso\Helpers;
 
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToWriteFile;
+use LogicException;
 use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
-use Sammyjo20\Lasso\Helpers\Filesystem as LocalFilesystem;
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 class Cloud
 {
     /**
-     * @var \Illuminate\Filesystem\Filesystem
+     * Lasso Filesystem
      */
-    protected $cloudFilesystem;
+    protected Filesystem $cloudFilesystem;
 
     /**
-     * @var string
+     * Local Filesystem
      */
-    protected $cloudDisk;
+    protected Filesystem $localFilesystem;
 
     /**
-     * @var LocalFilesystem
-     */
-    protected $localFilesystem;
-
-    /**
-     * Cloud constructor.
+     * Constructor.
      */
     public function __construct()
     {
-        $this->setCloudDisk(config('lasso.storage.disk'));
-
-        $this->initCloudFilesystem()
-            ->initLocalFilesystem();
+        $this->cloudFilesystem = Storage::disk(config('lasso.storage.disk'));
+        $this->localFilesystem = resolve(Filesystem::class);
     }
 
     /**
-     * @return mixed|void
-     * @throws ConsoleMethodException
+     * Upload a file to the cloud filesystem
      */
-    public function __call($name, $arguments)
-    {
-        if (method_exists($this->cloudFilesystem, $name)) {
-            return call_user_func_array([$this->cloudFilesystem, $name], $arguments);
-        }
-
-        throw new ConsoleMethodException(sprintf(
-            'Method %s::%s does not exist.',
-            get_class($this->cloudFilesystem),
-            $name
-        ));
-    }
-
-    
     public function uploadFile(string $path, string $name): void
     {
-        $upload_path = $this->getUploadPath($name);
+        $uploadPath = $this->getUploadPath($name);
 
         $stream = fopen($path, 'rb');
 
-        // Use the stream to write the bundle to the Filesystem.
-        if ($this->cloudFilesystem->writeStream($upload_path, $stream) === false) {
-            throw new UnableToWriteFile('Unable to write file at location ' . $upload_path);
+        if (! $stream) {
+            throw new LogicException('Unable to create a stream from the file path');
         }
 
-        // Close the Stream pointer because it's good practice.
-        if (is_resource($stream)) {
-            fclose($stream);
+        // Use the stream to write the bundle to the Filesystem.
+
+        if ($this->cloudFilesystem->writeStream($uploadPath, $stream) === false) {
+            throw new UnableToWriteFile(sprintf('Unable to write file at location [%s]', $uploadPath));
         }
+
+        fclose($stream);
     }
 
     /**
-     * Returns the Lasso upload directory. You can specify a file
-     * to create a fully qualified URL.
+     * Returns the Lasso upload directory.
+     *
+     * You can specify a file to create a fully qualified URL.
      */
     public function getUploadPath(string $file = null): string
     {
         $uploadPath = config('lasso.storage.upload_to');
 
-        $dir = sprintf('%s/%s', $uploadPath, $this->localFilesystem->getLassoEnvironment());
+        $directory = sprintf('%s/%s', $uploadPath, $this->localFilesystem->getLassoEnvironment());
 
         if (is_null($file)) {
-            return $dir;
+            return $directory;
         }
 
-        return $dir . '/' . ltrim($file, '/');
-    }
-
-    
-    public function getCloudDisk(): string
-    {
-        return $this->cloudDisk;
+        return $directory . '/' . ltrim($file, '/');
     }
 
     /**
-     * @return $this
+     * Call a method on the base Filesystem
+     *
+     * @throws \Sammyjo20\Lasso\Exceptions\ConsoleMethodException
      */
-    public function setCloudDisk(string $disk): self
+    public function __call(string $name, array $arguments)
     {
-        $this->cloudDisk = $disk;
+        if (method_exists($this->cloudFilesystem, $name)) {
+            return call_user_func_array([$this->cloudFilesystem, $name], $arguments);
+        }
 
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function initCloudFilesystem(): self
-    {
-        $this->cloudFilesystem = Storage::disk($this->cloudDisk);
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function initLocalFilesystem(): self
-    {
-        $this->localFilesystem = resolve(LocalFilesystem::class);
-
-        return $this;
+        throw new ConsoleMethodException(sprintf('Method %s::%s does not exist.', get_class($this->cloudFilesystem), $name));
     }
 }

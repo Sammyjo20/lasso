@@ -11,36 +11,36 @@ class Filesystem extends BaseFilesystem
     /**
      * @var string
      */
-    protected $lassoEnvironment;
+    protected string $lassoEnvironment;
 
     /**
      * @var string
      */
-    protected $cloudDisk;
+    protected string $cloudDisk;
 
     /**
      * @var string
      */
-    protected $publicPath;
+    protected string $publicPath;
 
     /**
      * Filesystem constructor.
      */
     public function __construct()
     {
-        $lassoEnvironment = config('lasso.storage.environment') ?? 'global';
-        $cloudDisk = config('lasso.storage.disk', 'assets');
-        $publicPath = config('lasso.public_path', public_path());
-
-        $this->setLassoEnvironment($lassoEnvironment)
-            ->setCloudDisk($cloudDisk)
-            ->setPublicPath($publicPath);
+        $this->lassoEnvironment = config('lasso.storage.environment') ?? 'global';
+        $this->cloudDisk = config('lasso.storage.disk', 'assets');
+        $this->publicPath = config('lasso.public_path', public_path());
     }
 
-    
+    /**
+     * @param $resource
+     * @param string $destination
+     * @return bool
+     */
     public function putStream($resource, string $destination): bool
     {
-        $stream = fopen($destination, 'w+b');
+        $stream = fopen($destination, 'wb+');
 
         if (! $stream || stream_copy_to_stream($resource, $stream) === false || ! fclose($stream)) {
             return false;
@@ -49,7 +49,10 @@ class Filesystem extends BaseFilesystem
         return true;
     }
 
-    
+    /**
+     * @param array $bundle
+     * @return void
+     */
     public function createFreshLocalBundle(array $bundle): void
     {
         $this->deleteLocalBundle();
@@ -57,7 +60,9 @@ class Filesystem extends BaseFilesystem
         $this->put(base_path('lasso-bundle.json'), json_encode($bundle));
     }
 
-    
+    /**
+     * @return bool
+     */
     public function deleteLocalBundle(): bool
     {
         return $this->delete(base_path('lasso-bundle.json'));
@@ -71,12 +76,6 @@ class Filesystem extends BaseFilesystem
         return $this->deleteDirectory('.lasso');
     }
 
-    
-    public function getLassoEnvironment(): string
-    {
-        return $this->lassoEnvironment;
-    }
-
     /**
      * @return $this
      */
@@ -87,35 +86,19 @@ class Filesystem extends BaseFilesystem
         return $this;
     }
 
-    
+    /**
+     * @return string
+     */
     public function getPublicPath(): string
     {
         return $this->publicPath;
     }
 
     /**
-     * @return $this
+     * @return string
      */
-    public function setPublicPath(string $publicPath): self
-    {
-        $this->publicPath = $publicPath;
-
-        return $this;
-    }
-
-    
     public function getCloudDisk(): string
     {
         return $this->cloudDisk;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setCloudDisk(string $disk): self
-    {
-        $this->cloudDisk = $disk;
-
-        return $this;
     }
 }

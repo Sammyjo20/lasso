@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Sammyjo20\Lasso\Helpers;
 
 use ZipArchive;
@@ -10,18 +9,18 @@ use ZipArchive;
 class Zip
 {
     /**
-     * @var ZipArchive
+     * Base ZipArchive class
      */
-    protected $zip;
+    protected ZipArchive $zip;
 
     /**
-     * @var Filesystem
+     * Lasso Filesystem
      */
-    protected $filesystem;
+    protected Filesystem $filesystem;
 
     /**
      * A big thank you to Spatie for their amazing "Laravel Backup" package.
-     * A lot of the ZipArchive code is inspired by their code.
+     * A lot of the Zip code is inspired by their code.
      *
      * https://github.com/spatie/laravel-backup/blob/18cf209be56bb086aaeb1397e142c2a7805802b3/src/Tasks/Backup/Zip.php
      *
@@ -29,17 +28,17 @@ class Zip
      */
     public function __construct(string $destinationPath)
     {
-        $this->setFilesystem()
-            ->createBaseZip($destinationPath);
+        $this->filesystem = resolve(Filesystem::class);
+
+        $this->createBaseZip($destinationPath);
     }
 
     /**
-     * @return $this
+     * Add files from a given directory
      */
     public function addFilesFromDirectory(string $directory): self
     {
-        $files = (new FileLister($directory))
-            ->getFinder();
+        $files = (new FileLister($directory))->getFinder();
 
         foreach ($files as $file) {
             $this->zip->addFile(str_replace('\\', '/', $file->getPathname()), str_replace('\\', '/', $file->getRelativePathname()));
@@ -49,27 +48,17 @@ class Zip
     }
 
     /**
-     * @return $this
+     * Create base ZipArchive
      */
-    private function setFilesystem(): self
+    private function createBaseZip(string $destination): void
     {
-        $this->filesystem = resolve(Filesystem::class);
-
-        return $this;
+        $this->zip = (new ZipArchive);
+        $this->zip->open($destination, ZipArchive::CREATE);
     }
 
     /**
-     * @return $this
+     * Close the Zip
      */
-    private function createBaseZip(string $destination): self
-    {
-        $this->zip = new ZipArchive();
-        $this->zip->open($destination, ZipArchive::CREATE);
-
-        return $this;
-    }
-
-    
     public function closeZip(): void
     {
         $this->zip->close();
