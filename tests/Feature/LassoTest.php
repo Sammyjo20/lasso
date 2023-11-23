@@ -9,6 +9,8 @@ test('can publish and pull assets with lasso', function () {
     File::delete('./lasso-bundle.json');
     File::ensureDirectoryExists('./tests/Fixtures/Public');
     File::ensureDirectoryExists('./tests/Fixtures/Cloud');
+    File::ensureDirectoryExists('./tests/Fixtures/Local');
+    File::ensureDirectoryExists('.lasso');
 
     File::cleanDirectory('./tests/Fixtures/Cloud');
 
