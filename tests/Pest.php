@@ -37,7 +37,7 @@ function defaultConfig(): array
              * phase. This will most likely be "npm run production" but
              * you may choose what you would like to execute.
              */
-            'script' => 'npm run production',
+            'script' => 'npx mix --production',
 
             /*
              * Configure the amount of time (in seconds) the compiler
@@ -140,6 +140,6 @@ function defaultConfig(): array
          * be stored within the /public directory in Laravel - but if
          * you have changed this - please specify it below.
          */
-        'public_path' => public_path(),
+        'public_path' => __DIR__ . '/Fixtures/Public',
     ];
 }

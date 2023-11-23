@@ -71,10 +71,7 @@ final class VersioningService
         }
     }
 
-    /**
-     * @param array $bundles
-     * @return array
-     */
+    
     private static function deleteExpiredBundles(array $bundles): array
     {
         $bundle_limit = self::getMaxBundlesAllowed();
@@ -100,10 +97,7 @@ final class VersioningService
         return array_diff($bundles, $deleted);
     }
 
-    /**
-     * @param array $deletable
-     * @return array
-     */
+    
     private static function deleteBundles(array $deletable): array
     {
         $disk = self::getDisk();
@@ -141,25 +135,19 @@ final class VersioningService
         }
     }
 
-    /**
-     * @return string
-     */
+    
     private static function getFileDirectory(): string
     {
         return (new Cloud)->getUploadPath('history.json');
     }
 
-    /**
-     * @return string
-     */
+    
     private static function getDisk(): string
     {
         return config('lasso.storage.disk');
     }
 
-    /**
-     * @return int
-     */
+    
     private static function getMaxBundlesAllowed(): int
     {
         return config('lasso.storage.max_bundles');

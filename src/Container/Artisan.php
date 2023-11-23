@@ -81,6 +81,7 @@ final class Artisan
 
         if ($mode === 'all') {
             $this->note($line);
+
             return;
         }
 
@@ -95,8 +96,6 @@ final class Artisan
 
     /**
      * Mark compiler as complete
-     *
-     * @return void
      */
     public function compilerComplete(): void
     {
@@ -110,8 +109,6 @@ final class Artisan
 
     /**
      * Get the progress bar
-     *
-     * @return \Symfony\Component\Console\Helper\ProgressBar
      */
     private function getProgressBar(): ProgressBar
     {

@@ -11,19 +11,13 @@ use \Illuminate\Filesystem\Filesystem as BaseFilesystem;
  */
 class Filesystem extends BaseFilesystem
 {
-    /**
-     * @var string
-     */
+    
     protected string $lassoEnvironment;
 
-    /**
-     * @var string
-     */
+    
     protected string $cloudDisk;
 
-    /**
-     * @var string
-     */
+    
     protected string $publicPath;
 
     /**
@@ -36,11 +30,7 @@ class Filesystem extends BaseFilesystem
         $this->publicPath = config('lasso.public_path', public_path());
     }
 
-    /**
-     * @param $resource
-     * @param string $destination
-     * @return bool
-     */
+    
     public function putStream($resource, string $destination): bool
     {
         $stream = fopen($destination, 'wb+');
@@ -52,10 +42,7 @@ class Filesystem extends BaseFilesystem
         return true;
     }
 
-    /**
-     * @param array $bundle
-     * @return void
-     */
+    
     public function createFreshLocalBundle(array $bundle): void
     {
         $this->deleteLocalBundle();
@@ -63,9 +50,7 @@ class Filesystem extends BaseFilesystem
         $this->put(base_path('lasso-bundle.json'), json_encode($bundle));
     }
 
-    /**
-     * @return bool
-     */
+    
     public function deleteLocalBundle(): bool
     {
         return $this->delete(base_path('lasso-bundle.json'));
@@ -89,17 +74,18 @@ class Filesystem extends BaseFilesystem
         return $this;
     }
 
-    /**
-     * @return string
-     */
+    public function getLassoEnvironment(): string
+    {
+        return $this->lassoEnvironment;
+    }
+
+    
     public function getPublicPath(): string
     {
         return $this->publicPath;
     }
 
-    /**
-     * @return string
-     */
+    
     public function getCloudDisk(): string
     {
         return $this->cloudDisk;

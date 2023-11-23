@@ -10,14 +10,10 @@ use Sammyjo20\Lasso\Services\ArchiveService;
 
 final class BundleJob extends BaseJob
 {
-    /**
-     * @var string
-     */
+    
     protected string $bundleId;
 
-    /**
-     * @var array
-     */
+    
     protected array $forbiddenFiles = [
         '.htaccess',
         'web.config',
@@ -26,9 +22,7 @@ final class BundleJob extends BaseJob
         'storage',
     ];
 
-    /**
-     * @var array
-     */
+    
     protected array $forbiddenDirectories = [
         'storage',
         'hot',
@@ -50,8 +44,6 @@ final class BundleJob extends BaseJob
 
     /**
      * Run the bundle job
-     *
-     * @return void
      */
     public function run(): void
     {

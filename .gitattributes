@@ -6,3 +6,5 @@
 phpunit.xml export-ignore
 LICENSE export-ignore
 .php-cs-fixer.dist.php export-ignore
+package.json export-ignore
+webpack.mix.js export-ignore

@@ -26,8 +26,10 @@ abstract class TestCase extends Orchestra
     {
         $app['config']->set('filesystems.disks.assets', [
             'driver' => 'local',
-            'root' => __DIR__ . '/Fixtures/Cloud',
+            'root' => realpath(__DIR__ . '/Fixtures/Cloud'),
             'throw' => false,
         ]);
+
+        $app->setBasePath(__DIR__ . '/../');
     }
 }

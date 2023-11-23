@@ -11,24 +11,16 @@ use ZipArchive;
  */
 class Unzipper
 {
-    /**
-     * @var ZipArchive
-     */
+    
     protected ZipArchive $zip;
 
-    /**
-     * @var string
-     */
+    
     protected string $source;
 
-    /**
-     * @var string
-     */
+    
     protected string $destination;
 
-    /**
-     * @var Filesystem
-     */
+    
     protected Filesystem $filesystem;
 
     /**
@@ -44,8 +36,6 @@ class Unzipper
 
     /**
      * Unzip the source into the destination
-     *
-     * @return void
      */
     public function run(): void
     {

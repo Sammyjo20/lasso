@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Sammyjo20\Lasso\Helpers;
 
+use LogicException;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToWriteFile;
-use LogicException;
 use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
-use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Contracts\Filesystem\Filesystem as BaseFilesystem;
 
 /**
  * @internal
@@ -18,7 +18,7 @@ class Cloud
     /**
      * Lasso Filesystem
      */
-    protected Filesystem $cloudFilesystem;
+    protected BaseFilesystem $cloudFilesystem;
 
     /**
      * Local Filesystem

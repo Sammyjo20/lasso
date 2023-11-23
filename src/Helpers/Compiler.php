@@ -24,8 +24,6 @@ class Compiler
 
     /**
      * The time it has taken for the compiler to Lasso up the assets.
-     *
-     * @var float
      */
     protected float $compilationTime = 0;
 

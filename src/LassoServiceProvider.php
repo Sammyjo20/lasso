@@ -14,8 +14,6 @@ class LassoServiceProvider extends BaseServiceProvider
 {
     /**
      * Register the Lasso service provider
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -24,8 +22,6 @@ class LassoServiceProvider extends BaseServiceProvider
 
     /**
      * Boot the Lasso service provider
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -48,7 +44,7 @@ class LassoServiceProvider extends BaseServiceProvider
 
         // Bind Artisan and Filesystem to the container
 
-        $this->app->singleton(Artisan::class, static fn() => new Artisan);
-        $this->app->singleton(Filesystem::class, static fn() => new Filesystem);
+        $this->app->singleton(Artisan::class, static fn () => new Artisan);
+        $this->app->singleton(Filesystem::class, static fn () => new Filesystem);
     }
 }
