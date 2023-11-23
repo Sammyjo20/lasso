@@ -9,3 +9,4 @@ package-lock.json
 tests/Fixtures/Cloud
 tests/Fixtures/Public
 lasso-bundle.json
+.lasso
