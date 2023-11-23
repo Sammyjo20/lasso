@@ -1,37 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Tasks\Publish;
 
 use Exception;
 use Illuminate\Support\Str;
 use Sammyjo20\Lasso\Helpers\Git;
 use Sammyjo20\Lasso\Tasks\BaseJob;
-use Sammyjo20\Lasso\Tasks\Webhook;
 use Sammyjo20\Lasso\Helpers\Bundle;
-use Sammyjo20\Lasso\Actions\Compiler;
+use Sammyjo20\Lasso\Helpers\Webhook;
+use Sammyjo20\Lasso\Helpers\Compiler;
 use Sammyjo20\Lasso\Exceptions\GitHashException;
 
 final class PublishJob extends BaseJob
 {
     /**
-     * @var string
+     * Bundle ID
      */
-    protected $bundleId;
+    protected string $bundleId;
 
     /**
-     * @var bool
+     * Should Lasso use Git?
      */
-    protected $usesGit = true;
+    protected bool $usesGit = true;
 
     /**
-     * @var bool
+     * Should Lasso use the latest commit?
      */
-    protected $useCommit = false;
+    protected bool $useCommit = false;
 
     /**
-     * @var string?
+     * The latest commit
      */
-    protected $commit = null;
+    protected ?string $commit = null;
 
     /**
      * PublishJob constructor.
@@ -44,53 +46,56 @@ final class PublishJob extends BaseJob
     }
 
     /**
-     * @return void
-     * @throws Exception
+     * Run the "publish" job
      */
     public function run(): void
     {
+        $artisan = $this->artisan;
+        $filesystem = $this->filesystem;
+        $cloud = $this->cloud;
+
         try {
             $this->generateBundleId();
 
-            $this->artisan->note('⏳ Compiling assets...');
+            $artisan->note('⏳ Compiling assets...');
 
             // Start with the compiler. This will run the "script" which
             // has been defined in the config file (e.g. npm run production).
 
-            $compiler = (new Compiler())
+            $compiler = (new Compiler)
                 ->setCommand(config('lasso.compiler.script'))
                 ->setTimeout(config('lasso.compiler.timeout', 600))
                 ->execute();
 
-            $this->artisan->note(sprintf(
+            $artisan->note(sprintf(
                 '✅ Compiled assets in %s seconds.',
                 $compiler->getCompilationTime()
             ));
 
-            $this->artisan->note('⏳ Copying and zipping compiled assets...');
+            $artisan->note('⏳ Copying and zipping compiled assets...');
 
             // Once we have compiled all of our assets, we need to "bundle"
-            // them up. Todo: Remove this step in the future.
+            // them up.
 
-            (new BundleJob())
+            (new BundleJob)
                 ->setBundleId($this->bundleId)
                 ->run();
 
             $zipBundlePath = base_path('.lasso/dist/' . $this->bundleId . '.zip');
 
-            $this->artisan->note('✅ Successfully copied and zipped assets.');
+            $artisan->note('✅ Successfully copied and zipped assets.');
 
             // Now we want to create the data which will go inside the
             // "lasso-bundle.json" file. After that, we will create a Zip file
             // with all the assets inside.
 
-            $bundle = (new Bundle())
+            $bundle = (new Bundle)
                 ->setBundleId($this->bundleId)
                 ->setZipPath($zipBundlePath)
                 ->create();
 
-            $this->artisan->note(
-                sprintf('⏳ Uploading asset bundle to "%s" filesystem...', $this->filesystem->getCloudDisk())
+            $artisan->note(
+                sprintf('⏳ Uploading asset bundle to "%s" filesystem...', $filesystem->getCloudDisk())
             );
 
             $bundlePath = base_path('.lasso/dist/lasso-bundle.json');
@@ -99,20 +104,20 @@ final class PublishJob extends BaseJob
             // this uses stream to ensure we don't run out of memory
             // while uploading the file.
 
-            $this->cloud->uploadFile($zipBundlePath, $bundle['file']);
+            $cloud->uploadFile($zipBundlePath, $bundle['file']);
 
             // Has the user requested to use/not use Git? Here
             // we will create the lasso-bundle.json in the right
             // place.
 
             if ($this->usesGit) {
-                $this->filesystem->createFreshLocalBundle($bundle);
+                $filesystem->createFreshLocalBundle($bundle);
             } else {
-                $this->filesystem->deleteLocalBundle();
+                $filesystem->deleteLocalBundle();
 
-                $this->filesystem->put($bundlePath, json_encode($bundle));
+                $filesystem->put($bundlePath, (string)json_encode($bundle));
 
-                $this->cloud->uploadFile($bundlePath, config('lasso.storage.prefix') . 'lasso-bundle.json');
+                $cloud->uploadFile($bundlePath, config('lasso.storage.prefix') . 'lasso-bundle.json');
             }
 
             // Done! Let's run some cleanup, and dispatch all the
@@ -126,8 +131,9 @@ final class PublishJob extends BaseJob
         }
     }
 
+
     /**
-     * @return void
+     * Clean up the publish
      */
     public function cleanUp(): void
     {
@@ -135,10 +141,11 @@ final class PublishJob extends BaseJob
     }
 
     /**
-     * @param Exception $exception
+     * Roll back the publish
+     *
      * @throws Exception
      */
-    private function rollBack(Exception $exception)
+    private function rollBack(Exception $exception): void
     {
         $this->deleteLassoDirectory();
 
@@ -146,7 +153,9 @@ final class PublishJob extends BaseJob
     }
 
     /**
-     * @param array $webhooks
+     * Dispatch the webhooks
+     *
+     * @param array<int, string> $webhooks
      */
     public function dispatchWebhooks(array $webhooks = []): void
     {
@@ -164,10 +173,11 @@ final class PublishJob extends BaseJob
     }
 
     /**
-     * @return $this
+     * Generate the Bundle ID
+     *
      * @throws GitHashException
      */
-    private function generateBundleId(): self
+    private function generateBundleId(): void
     {
         $id = Str::random(20);
 
@@ -180,21 +190,19 @@ final class PublishJob extends BaseJob
         }
 
         $this->bundleId = $id;
-
-        return $this;
     }
 
     /**
-     * @return $this
+     * Delete the Lasso directory
      */
-    private function deleteLassoDirectory(): self
+    private function deleteLassoDirectory(): void
     {
         $this->filesystem->deleteBaseLassoDirectory();
-
-        return $this;
     }
 
     /**
+     * Disable Git with Lasso
+     *
      * @return $this
      */
     public function dontUseGit(): self
@@ -205,6 +213,8 @@ final class PublishJob extends BaseJob
     }
 
     /**
+     * Should Lasso use the latest commit from Git?
+     *
      * @return $this
      */
     public function useCommit(): self
@@ -214,6 +224,11 @@ final class PublishJob extends BaseJob
         return $this;
     }
 
+    /**
+     * Specify a commit that is used for the bundle
+     *
+     * @return $this
+     */
     public function withCommit(string $commitHash): self
     {
         $this->commit = $commitHash;

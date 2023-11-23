@@ -1,21 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
+/**
+ * @internal
+ */
 class Bundle
 {
     /**
-     * @var string
+     * Bundle ID
      */
-    protected $bundleId;
+    protected string $bundleId;
 
     /**
-     * @var string
+     * ZIP Path
      */
-    protected $zipPath;
+    protected string $zipPath;
 
     /**
-     * @return array
+     * Create a bundle
+     *
+     * @return array<string, string>
      */
     public function create(): array
     {
@@ -29,8 +36,7 @@ class Bundle
     }
 
     /**
-     * @param string $bundleId
-     * @return $this
+     * Set the bundle ID
      */
     public function setBundleId(string $bundleId): self
     {
@@ -40,8 +46,7 @@ class Bundle
     }
 
     /**
-     * @param string $path
-     * @return $this
+     * Set the ZIP path
      */
     public function setZipPath(string $path): self
     {

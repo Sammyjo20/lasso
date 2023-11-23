@@ -1,16 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 use Illuminate\Filesystem\Filesystem;
 use Sammyjo20\Lasso\Exceptions\ConfigFailedValidation;
 
+/**
+ * @internal
+ */
 class ConfigValidator
 {
     /**
-     * @var Filesystem
+     * Filesystem
      */
-    public $filesystem;
+    public Filesystem $filesystem;
 
     /**
      * ConfigValidator constructor.
@@ -21,37 +26,33 @@ class ConfigValidator
     }
 
     /**
-     * @param string $item
-     * @return mixed
+     * Get config parameter
      */
-    private function get(string $item)
+    private function get(string $item): mixed
     {
-        return config('lasso.' . $item, null);
+        return config('lasso.' . $item);
     }
 
     /**
-     * @param $value
-     * @return bool
+     * Check the compiler script
      */
-    private function checkCompilerScript($value): bool
+    private function checkCompilerScript(mixed $value): bool
     {
         return ! is_null($value);
     }
 
     /**
-     * @param $value
-     * @return bool
+     * Check compiler script type
      */
-    private function checkCompilerScriptType($value): bool
+    private function checkCompilerScriptType(mixed $value): bool
     {
         return is_string($value);
     }
 
     /**
-     * @param $value
-     * @return bool
+     * Check compiler output
      */
-    private function checkCompilerOutputSetting($value): bool
+    private function checkCompilerOutputSetting(mixed $value): bool
     {
         if (is_null($value)) {
             return true;
@@ -61,35 +62,33 @@ class ConfigValidator
     }
 
     /**
-     * @param $value
-     * @return bool
+     * Check if public path exists
      */
-    private function checkIfPublicPathExists($value): bool
+    private function checkIfPublicPathExists(mixed $value): bool
     {
         return $this->filesystem->exists($value) && $this->filesystem->isReadable($value) && $this->filesystem->isWritable($value);
     }
 
     /**
-     * @param $value
-     * @return bool
+     * Check disk exists
      */
-    private function checkDiskExists($value): bool
+    private function checkDiskExists(mixed $value): bool
     {
-        return ! is_null(config('filesystems.disks.' . $value, null));
+        return ! is_null(config('filesystems.disks.' . $value));
     }
 
     /**
-     * @param $value
-     * @return bool
+     * Check bundle to keep count
      */
-    private function checkBundleToKeepCount($value): bool
+    private function checkBundleToKeepCount(mixed $value): bool
     {
         return is_int($value) && $value > 0;
     }
 
     /**
-     * @throws ConfigFailedValidation
-     * @return void
+     * Validate config
+     *
+     * @throws ConfigFailedValidation|\Sammyjo20\Lasso\Exceptions\BaseException
      */
     public function validate(): void
     {

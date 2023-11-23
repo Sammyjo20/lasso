@@ -173,7 +173,7 @@ Special thanks to @codepotato for the logo! ❤️
 
 ## Security
 
-If you find any security related issues, please send me an email to import.lorises_0c@icloud.com.
+If you find any security related issues, please send an email to **29132017+Sammyjo20@users.noreply.github.com**
 
 ## And that's it! ✨
 

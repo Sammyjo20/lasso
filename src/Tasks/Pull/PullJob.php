@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Tasks\Pull;
 
+use Exception;
 use Sammyjo20\Lasso\Helpers\Git;
 use Sammyjo20\Lasso\Tasks\BaseJob;
-use Sammyjo20\Lasso\Tasks\Webhook;
+use Sammyjo20\Lasso\Helpers\Webhook;
 use Sammyjo20\Lasso\Helpers\FileLister;
 use Sammyjo20\Lasso\Services\BackupService;
 use Sammyjo20\Lasso\Services\ArchiveService;
@@ -15,19 +18,19 @@ use Sammyjo20\Lasso\Helpers\BundleIntegrityHelper;
 final class PullJob extends BaseJob
 {
     /**
-     * @var BackupService
+     * Backup Service
      */
-    protected $backup;
+    protected BackupService $backup;
 
     /**
-     * @var bool
+     * Should Lasso use the latest commit from Git?
      */
-    protected $useCommit = false;
+    protected bool $useCommit = false;
 
     /**
-     * @var string?
+     * Specify commit hash to use
      */
-    protected $commitHash = null;
+    protected ?string $commitHash = null;
 
     /**
      * PullJob constructor.
@@ -36,14 +39,16 @@ final class PullJob extends BaseJob
     {
         parent::__construct();
 
-        $this->setBackup();
+        $this->backup = new BackupService($this->filesystem);
     }
 
     /**
-     * @return void
+     * Run the "pull" job
+     *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
-     * @throws PullJobFailed
      */
     public function run(): void
     {
@@ -85,7 +90,7 @@ final class PullJob extends BaseJob
                 $this->filesystem
                     ->copy($source, $destination);
             }
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             // If anything goes wrong inside this try block,
             // we will "roll back" which means we will restore
             // our backup.
@@ -100,11 +105,12 @@ final class PullJob extends BaseJob
         $this->cleanUp();
 
         $webhooks = config('lasso.webhooks.pull', []);
+
         $this->dispatchWebhooks($webhooks);
     }
 
     /**
-     * @return void
+     * Cleanup the command
      */
     public function cleanUp(): void
     {
@@ -112,7 +118,9 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @param array $webhooks
+     * Dispatch the webhooks
+     *
+     * @param array<int, string> $webhooks
      */
     public function dispatchWebhooks(array $webhooks = []): void
     {
@@ -130,16 +138,19 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @return array
+     * Get the latest bundle info
+     *
+     * @return array<mixed, mixed>
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     private function getLatestBundleInfo(): array
     {
         $localPath = base_path('lasso-bundle.json');
         $cloudPath = $this->cloud->getUploadPath(config('lasso.storage.prefix') . 'lasso-bundle.json');
 
-        // Firstly, let's check if the local filesystem has a "lasso-bundle.json"
-        // file in it's root directory.
+        // Firstly, let's check if the local filesystem has a "lasso-bundle.json" file in its root directory.
 
         if ($this->filesystem->exists($localPath)) {
             $file = $this->filesystem->get($localPath);
@@ -150,10 +161,9 @@ final class PullJob extends BaseJob
             return $bundle;
         }
 
-        // If there isn't a "lasso-bundle.json" file in the root directory,
-        // that's okay - this means that the commit is in "non-git" mode. So
-        // let's just grab that file. If we don't have a file on the server
-        // however; we need to throw an exception.
+        // If there isn't a "lasso-bundle.json" file in the root directory, that's okay - this means
+        // that the commit is in "non-git" mode. So let's just grab that file. If we don't have a
+        // file on the server however; we need to throw an exception.
 
         if (! $this->cloud->exists($cloudPath)) {
             $this->rollBack(
@@ -170,13 +180,14 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @param array $bundle
-     * @return bool
+     * Validate the bundle checksum
+     *
+     * @param array<mixed, mixed> $bundle
      * @throws \Exception
      */
     private function validateBundle(array $bundle): bool
     {
-        if (! isset($bundle['file']) || ! isset($bundle['checksum'])) {
+        if (! isset($bundle['file'], $bundle['checksum'])) {
             $this->rollBack(
                 PullJobFailed::because('The bundle info was missing the required data.')
             );
@@ -186,10 +197,7 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @param string $file
-     * @param string $checksum
-     * @return string
-     * @throws PullJobFailed|\Exception
+     * Download Zip bundle file
      */
     private function downloadBundleZip(string $file, string $checksum): string
     {
@@ -212,7 +220,7 @@ final class PullJob extends BaseJob
             if (is_resource($bundleZip)) {
                 fclose($bundleZip);
             }
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->rollBack($ex);
         }
 
@@ -236,18 +244,17 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @param \Exception $exception
+     * Roll back and throw an exception
+     *
      * @throws \Exception
      */
-    private function rollBack(\Exception $exception)
+    private function rollBack(Exception $exception): Exception
     {
-        if ($this->backup->hasBackup()) {
-            $this->artisan->note('⏳ Restoring backup...');
+        $this->artisan->note('⏳ Restoring backup...');
 
-            $this->backup->restoreBackup($this->filesystem->getPublicPath());
+        $this->backup->restoreBackup($this->filesystem->getPublicPath());
 
-            $this->artisan->note('✅ Successfully restored backup.');
-        }
+        $this->artisan->note('✅ Successfully restored backup.');
 
         $this->filesystem->deleteBaseLassoDirectory();
 
@@ -255,30 +262,15 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @return $this
+     * Backup the source data
      */
-    private function runBackup(): self
+    private function runBackup(): void
     {
-        $this->backup->createBackup(
-            $this->filesystem->getPublicPath(),
-            base_path('.lasso/backup')
-        );
-
-        return $this;
+        $this->backup->createBackup($this->filesystem->getPublicPath(), base_path('.lasso/backup'));
     }
 
     /**
-     * @return $this
-     */
-    private function setBackup(): self
-    {
-        $this->backup = new BackupService($this->filesystem);
-
-        return $this;
-    }
-
-    /**
-     * @return void
+     * Cleanup the Lasso directory
      */
     private function cleanLassoDirectory(): void
     {
@@ -288,8 +280,7 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @param string $file
-     * @return string
+     * Get the Lasso bundle path
      */
     private function getBundlePath(string $file): string
     {
@@ -305,7 +296,7 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @return $this
+     * Should Lasso use the latest commit from Git?
      */
     public function useCommit(): self
     {
@@ -315,7 +306,7 @@ final class PullJob extends BaseJob
     }
 
     /**
-     * @return $this
+     * Specify a custom commit hash
      */
     public function withCommit(string $commitHash): self
     {

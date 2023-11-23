@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Commands;
 
 use Sammyjo20\Lasso\Container\Artisan;
@@ -26,21 +28,17 @@ final class PublishCommand extends BaseCommand
     /**
      * Execute the console command.
      *
-     * @param Artisan $artisan
-     * @param Filesystem $filesystem
-     * @return int
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
      */
     public function handle(Artisan $artisan, Filesystem $filesystem): int
     {
-        (new ConfigValidator())->validate();
+        (new ConfigValidator)->validate();
 
         $this->configureApplication($artisan, $filesystem, true);
 
         $dontUseGit = $this->option('no-git') === true;
         $useCommit = $this->option('use-commit') === true;
         $withCommit = $this->option('with-commit');
-        $this->configureApplication($artisan, $filesystem);
 
         $job = new PublishJob;
 
@@ -52,8 +50,8 @@ final class PublishCommand extends BaseCommand
             $job->useCommit();
         }
 
-        if ($withCommit) {
-            $job->withCommit($withCommit);
+        if (is_string($withCommit)) {
+            $job->withCommit(mb_substr($withCommit, 0, 12));
         }
 
         $artisan->note(sprintf(
@@ -68,6 +66,6 @@ final class PublishCommand extends BaseCommand
             $filesystem->getCloudDisk()
         ));
 
-        return 0;
+        return self::SUCCESS;
     }
 }

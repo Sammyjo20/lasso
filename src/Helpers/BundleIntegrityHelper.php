@@ -1,24 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
+/**
+ * @internal
+ */
 class BundleIntegrityHelper
 {
+    /**
+     * Hashing Algorithm
+     */
     public const ALGORITHM = 'md5';
 
     /**
-     * @param string $path
-     * @return string
+     * Generate the checksum
      */
     public static function generateChecksum(string $path): string
     {
-        return hash_file(self::ALGORITHM, $path);
+        return (string)hash_file(self::ALGORITHM, $path);
     }
 
     /**
-     * @param string $path
-     * @param string $checksum
-     * @return bool
+     * Verify the checksum
      */
     public static function verifyChecksum(string $path, string $checksum): bool
     {

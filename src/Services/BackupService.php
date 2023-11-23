@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Services;
 
 use Sammyjo20\Lasso\Helpers\Filesystem;
@@ -8,31 +10,25 @@ use Sammyjo20\Lasso\Exceptions\RestoreFailed;
 final class BackupService
 {
     /**
-     * @var Filesystem
+     * Lasso Filesystem
      */
-    protected $filesystem;
+    protected Filesystem $filesystem;
 
     /**
-     * @var bool
+     * Backup path
      */
-    protected $backupPath;
+    protected string $backupPath;
 
     /**
-     * Backup constructor.
-     *
-     * @param Filesystem $filesystem
+     * Constructor.
      */
     public function __construct(Filesystem $filesystem)
     {
-        $this->setFilesystem($filesystem);
+        $this->filesystem = $filesystem;
     }
 
     /**
      * Copy a directory to a given location.
-     *
-     * @param string $sourceDirectory
-     * @param string $destinationDirectory
-     * @return bool
      */
     public function createBackup(string $sourceDirectory, string $destinationDirectory): bool
     {
@@ -49,8 +45,8 @@ final class BackupService
     }
 
     /**
-     * @param string $destinationDirectory
-     * @return bool
+     * Restore a backup
+     *
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
     public function restoreBackup(string $destinationDirectory): bool
@@ -67,27 +63,7 @@ final class BackupService
     }
 
     /**
-     * @param Filesystem $filesystem
-     * @return $this
-     */
-    public function setFilesystem(Filesystem $filesystem): self
-    {
-        $this->filesystem = $filesystem;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasBackup(): bool
-    {
-        return ! is_null($this->backupPath);
-    }
-
-    /**
-     * @param string $path
-     * @return $this
+     * Set a backup path
      */
     public function setBackupPath(string $path): self
     {

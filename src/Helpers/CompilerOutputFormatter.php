@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
+/**
+ * @internal
+ */
 class CompilerOutputFormatter
 {
     private const PERCENTAGE_REGEX = '/\b(?<!\.)(?!0+(?:\.0+)?%)(?:\d|[1-9]\d|100)(?:(?<!100)\.\d+)?%/';
 
     /**
      * Attempt to find the progress percentage from the line returned by the compiler.
-     *
-     * @param string $line
-     * @return int
      */
     public static function getWebpackProgress(string $line): int
     {

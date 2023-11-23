@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 
 namespace Sammyjo20\Lasso\Commands;
 
@@ -27,13 +29,11 @@ final class PullCommand extends BaseCommand
     /**
      * Execute the console command.
      *
-     * @param Artisan $artisan
-     * @param Filesystem $filesystem
-     * @return int
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      * @throws \Sammyjo20\Lasso\Exceptions\ConfigFailedValidation
-     * @throws \Sammyjo20\Lasso\Exceptions\PullJobFailed
      */
     public function handle(Artisan $artisan, Filesystem $filesystem): int
     {
@@ -41,6 +41,7 @@ final class PullCommand extends BaseCommand
 
         $useCommit = $this->option('use-commit') === true;
         $withCommit = $this->option('with-commit');
+
         $this->configureApplication($artisan, $filesystem);
 
         $artisan->setCommand($this);
@@ -50,21 +51,21 @@ final class PullCommand extends BaseCommand
             $filesystem->getCloudDisk()
         ));
 
-        $job = new PullJob();
+        $job = new PullJob;
 
         if ($useCommit) {
             $job->useCommit();
         }
 
-        if ($withCommit) {
-            $job->withCommit(substr($withCommit, 0, 12));
+        if (is_string($withCommit)) {
+            $job->withCommit(mb_substr((string)$withCommit, 0, 12));
         }
 
         $job->run();
 
         $artisan->note('✅ Successfully downloaded the latest assets. Yee-haw!');
-        $artisan->note('❤️  Thank you for using Lasso. https://getlasso.dev');
+        $artisan->note('❤️  Thank you for using Lasso.');
 
-        return 0;
+        return self::SUCCESS;
     }
 }

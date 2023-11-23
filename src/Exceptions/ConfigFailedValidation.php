@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Exceptions;
 
 class ConfigFailedValidation extends BaseException
 {
     /**
-     * @var string
+     * Default Event
      */
-    public static $event = 'Failed to parse configuration.';
+    public static string $event = 'Failed to parse configuration.';
 }

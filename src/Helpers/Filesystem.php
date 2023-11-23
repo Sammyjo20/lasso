@@ -1,48 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 use \Illuminate\Filesystem\Filesystem as BaseFilesystem;
 
+/**
+ * @internal
+ */
 class Filesystem extends BaseFilesystem
 {
     /**
-     * @var string
+     * Lasso Environment
      */
-    protected $lassoEnvironment;
+    protected string $lassoEnvironment;
 
     /**
-     * @var string
+     * Cloud Disk Path
      */
-    protected $cloudDisk;
+    protected string $cloudDisk;
 
     /**
-     * @var string
+     * Public Path
      */
-    protected $publicPath;
+    protected string $publicPath;
 
     /**
      * Filesystem constructor.
      */
     public function __construct()
     {
-        $lassoEnvironment = config('lasso.storage.environment') ?? 'global';
-        $cloudDisk = config('lasso.storage.disk', 'assets');
-        $publicPath = config('lasso.public_path', public_path());
-
-        $this->setLassoEnvironment($lassoEnvironment)
-            ->setCloudDisk($cloudDisk)
-            ->setPublicPath($publicPath);
+        $this->lassoEnvironment = config('lasso.storage.environment') ?? 'global';
+        $this->cloudDisk = config('lasso.storage.disk', 'assets');
+        $this->publicPath = config('lasso.public_path', public_path());
     }
 
     /**
-     * @param $resource
-     * @param string $destination
-     * @return bool
+     * Store a file as a stream
+     *
+     * @param resource $resource
      */
-    public function putStream($resource, string $destination): bool
+    public function putStream(mixed $resource, string $destination): bool
     {
-        $stream = fopen($destination, 'w+b');
+        $stream = fopen($destination, 'wb+');
 
         if (! $stream || stream_copy_to_stream($resource, $stream) === false || ! fclose($stream)) {
             return false;
@@ -52,17 +53,19 @@ class Filesystem extends BaseFilesystem
     }
 
     /**
-     * @param array $bundle
+     * Create fresh from local bundle
+     *
+     * @param array<mixed, mixed> $bundle
      */
     public function createFreshLocalBundle(array $bundle): void
     {
         $this->deleteLocalBundle();
 
-        $this->put(base_path('lasso-bundle.json'), json_encode($bundle));
+        $this->put(base_path('lasso-bundle.json'), (string)json_encode($bundle));
     }
 
     /**
-     * @return bool
+     * Delete local bundle
      */
     public function deleteLocalBundle(): bool
     {
@@ -71,8 +74,6 @@ class Filesystem extends BaseFilesystem
 
     /**
      * Delete Lasso's base directory (.lasso)
-     *
-     * @return bool
      */
     public function deleteBaseLassoDirectory(): bool
     {
@@ -80,16 +81,7 @@ class Filesystem extends BaseFilesystem
     }
 
     /**
-     * @return string
-     */
-    public function getLassoEnvironment(): string
-    {
-        return $this->lassoEnvironment;
-    }
-
-    /**
-     * @param string $environment
-     * @return $this
+     * Set the Lasso environment
      */
     public function setLassoEnvironment(string $environment): self
     {
@@ -99,7 +91,15 @@ class Filesystem extends BaseFilesystem
     }
 
     /**
-     * @return string
+     * Get the Lasso environment
+     */
+    public function getLassoEnvironment(): string
+    {
+        return $this->lassoEnvironment;
+    }
+
+    /**
+     * Get the public path
      */
     public function getPublicPath(): string
     {
@@ -107,32 +107,10 @@ class Filesystem extends BaseFilesystem
     }
 
     /**
-     * @param string $publicPath
-     * @return $this
-     */
-    public function setPublicPath(string $publicPath): self
-    {
-        $this->publicPath = $publicPath;
-
-        return $this;
-    }
-
-    /**
-     * @return string
+     * Get the cloud disk
      */
     public function getCloudDisk(): string
     {
         return $this->cloudDisk;
-    }
-
-    /**
-     * @param string $disk
-     * @return $this
-     */
-    public function setCloudDisk(string $disk): self
-    {
-        $this->cloudDisk = $disk;
-
-        return $this;
     }
 }

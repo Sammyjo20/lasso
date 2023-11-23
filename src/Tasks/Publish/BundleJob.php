@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Tasks\Publish;
 
 use Sammyjo20\Lasso\Tasks\BaseJob;
@@ -9,14 +11,16 @@ use Sammyjo20\Lasso\Services\ArchiveService;
 final class BundleJob extends BaseJob
 {
     /**
-     * @var string
+     * Bundle ID
      */
-    protected $bundleId;
+    protected string $bundleId;
 
     /**
-     * @var array
+     * Forbidden files
+     *
+     * @var array<int, string>
      */
-    protected $forbiddenFiles = [
+    protected array $forbiddenFiles = [
         '.htaccess',
         'web.config',
         'index.php',
@@ -25,9 +29,11 @@ final class BundleJob extends BaseJob
     ];
 
     /**
-     * @var array
+     * Forbidden Directories
+     *
+     * @var array<int, string>
      */
-    protected $forbiddenDirectories = [
+    protected array $forbiddenDirectories = [
         'storage',
         'hot',
     ];
@@ -42,15 +48,13 @@ final class BundleJob extends BaseJob
         $userForbiddenFiles = config('lasso.compiler.excluded_files', []);
         $userForbiddenDirs = config('lasso.compiler.excluded_directories', []);
 
-        $this->setForbiddenFiles(
-            array_merge($this->forbiddenFiles, $userForbiddenFiles)
-        );
-
-        $this->setForbiddenDirectories(
-            array_merge($this->forbiddenDirectories, $userForbiddenDirs)
-        );
+        $this->forbiddenFiles = array_merge($this->forbiddenFiles, $userForbiddenFiles);
+        $this->forbiddenDirectories = array_merge($this->forbiddenDirectories, $userForbiddenDirs);
     }
 
+    /**
+     * Run the bundle job
+     */
     public function run(): void
     {
         $filesystem = $this->filesystem;
@@ -105,34 +109,11 @@ final class BundleJob extends BaseJob
     }
 
     /**
-     * @param string $bundleId
-     * @return $this
+     * Set the Bundle ID
      */
     public function setBundleId(string $bundleId): self
     {
         $this->bundleId = $bundleId;
-
-        return $this;
-    }
-
-    /**
-     * @param array $files
-     * @return $this
-     */
-    private function setForbiddenFiles(array $files): self
-    {
-        $this->forbiddenFiles = $files;
-
-        return $this;
-    }
-
-    /**
-     * @param array $directories
-     * @return $this
-     */
-    private function setForbiddenDirectories(array $directories): self
-    {
-        $this->forbiddenDirectories = $directories;
 
         return $this;
     }

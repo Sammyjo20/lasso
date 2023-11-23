@@ -1,28 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
+use Exception;
 use Sammyjo20\Lasso\Exceptions\GitHashException;
 
+/**
+ * @internal
+ */
 class Git
 {
     /**
-     * @return string|null
+     * Get the current commit hash
+     *
      * @throws GitHashException
      */
     public static function getCommitHash(): ? string
     {
         try {
-            $branch = str_replace("\n", '', last(explode('/', file_get_contents(base_path() . '/.git/HEAD'))));
+            $branch = str_replace('\n', '', last(explode('/', (string)file_get_contents(base_path() . '/.git/HEAD'))));
             $hash = file_get_contents(base_path() . '/.git/refs/heads/' . $branch);
-        } catch (\Exception $exception) {
-            throw new GitHashException($exception->getMessage(), $exception);
+        } catch (Exception $exception) {
+            throw new GitHashException($exception->getMessage(), previous: $exception);
         }
 
-        if ($hash) {
-            return substr($hash, 0, 12);
-        }
-
-        return null;
+        return $hash ? mb_substr($hash, 0, 12) : null;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso;
 
 use Sammyjo20\Lasso\Container\Artisan;
@@ -10,61 +12,39 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class LassoServiceProvider extends BaseServiceProvider
 {
-    public function register()
+    /**
+     * Register the Lasso service provider
+     */
+    public function register(): void
     {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/lasso.php',
-            'lasso'
-        );
-    }
-
-    public function boot(): void
-    {
-        if ($this->app->runningInConsole()) {
-            $this->registerCommands()
-                ->offerPublishing()
-                ->bindsServices();
-        }
+        $this->mergeConfigFrom(__DIR__ . '/../config/lasso.php', 'lasso');
     }
 
     /**
-     * @return $this
+     * Boot the Lasso service provider
      */
-    protected function registerCommands(): self
+    public function boot(): void
     {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
+        // Publish the config
+
+        $this->publishes([
+            __DIR__ . '/../config/lasso.php' => config_path('lasso.php'),
+        ], 'lasso-config');
+
+        // Register Lasso's commands
+
         $this->commands([
             PublishCommand::class,
             PullCommand::class,
         ]);
 
-        return $this;
-    }
+        // Bind Artisan and Filesystem to the container
 
-    /**
-     * @return $this
-     */
-    protected function offerPublishing(): self
-    {
-        $this->publishes([
-            __DIR__ . '/../config/lasso.php' => config_path('lasso.php'),
-        ], 'lasso-config');
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function bindsServices(): self
-    {
-        $this->app->singleton(Artisan::class, function () {
-            return new Artisan;
-        });
-
-        $this->app->singleton(Filesystem::class, function () {
-            return new Filesystem;
-        });
-
-        return $this;
+        $this->app->singleton(Artisan::class, static fn () => new Artisan);
+        $this->app->singleton(Filesystem::class, static fn () => new Filesystem);
     }
 }

@@ -1,24 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Helpers;
 
 use Symfony\Component\Finder\Finder;
 
+/**
+ * @internal
+ */
 class FileLister
 {
     /**
-     * @var Finder
+     * Symfony Finder
      */
-    public $finder;
+    public Finder $finder;
 
     /**
      * FileLister constructor.
-     *
-     * @param string $directory
      */
     public function __construct(string $directory)
     {
-        $this->finder = (new Finder())
+        $this->finder = (new Finder)
             ->in($directory)
             ->ignoreDotFiles(false)
             ->ignoreUnreadableDirs(true)
@@ -27,9 +30,9 @@ class FileLister
     }
 
     /**
-     * @return Finder
+     * Return Finder
      */
-    public function getFinder()
+    public function getFinder(): Finder
     {
         return $this->finder;
     }

@@ -1,24 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sammyjo20\Lasso\Exceptions;
 
-class BaseException extends \Exception
+use Exception;
+use Throwable;
+
+class BaseException extends Exception
 {
     /**
-     * @var string
+     * Default Event
      */
-    public static $event = 'An exception was thrown.';
+    public static string $event = 'An exception was thrown.';
 
     /**
-     * @param string $reason
-     * @return static
+     * Constructor
      */
-    public static function because(string $reason)
+    final public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
     {
-        return new static(sprintf(
-            '%s Reason: %s',
-            static::$event,
-            $reason
-        ));
+        parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * Create a new exception with a reason
+     */
+    public static function because(string $reason): self
+    {
+        return new static(sprintf('%s Reason: %s', static::$event, $reason));
     }
 }
