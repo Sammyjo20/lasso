@@ -6,7 +6,7 @@
 ### Asset wrangling for Laravel made simple.
 
 [![Latest Stable Version](https://poser.pugx.org/sammyjo20/lasso/v)](//packagist.org/packages/sammyjo20/lasso) [![Total Downloads](https://poser.pugx.org/sammyjo20/lasso/downloads)](//packagist.org/packages/sammyjo20/lasso) [![License](https://poser.pugx.org/sammyjo20/lasso/license)](//packagist.org/packages/sammyjo20/lasso)
-[![Code style][ico-code-style]][link-code-style] 
+[![Build Status](https://github.com/sammyjo20/lasso/actions/workflows/tests.yml/badge.svg)](https://img.shields.io/github/actions/workflow/status/sammyjo20/lasso/tests.yml?label=tests)
 
 [Official Website](https://getlasso.dev)
 
@@ -173,7 +173,7 @@ Special thanks to @codepotato for the logo! ❤️
 
 ## Security
 
-If you find any security related issues, please send an email to **29132017+Sammyjo20@users.noreply.github.com**
+If you find any security related issues, please send an email to 29132017+Sammyjo20@users.noreply.github.com
 
 ## And that's it! ✨
 
