@@ -9,7 +9,7 @@ on:
       - '*'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   tests:
