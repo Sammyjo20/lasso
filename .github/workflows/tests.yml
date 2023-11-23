@@ -45,7 +45,7 @@ jobs:
 
       - name: Configure Permissions
         run: |
-          sudo chown -R $USER:$USER /home/github/actions-runner/_work/lasso
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
 
       - name: Execute tests
         run: ./vendor/bin/pest
