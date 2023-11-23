@@ -15,16 +15,18 @@ use Sammyjo20\Lasso\Exceptions\VersioningFailed;
 final class VersioningService
 {
     /**
+     * Append a new version to the history
+     *
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
-    public static function appendNewVersion(string $bundle_url): void
+    public static function appendNewVersion(string $bundleUrl): void
     {
         // 1. We need to fetch the current history
         $history = self::getHistoryFromDisk();
 
         // 2. We then need to append the new version to the history, keyed with a unix timestamp
-        if (! in_array($bundle_url, $history, true)) {
-            $history[time()] = $bundle_url;
+        if (! in_array($bundleUrl, $history, true)) {
+            $history[time()] = $bundleUrl;
         }
 
         // 3. Then we need to delete any old bundles.
@@ -71,21 +73,23 @@ final class VersioningService
         }
     }
 
-    
+    /**
+     * Delete expired bundles
+     */
     private static function deleteExpiredBundles(array $bundles): array
     {
-        $bundle_limit = self::getMaxBundlesAllowed();
+        $bundleLimit = config('lasso.storage.max_bundles');
 
         // If we haven't exceeded our bundle Limit, let's just return the bundles.
         // There's nothing more we can do here.
 
-        if (count($bundles) <= $bundle_limit) {
+        if (count($bundles) <= $bundleLimit) {
             return $bundles;
         }
 
         // However, if there's a bundle to be removed we need to go Ghostbuster on that bundle.
 
-        $deletable_count = count($bundles) - $bundle_limit;
+        $deletable_count = count($bundles) - $bundleLimit;
         $deletable = array_slice($bundles, 0, $deletable_count, true);
 
         // Now let's delete those bundles!
@@ -97,7 +101,9 @@ final class VersioningService
         return array_diff($bundles, $deleted);
     }
 
-    
+    /**
+     * Delete bundles
+     */
     private static function deleteBundles(array $deletable): array
     {
         $disk = self::getDisk();
@@ -122,6 +128,8 @@ final class VersioningService
     }
 
     /**
+     * Update history file
+     *
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
     private static function updateHistory(array $history): void
@@ -135,21 +143,19 @@ final class VersioningService
         }
     }
 
-    
+    /**
+     * Get the file directory
+     */
     private static function getFileDirectory(): string
     {
         return (new Cloud)->getUploadPath('history.json');
     }
 
-    
+    /**
+     * Get the disk
+     */
     private static function getDisk(): string
     {
         return config('lasso.storage.disk');
-    }
-
-    
-    private static function getMaxBundlesAllowed(): int
-    {
-        return config('lasso.storage.max_bundles');
     }
 }

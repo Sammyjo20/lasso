@@ -15,17 +15,23 @@ use Sammyjo20\Lasso\Exceptions\GitHashException;
 
 final class PublishJob extends BaseJob
 {
-    
+    /**
+     * Bundle ID
+     */
     protected string $bundleId;
 
-    
+    /**
+     * Should Lasso use Git?
+     */
     protected bool $usesGit = true;
 
-    
+    /**
+     * Should Lasso use the latest commit?
+     */
     protected bool $useCommit = false;
 
     /**
-     * @var string?
+     * The latest commit
      */
     protected ?string $commit = null;
 
@@ -125,24 +131,30 @@ final class PublishJob extends BaseJob
         }
     }
 
-    
+
+    /**
+     * Clean up the publish
+     */
     public function cleanUp(): void
     {
         $this->deleteLassoDirectory();
     }
 
     /**
+     * Roll back the publish
+     *
      * @throws Exception
      */
-    private function rollBack(Exception $exception)
+    private function rollBack(Exception $exception): void
     {
         $this->deleteLassoDirectory();
 
         throw $exception;
     }
 
-
-    
+    /**
+     * Dispatch the webhookss
+     */
     public function dispatchWebhooks(array $webhooks = []): void
     {
         if (! count($webhooks)) {
@@ -159,10 +171,11 @@ final class PublishJob extends BaseJob
     }
 
     /**
-     * @return $this
+     * Generate the Bundle ID
+     *
      * @throws GitHashException
      */
-    private function generateBundleId(): self
+    private function generateBundleId(): void
     {
         $id = Str::random(20);
 
@@ -175,21 +188,19 @@ final class PublishJob extends BaseJob
         }
 
         $this->bundleId = $id;
-
-        return $this;
     }
 
     /**
-     * @return $this
+     * Delete the Lasso directory
      */
-    private function deleteLassoDirectory(): self
+    private function deleteLassoDirectory(): void
     {
         $this->filesystem->deleteBaseLassoDirectory();
-
-        return $this;
     }
 
     /**
+     * Disable Git with Lasso
+     *
      * @return $this
      */
     public function dontUseGit(): self
@@ -200,6 +211,8 @@ final class PublishJob extends BaseJob
     }
 
     /**
+     * Should Lasso use the latest commit from Git?
+     *
      * @return $this
      */
     public function useCommit(): self
@@ -210,6 +223,8 @@ final class PublishJob extends BaseJob
     }
 
     /**
+     * Specify a commit that is used for the bundle
+     *
      * @return $this
      */
     public function withCommit(string $commitHash): self
