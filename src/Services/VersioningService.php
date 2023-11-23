@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Sammyjo20\Lasso\Services;
 
+use Exception;
 use Sammyjo20\Lasso\Helpers\Cloud;
 use Illuminate\Support\Facades\Storage;
 use Sammyjo20\Lasso\Exceptions\VersioningFailed;
 
+/**
+ * @internal
+ */
 final class VersioningService
 {
     /**
@@ -39,7 +43,7 @@ final class VersioningService
     private static function getHistoryFromDisk(): array
     {
         $disk = self::getDisk();
-        $path = self::getFileDirectory('history.json');
+        $path = self::getFileDirectory();
 
         // If there is no history to be found in the Filesystem,
         // that's completely fine. Let's just return an empty
@@ -60,48 +64,53 @@ final class VersioningService
             ksort($history);
 
             return $history;
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             throw VersioningFailed::because(
                 'Lasso could not retrieve the history.json file from the Filesystem.'
             );
         }
     }
 
-    
+    /**
+     * @param array $bundles
+     * @return array
+     */
     private static function deleteExpiredBundles(array $bundles): array
     {
         $bundle_limit = self::getMaxBundlesAllowed();
 
-        // If we haven't exceeded our bundle Limit,
-        // let's just return the bundles. There's nothing
-        // more we can do here.
+        // If we haven't exceeded our bundle Limit, let's just return the bundles.
+        // There's nothing more we can do here.
 
         if (count($bundles) <= $bundle_limit) {
             return $bundles;
         }
 
-        // However, if there's a bundle to be removed
-        // we need to go Ghostbuster on that bundle.
+        // However, if there's a bundle to be removed we need to go Ghostbuster on that bundle.
+
         $deletable_count = count($bundles) - $bundle_limit;
         $deletable = array_slice($bundles, 0, $deletable_count, true);
 
         // Now let's delete those bundles!
+
         $deleted = self::deleteBundles(array_values($deletable));
 
-        // Finally, we want to return a new array, with
-        // the bundles that have been deleted removed.
+        // Finally, we want to return a new array, with the bundles that have been deleted removed.
+
         return array_diff($bundles, $deleted);
     }
 
-    
+    /**
+     * @param array $deletable
+     * @return array
+     */
     private static function deleteBundles(array $deletable): array
     {
         $disk = self::getDisk();
         $deleted = [];
 
-        // Attempt to delete the bundle. If something
-        // goes wrong, Lasso isn't precious about it.
-        // we will simply try to delete the next directory and move on.
+        // Attempt to delete the bundle. If something goes wrong, Lasso isn't precious about it.
+        // We will simply try to delete the next directory and move on.
 
         foreach ($deletable as $bundle_key => $bundle) {
             try {
@@ -110,7 +119,7 @@ final class VersioningService
                 if ($success) {
                     $deleted[$bundle_key] = $bundle;
                 }
-            } catch (\Exception $ex) {
+            } catch (Exception) {
                 continue;
             }
         }
@@ -121,35 +130,36 @@ final class VersioningService
     /**
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
-    private static function updateHistory(array $history): bool
+    private static function updateHistory(array $history): void
     {
-        $disk = self::getDisk();
-        $path = self::getFileDirectory('history.json');
-
         try {
-            $encoded = json_encode($history);
-
-            return Storage::disk($disk)->put($path, $encoded);
-        } catch (\Exception $ex) {
+            Storage::disk(self::getDisk())->put(self::getFileDirectory(), json_encode($history, JSON_THROW_ON_ERROR));
+        } catch (Exception) {
             throw VersioningFailed::because(
                 'Lasso could not update the history.json on the Filesystem.'
             );
         }
     }
 
-    
-    private static function getFileDirectory(string $path): string
+    /**
+     * @return string
+     */
+    private static function getFileDirectory(): string
     {
-        return (new Cloud())->getUploadPath($path);
+        return (new Cloud)->getUploadPath('history.json');
     }
 
-    
+    /**
+     * @return string
+     */
     private static function getDisk(): string
     {
         return config('lasso.storage.disk');
     }
 
-    
+    /**
+     * @return int
+     */
     private static function getMaxBundlesAllowed(): int
     {
         return config('lasso.storage.max_bundles');

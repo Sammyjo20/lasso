@@ -6,6 +6,9 @@ namespace Sammyjo20\Lasso\Helpers;
 
 use \Illuminate\Filesystem\Filesystem as BaseFilesystem;
 
+/**
+ * @internal
+ */
 class Filesystem extends BaseFilesystem
 {
     /**

@@ -9,6 +9,9 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Sammyjo20\Lasso\Helpers\CompilerOutputFormatter;
 use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
 
+/**
+ * @internal
+ */
 final class Artisan
 {
     /**

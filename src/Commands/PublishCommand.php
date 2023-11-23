@@ -66,6 +66,6 @@ final class PublishCommand extends BaseCommand
             $filesystem->getCloudDisk()
         ));
 
-        return 0;
+        return self::SUCCESS;
     }
 }

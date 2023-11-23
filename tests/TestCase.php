@@ -10,12 +10,24 @@ use Orchestra\Testbench\TestCase as Orchestra;
 abstract class TestCase extends Orchestra
 {
     /**
-     * @param  \Illuminate\Foundation\Application  $app
+     * Get the package providers
      */
     protected function getPackageProviders($app): array
     {
         return [
             LassoServiceProvider::class,
         ];
+    }
+
+    /**
+     * Get environment setup
+     */
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']->set('filesystems.disks.assets', [
+            'driver' => 'local',
+            'root' => __DIR__ . '/Fixtures/Cloud',
+            'throw' => false,
+        ]);
     }
 }

@@ -6,6 +6,9 @@ namespace Sammyjo20\Lasso\Helpers;
 
 use ZipArchive;
 
+/**
+ * @internal
+ */
 class Zip
 {
     /**

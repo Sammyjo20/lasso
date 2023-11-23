@@ -10,21 +10,21 @@ use Sammyjo20\Lasso\Exceptions\RestoreFailed;
 final class BackupService
 {
     /**
-     * @var Filesystem
+     * Lasso Filesystem
      */
-    protected $filesystem;
+    protected Filesystem $filesystem;
 
     /**
-     * @var bool
+     * Backup path
      */
-    protected $backupPath;
+    protected string $backupPath;
 
     /**
-     * Backup constructor.
+     * Constructor.
      */
     public function __construct(Filesystem $filesystem)
     {
-        $this->setFilesystem($filesystem);
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -45,6 +45,8 @@ final class BackupService
     }
 
     /**
+     * Restore a backup
+     *
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
     public function restoreBackup(string $destinationDirectory): bool
@@ -61,23 +63,7 @@ final class BackupService
     }
 
     /**
-     * @return $this
-     */
-    public function setFilesystem(Filesystem $filesystem): self
-    {
-        $this->filesystem = $filesystem;
-
-        return $this;
-    }
-
-    
-    public function hasBackup(): bool
-    {
-        return ! is_null($this->backupPath);
-    }
-
-    /**
-     * @return $this
+     * Set a backup path
      */
     public function setBackupPath(string $path): self
     {

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Sammyjo20\Lasso\Helpers;
 
+/**
+ * @internal
+ */
 class CompilerOutputFormatter
 {
     private const PERCENTAGE_REGEX = '/\b(?<!\.)(?!0+(?:\.0+)?%)(?:\d|[1-9]\d|100)(?:(?<!100)\.\d+)?%/';

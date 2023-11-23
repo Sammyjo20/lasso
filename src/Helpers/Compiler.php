@@ -7,6 +7,9 @@ namespace Sammyjo20\Lasso\Helpers;
 use Sammyjo20\Lasso\Container\Artisan;
 use Symfony\Component\Process\Process;
 
+/**
+ * @internal
+ */
 class Compiler
 {
     /**

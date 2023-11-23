@@ -6,6 +6,9 @@ namespace Sammyjo20\Lasso\Helpers;
 
 use Symfony\Component\Finder\Finder;
 
+/**
+ * @internal
+ */
 class FileLister
 {
     /**

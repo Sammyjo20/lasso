@@ -7,6 +7,9 @@ namespace Sammyjo20\Lasso\Helpers;
 use Exception;
 use Sammyjo20\Lasso\Exceptions\GitHashException;
 
+/**
+ * @internal
+ */
 class Git
 {
     /**

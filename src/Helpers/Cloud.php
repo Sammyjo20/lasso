@@ -10,6 +10,9 @@ use LogicException;
 use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
+/**
+ * @internal
+ */
 class Cloud
 {
     /**
