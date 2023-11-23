@@ -1,14 +1,12 @@
 <p align="center">
   <img src="https://getlasso.dev/images/lasso-logo-small.png" alt="Lasso" height="150">
-</p>
 
 # Lasso
 ### Asset wrangling for Laravel made simple.
 
 [![Latest Stable Version](https://poser.pugx.org/sammyjo20/lasso/v)](//packagist.org/packages/sammyjo20/lasso) [![Total Downloads](https://poser.pugx.org/sammyjo20/lasso/downloads)](//packagist.org/packages/sammyjo20/lasso) [![License](https://poser.pugx.org/sammyjo20/lasso/license)](//packagist.org/packages/sammyjo20/lasso)
 [![Build Status](https://github.com/sammyjo20/lasso/actions/workflows/tests.yml/badge.svg)](https://img.shields.io/github/actions/workflow/status/sammyjo20/lasso/tests.yml?label=tests)
-
-[Official Website](https://getlasso.dev)
+</p>
 
 ### Introduction
 
