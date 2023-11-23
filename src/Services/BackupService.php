@@ -71,4 +71,12 @@ final class BackupService
 
         return $this;
     }
+
+    /**
+     * Check if a backup has been created
+     */
+    public function hasBackup(): bool
+    {
+        return isset($this->backupPath);
+    }
 }

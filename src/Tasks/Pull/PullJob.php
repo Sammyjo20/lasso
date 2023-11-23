@@ -250,11 +250,13 @@ final class PullJob extends BaseJob
      */
     private function rollBack(Exception $exception): Exception
     {
-        $this->artisan->note('⏳ Restoring backup...');
+        if ($this->backup->hasBackup()) {
+            $this->artisan->note('⏳ Restoring backup...');
 
-        $this->backup->restoreBackup($this->filesystem->getPublicPath());
+            $this->backup->restoreBackup($this->filesystem->getPublicPath());
 
-        $this->artisan->note('✅ Successfully restored backup.');
+            $this->artisan->note('✅ Successfully restored backup.');
+        }
 
         $this->filesystem->deleteBaseLassoDirectory();
 
