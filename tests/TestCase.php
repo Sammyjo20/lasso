@@ -24,12 +24,12 @@ abstract class TestCase extends Orchestra
      */
     protected function getEnvironmentSetUp($app)
     {
+        $app->setBasePath(__DIR__ . '/../');
+
         $app['config']->set('filesystems.disks.assets', [
             'driver' => 'local',
-            'root' => realpath(__DIR__ . '/Fixtures/Cloud'),
+            'root' => __DIR__ . '/Fixtures/Cloud',
             'throw' => false,
         ]);
-
-        $app->setBasePath(__DIR__ . '/../');
     }
 }
