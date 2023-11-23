@@ -115,7 +115,7 @@ final class PublishJob extends BaseJob
             } else {
                 $filesystem->deleteLocalBundle();
 
-                $filesystem->put($bundlePath, json_encode($bundle));
+                $filesystem->put($bundlePath, (string)json_encode($bundle));
 
                 $cloud->uploadFile($bundlePath, config('lasso.storage.prefix') . 'lasso-bundle.json');
             }
@@ -153,7 +153,9 @@ final class PublishJob extends BaseJob
     }
 
     /**
-     * Dispatch the webhookss
+     * Dispatch the webhooks
+     *
+     * @param array<int, string> $webhooks
      */
     public function dispatchWebhooks(array $webhooks = []): void
     {

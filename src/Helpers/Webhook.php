@@ -13,6 +13,8 @@ class Webhook
 {
     /**
      * Send a Webhook to a URL
+     *
+     * @param array<string, mixed> $data
      */
     public static function send(string $url, string $event, array $data = []): void
     {

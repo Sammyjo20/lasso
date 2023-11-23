@@ -28,15 +28,15 @@ class ConfigValidator
     /**
      * Get config parameter
      */
-    private function get(string $item)
+    private function get(string $item): mixed
     {
-        return config('lasso.' . $item, null);
+        return config('lasso.' . $item);
     }
 
     /**
      * Check the compiler script
      */
-    private function checkCompilerScript($value): bool
+    private function checkCompilerScript(mixed $value): bool
     {
         return ! is_null($value);
     }
@@ -44,7 +44,7 @@ class ConfigValidator
     /**
      * Check compiler script type
      */
-    private function checkCompilerScriptType($value): bool
+    private function checkCompilerScriptType(mixed $value): bool
     {
         return is_string($value);
     }
@@ -52,7 +52,7 @@ class ConfigValidator
     /**
      * Check compiler output
      */
-    private function checkCompilerOutputSetting($value): bool
+    private function checkCompilerOutputSetting(mixed $value): bool
     {
         if (is_null($value)) {
             return true;
@@ -64,7 +64,7 @@ class ConfigValidator
     /**
      * Check if public path exists
      */
-    private function checkIfPublicPathExists($value): bool
+    private function checkIfPublicPathExists(mixed $value): bool
     {
         return $this->filesystem->exists($value) && $this->filesystem->isReadable($value) && $this->filesystem->isWritable($value);
     }
@@ -72,15 +72,15 @@ class ConfigValidator
     /**
      * Check disk exists
      */
-    private function checkDiskExists($value): bool
+    private function checkDiskExists(mixed $value): bool
     {
-        return ! is_null(config('filesystems.disks.' . $value, null));
+        return ! is_null(config('filesystems.disks.' . $value));
     }
 
     /**
      * Check bundle to keep count
      */
-    private function checkBundleToKeepCount($value): bool
+    private function checkBundleToKeepCount(mixed $value): bool
     {
         return is_int($value) && $value > 0;
     }
@@ -88,7 +88,7 @@ class ConfigValidator
     /**
      * Validate config
      *
-     * @throws ConfigFailedValidation
+     * @throws ConfigFailedValidation|\Sammyjo20\Lasso\Exceptions\BaseException
      */
     public function validate(): void
     {

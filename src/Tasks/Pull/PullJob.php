@@ -119,6 +119,8 @@ final class PullJob extends BaseJob
 
     /**
      * Dispatch the webhooks
+     *
+     * @param array<int, string> $webhooks
      */
     public function dispatchWebhooks(array $webhooks = []): void
     {
@@ -138,6 +140,7 @@ final class PullJob extends BaseJob
     /**
      * Get the latest bundle info
      *
+     * @return array<mixed, mixed>
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
@@ -178,6 +181,9 @@ final class PullJob extends BaseJob
 
     /**
      * Validate the bundle checksum
+     *
+     * @param array<mixed, mixed> $bundle
+     * @throws \Exception
      */
     private function validateBundle(array $bundle): bool
     {

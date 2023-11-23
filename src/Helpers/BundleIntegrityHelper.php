@@ -19,7 +19,7 @@ class BundleIntegrityHelper
      */
     public static function generateChecksum(string $path): string
     {
-        return hash_file(self::ALGORITHM, $path);
+        return (string)hash_file(self::ALGORITHM, $path);
     }
 
     /**

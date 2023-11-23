@@ -40,6 +40,7 @@ final class VersioningService
      * Get the versioning file from the Filesystem Disk.
      * This is a file Lasso stores to keep track of its versions.
      *
+     * @return array<mixed, mixed>
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
     private static function getHistoryFromDisk(): array
@@ -75,6 +76,9 @@ final class VersioningService
 
     /**
      * Delete expired bundles
+     *
+     * @param array<mixed, mixed> $bundles
+     * @return array<mixed, mixed>
      */
     private static function deleteExpiredBundles(array $bundles): array
     {
@@ -103,6 +107,9 @@ final class VersioningService
 
     /**
      * Delete bundles
+     *
+     * @param array<mixed, mixed> $deletable
+     * @return array<mixed, mixed>
      */
     private static function deleteBundles(array $deletable): array
     {
@@ -130,6 +137,7 @@ final class VersioningService
     /**
      * Update history file
      *
+     * @param array<mixed, mixed> $history
      * @throws \Sammyjo20\Lasso\Exceptions\BaseException
      */
     private static function updateHistory(array $history): void

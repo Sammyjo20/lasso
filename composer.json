@@ -25,7 +25,8 @@
         "orchestra/testbench": "^7.0 || ^8.0",
         "friendsofphp/php-cs-fixer": "^3.1.0",
         "spatie/ray": "^1.33",
-        "pestphp/pest": "^2.25"
+        "pestphp/pest": "^2.25",
+        "phpstan/phpstan": "^1.10"
     },
     "extra": {
         "laravel": {
@@ -46,6 +47,9 @@
         ],
         "fix-code": [
             "./vendor/bin/php-cs-fixer fix --allow-risky=yes"
+        ],
+        "pstan": [
+            "./vendor/bin/phpstan analyse"
         ]
     },
     "minimum-stability": "stable",

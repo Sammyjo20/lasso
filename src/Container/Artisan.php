@@ -10,6 +10,7 @@ use Sammyjo20\Lasso\Helpers\CompilerOutputFormatter;
 use Sammyjo20\Lasso\Exceptions\ConsoleMethodException;
 
 /**
+ * @mixin Command
  * @internal
  */
 final class Artisan
@@ -40,20 +41,6 @@ final class Artisan
     public function __construct()
     {
         $this->compilerOutputMode = config('lasso.compiler.output', 'progress');
-    }
-
-    /**
-     * Handle a method call
-     *
-     * @throws \Sammyjo20\Lasso\Exceptions\ConsoleMethodException
-     */
-    public function __call($name, $arguments): mixed
-    {
-        if (method_exists($this->command, $name)) {
-            return call_user_func_array([$this->command, $name], $arguments);
-        }
-
-        throw new ConsoleMethodException(sprintf('Method %s::%s does not exist.', get_class($this->command), $name));
     }
 
     /**
@@ -146,5 +133,20 @@ final class Artisan
         $this->isSilent = true;
 
         return $this;
+    }
+
+    /**
+     * Handle a method call
+     *
+     * @param array<string, mixed> $arguments
+     * @throws \Sammyjo20\Lasso\Exceptions\ConsoleMethodException
+     */
+    public function __call(string $name, array $arguments): mixed
+    {
+        if (method_exists($this->command, $name)) {
+            return $this->command->$name(...$arguments);
+        }
+
+        throw new ConsoleMethodException(sprintf('Method %s::%s does not exist.', get_class($this->command), $name));
     }
 }

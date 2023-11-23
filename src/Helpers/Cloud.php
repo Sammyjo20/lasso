@@ -12,6 +12,7 @@ use Illuminate\Contracts\Filesystem\Filesystem as BaseFilesystem;
 
 /**
  * @internal
+ * @mixin BaseFilesystem
  */
 class Cloud
 {
@@ -77,12 +78,13 @@ class Cloud
     /**
      * Call a method on the base Filesystem
      *
+     * @param array<string, mixed> $arguments
      * @throws \Sammyjo20\Lasso\Exceptions\ConsoleMethodException
      */
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
         if (method_exists($this->cloudFilesystem, $name)) {
-            return call_user_func_array([$this->cloudFilesystem, $name], $arguments);
+            return $this->cloudFilesystem->$name(...$arguments);
         }
 
         throw new ConsoleMethodException(sprintf('Method %s::%s does not exist.', get_class($this->cloudFilesystem), $name));
