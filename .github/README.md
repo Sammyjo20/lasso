@@ -22,10 +22,10 @@ During deployment, Lasso will then download your assets from the filesystem. It 
 
 ## Installation
 
-Lasso requires Laravel 6+ and PHP 7.3 or higher. To install Lasso, simply run the composer require command below:
+Lasso supports Laravel 9+ and PHP 8.1 or higher. To install Lasso, simply run the composer require command below:
 
 ```bash
-composer require sammyjo20/lasso
+composer require sammyjo20/lasso "^3.0"
 ```
 
 After that, run the command below to create the lasso.php config file:
