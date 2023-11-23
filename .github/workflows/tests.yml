@@ -47,9 +47,5 @@ jobs:
         run: |
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
-      - name: Configure Permissions
-        run: |
-          sudo chown -R $USER:$USER ./
-
       - name: Execute tests
         run: ./vendor/bin/pest
