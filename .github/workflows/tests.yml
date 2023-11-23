@@ -45,7 +45,7 @@ jobs:
 
       - name: Configure Permissions
         run: |
-          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+          sudo chown -R $USER:$USER ./
 
       - name: Execute tests
         run: ./vendor/bin/pest
