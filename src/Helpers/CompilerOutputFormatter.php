@@ -28,7 +28,7 @@ class CompilerOutputFormatter
 
         preg_match(self::PERCENTAGE_REGEX, $line, $matches, PREG_OFFSET_CAPTURE);
 
-        $percentage = $matches[0][0] ?? null;
+        $percentage = $matches[0][0] ?? '';
 
         return (int)str_replace('%', '', $percentage);
     }
