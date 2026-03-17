@@ -62,7 +62,7 @@ class Cloud
      *
      * You can specify a file to create a fully qualified URL.
      */
-    public function getUploadPath(string $file = null): string
+    public function getUploadPath(?string $file = null): string
     {
         $uploadPath = config('lasso.storage.upload_to');
 
