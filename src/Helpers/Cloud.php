@@ -72,7 +72,7 @@ class Cloud
             return $directory;
         }
 
-        return $directory . '/' . ltrim($file, '/');
+        return $directory . '/' . mb_ltrim($file, '/');
     }
 
     /**

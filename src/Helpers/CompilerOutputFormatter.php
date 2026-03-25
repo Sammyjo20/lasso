@@ -16,7 +16,7 @@ class CompilerOutputFormatter
      */
     public static function getWebpackProgress(string $line): int
     {
-        $line = trim($line);
+        $line = mb_trim($line);
 
         if (empty($line)) {
             return 0;
